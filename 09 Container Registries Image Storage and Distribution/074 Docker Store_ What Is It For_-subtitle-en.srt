@@ -1,0 +1,143 @@
+0
+00:05.460 --> 00:08.720
+So what about the store? And what makes it different from Hub?
+
+1
+00:08.790 --> 00:13.680
+Docker Hub has been around for years, and is the place where we've been going throughout this course.
+
+2
+00:13.900 --> 00:17.470
+The Docker Store was released in the summer of 2016.
+
+3
+00:17.490 --> 00:20.870
+At first, it didn't have a whole lot for us to care about.
+
+4
+00:20.970 --> 00:26.120
+Since then, it's been continually evolving to be the place where we get more and more of this stuff.
+
+5
+00:26.370 --> 00:31.730
+As of today, in spring of 2017, I can tell you that the Docker Store is really for two things.
+
+6
+00:31.740 --> 00:34.100
+One, is for actual Docker software.
+
+7
+00:34.140 --> 00:35.750
+They've moved all their downloads here.
+
+8
+00:35.760 --> 00:40.590
+There's so many editions of Docker now with all the different cloud options and downloads that
+
+9
+00:40.590 --> 00:42.500
+we have for our local installations.
+
+10
+00:42.530 --> 00:45.040
+Any time you want to download Docker it forwards you to here.
+
+11
+00:45.150 --> 00:52.530
+And secondly, it's giving you a higher level of assurance about software from third parties. That software
+
+12
+00:52.530 --> 01:02.520
+might be images from Microsoft, or that might be software that's a add-on to Docker or a plugin.
+
+13
+01:02.590 --> 01:03.960
+Let's see some examples.
+
+14
+01:03.970 --> 01:10.720
+These are going to be listed images that are placed here by the creators. In this case we're seeing
+
+15
+01:10.720 --> 01:15.610
+Microsoft images, and with the little checkbox, they’re Docker certified.
+
+16
+01:15.610 --> 01:20.470
+This just indicates that Docker and Microsoft have worked together on this image to ensure that it
+
+17
+01:20.470 --> 01:25.780
+meets all Docker best practices and that it's truly from Microsoft and not someone pretending to be them
+
+18
+01:25.780 --> 01:26.680
+on Docker Hub.
+
+19
+01:26.680 --> 01:32.170
+What you won't see on the store is ten different versions of .NET from ten different people that
+
+20
+01:32.170 --> 01:34.980
+have all built it themselves the way they like it.
+
+21
+01:35.020 --> 01:39.640
+If I had to tell someone in an elevator pitch the difference between the Docker Store today and Docker
+
+22
+01:39.670 --> 01:46.810
+Hub, I would say Docker Hub is like the GitHub of images and that Docker Store is like an app store
+
+23
+01:46.870 --> 01:51.790
+for images. Or, maybe more specifically, the Apple Store for images, because the only way that something
+
+24
+01:51.790 --> 01:58.240
+gets here is when they partner and work with Docker to get their official software into the store. Over
+
+25
+01:58.240 --> 01:58.720
+time,
+
+26
+01:58.750 --> 02:02.860
+I believe what we're going to see is the things here that you could pay for, which is those things that
+
+27
+02:02.890 --> 02:08.530
+aren't necessarily open-source but maybe some more closed-sourced products from companies. You'll be
+
+28
+02:08.530 --> 02:11.450
+able to use the store to pay for subscriptions of those.
+
+29
+02:11.860 --> 02:13.800
+And you can start to see some of that happening today.
+
+30
+02:13.810 --> 02:19.570
+For instance, if we scroll down and we saw this Microservice Firewall from Polyverse, it's $50 a month
+
+31
+02:19.630 --> 02:22.190
+for you to have access to this image.
+
+32
+02:22.360 --> 02:27.100
+So, I guess the word store makes sense here, because it's essentially the place we could potentially pay
+
+33
+02:27.100 --> 02:30.600
+for images. But that's all I'm really going to go into on the Store.
+
+34
+02:30.610 --> 02:32.890
+You can check it out on your own. For this course,
+
+35
+02:32.890 --> 02:34.980
+we're going to spend all of our time in Docker Hub.

@@ -1,0 +1,4 @@
+- b'12-Fractured-Apps-A-follow-up-to-12-Factor-a-great-article-on-how-to-do-12F-correctly-in-containers-'
+- b'https://medium.com/@kelseyhightower/12-fractured-apps-1080c73d481c#.cjvkgw4b3'
+- b'Jekyll-a-Static-Site-Generator-just-as-background-info-no-need-to-install-'
+- b'https://jekyllrb.com'

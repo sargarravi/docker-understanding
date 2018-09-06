@@ -1,0 +1,123 @@
+0
+00:02.260 --> 00:05.240
+OK.
+
+1
+00:05.260 --> 00:11.050
+This is a lesson where I'm going to walk through the assignment for the CLI app testing and you can see
+
+2
+00:11.050 --> 00:14.970
+my thought process as I just sort of talk out loud while I do it.
+
+3
+00:15.460 --> 00:15.760
+OK.
+
+4
+00:15.760 --> 00:24.590
+So, I need to start two Linux distributions. We're going to use the rm, so docker container run rm.
+
+5
+00:25.650 --> 00:30.170
+Let's see...I'm not going to want to run it as a daemon.
+
+6
+00:31.510 --> 00:33.530
+I am going to want to use i t
+
+7
+00:37.280 --> 00:39.750
+cent os 7.
+
+8
+00:39.920 --> 00:44.360
+I don't need a port open but I do need to get bash.
+
+9
+00:46.890 --> 00:53.640
+OK. Then I going to need to do yum update curl.
+
+10
+00:53.780 --> 01:03.860
+And then while that's going, I'm in iTerm2 and iTerm2 is my terminal command.  So command shift d
+
+11
+01:03.870 --> 01:08.460
+will give me another window... another shell
+
+12
+01:11.510 --> 01:18.520
+so I can then do docker container run rm
+
+13
+01:19.170 --> 01:36.380
+it ubuntu 14.04 bash and then do an apt get update then apt get install curl. I'm actually going to throw
+
+14
+01:36.380 --> 01:38.300
+in a -y so it automatically does it.
+
+15
+01:41.220 --> 01:45.770
+Then up here, I can do a curl version while that one is going. All right.
+
+16
+01:45.770 --> 01:49.880
+And it's got curl version 7.2 9 installed.
+
+17
+01:50.270 --> 01:51.780
+And then ubuntu.
+
+18
+01:52.640 --> 01:55.100
+All right curl version.
+
+19
+01:55.900 --> 02:05.910
+All right and ubuntu is 7. 35. I just happen to know that CentOS tends to lag behind in
+
+20
+02:05.910 --> 02:12.410
+some more enterprise-y Linux distributions so it tends to have older packet package versions than
+
+21
+02:12.410 --> 02:17.410
+Ubuntu even though we're actually running a Ubuntu version that's more than a few years old.
+
+22
+02:18.750 --> 02:19.190
+OK.
+
+23
+02:19.310 --> 02:23.380
+So when I type exit I shouldn't see my container in there anymore.
+
+24
+02:24.410 --> 02:30.080
+No. And then appear if I type exit and I do another listing,
+
+25
+02:33.210 --> 02:39.920
+you'll see that one thing left is an nginx container I had left over from my previous unrelated session.
+
+26
+02:39.980 --> 02:42.200
+So my CentOS disappeared.
+
+27
+02:42.370 --> 02:46.550
+And my Ubuntu disappeared, which is what the --rm does for us.
+
+28
+02:46.550 --> 02:46.880
+All right.
+
+29
+02:46.880 --> 02:48.390
+And that's it.
+
+30
+02:48.450 --> 02:49.440
+Nothing to clean up.

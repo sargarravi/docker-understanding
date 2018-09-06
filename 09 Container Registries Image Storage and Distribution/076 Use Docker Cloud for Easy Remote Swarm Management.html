@@ -1,0 +1,33 @@
+<html>
+                        <head>
+                        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+                        <title>076 Use Docker Cloud for Easy Remote Swarm Management</title>
+                        </head>
+                        <body>
+                        <div class="container">
+                        <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <p class="lead"><div class="asset-container">
+    <div class="asset-container__padding article-view">
+        <div class="w3c-default">
+            <p>A new feature for Docker Cloud in 2017 is "Swarms", which in part, allows you to use Cloud as a way to connect your local Docker CLI to a remote Swarm you've created anywhere that has Internet access (no inbound ports needed).</p>
+
+<p>This means you can use your local shell to control a remote swarm cluster with docker commands, without needing SSH access to that server. It also means you can give other people secure access to a swarm via Cloud, without them also needing SSH, and then later revoke their access in Cloud. </p>
+
+<p>It's not a full RBAC solution like Docker Enterprise Edition provides, but it's better than what we get out of the box with Docker CE!</p>
+
+<p>For now, it works best when using "Docker for Mac" and "Docker for Windows" GUI's, which if you log into them with your Docker ID, you'll see a list of Swarms that you can setup via Docker Cloud.</p>
+
+<p>The way this works is, when you follow the steps in Docker's setup video below, it'll install a "Cloud Agent" container in your Swarm, that allows Cloud to act as a sort of proxy between your local Docker CLI and your remote Swarm.</p>
+
+<p><a href="https://youtu.be/VJmbCioYKGg" rel="nofollow" target="_blank">See a quick how-to video on Swarms fleet management feature on YouTube.</a></p>
+        </div>
+    </div>
+</div>
+</p>
+                        </div>
+                        </div>
+                        </div>
+                        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+                        </body>
+                        </html>

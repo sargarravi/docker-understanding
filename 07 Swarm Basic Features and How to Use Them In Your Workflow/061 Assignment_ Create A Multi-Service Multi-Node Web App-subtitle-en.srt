@@ -1,0 +1,347 @@
+0
+00:00.620 --> 00:10.480
+All right, now that we've learned all about Swarm scaling with overlayed networking and routing mesh,
+
+1
+00:11.350 --> 00:18.910
+I want you to actually go through the process of creating the assets, or the objects, that you need to
+
+2
+00:18.910 --> 00:20.620
+deploy in a Swarm scenario.
+
+3
+00:20.620 --> 00:26.110
+So we're no longer using the docker run command, but the networking and the volumes are kind of the
+
+4
+00:26.110 --> 00:28.640
+same but slightly different.
+
+5
+00:28.660 --> 00:36.030
+I want to give you a real-world scenario of a multi-tier app, and we're going to use Docker’s Distributed
+
+6
+00:36.030 --> 00:36.820
+Voting App.
+
+7
+00:36.840 --> 00:38.830
+It's actually called the Example Voting App.
+
+8
+00:38.910 --> 00:43.980
+You might have seen it in Docker keynotes, or in other labs or tutorials.
+
+9
+00:43.980 --> 00:49.860
+It's a pretty common, and I think, a great app, because it's got at least five roles to it, or different
+
+10
+00:49.860 --> 00:51.540
+containers that you need to deploy.
+
+11
+00:51.720 --> 00:56.760
+And they all serve a special function and they're actually doing stuff that actually works, actually does
+
+12
+00:56.760 --> 00:57.740
+what it's supposed to do.
+
+13
+00:57.750 --> 01:03.000
+And so you can play with it and it has very typical, distributed architecture components like the web
+
+14
+01:03.010 --> 01:04.870
+frontend and the worker backend,
+
+15
+01:04.870 --> 01:12.190
+and the key value in a database. I think it's really helpful to do. In this case, you're going to use
+
+16
+01:12.370 --> 01:18.960
+the directory swarm-app-1. It's actually in our course repo. In there is nothing but a readme and
+
+17
+01:18.960 --> 01:26.590
+an image. From that readme, you're going need to create the volume and a couple of networks and five
+
+18
+01:26.590 --> 01:30.280
+services that are needed for this app to fully function.
+
+19
+01:30.370 --> 01:36.580
+It may help you to try some of these commands locally, or actually write them in your text editor
+
+20
+01:36.790 --> 01:40.290
+and sort of compose them, because they are going to be a little complex, right. When you do that docker
+
+21
+01:40.300 --> 01:45.650
+service create, you’re going to have to connect it to a specific network, and open up ports, and call it
+
+22
+01:45.650 --> 01:51.490
+a specific name, and use a specific image. So, it might be easier to edit it locally and then just cut
+
+23
+01:51.490 --> 01:54.400
+and paste into your shell, wherever your Swarm is at.
+
+24
+01:54.520 --> 01:56.240
+But that's just me.
+
+25
+01:56.260 --> 02:01.390
+Everything is going to use Docker Hub images because in the production Swarm you don't want to be building.
+
+26
+02:01.450 --> 02:05.260
+That's not a process you want on your production Swarm, typically.
+
+27
+02:05.290 --> 02:10.390
+Usually, you want to do your building either through some automated online service like Docker Hub or
+
+28
+02:10.390 --> 02:17.280
+Docker Cloud, or somewhere in your CI/CD pipeline that's not eating resources on your production Swarm.
+
+29
+02:17.290 --> 02:22.630
+In this scenario, we can imagine that our images are being built elsewhere and stored on Docker Hub and
+
+30
+02:22.630 --> 02:28.720
+we just need to pull those down, whatever the latest versions are, into our Swarm.
+
+31
+02:28.840 --> 02:34.720
+And I'll just say this, like many things in Computer Science, this is one half science, one half art form.
+
+32
+02:34.930 --> 02:40.650
+Your commands could be in totally different orders, or have totally different option orders than mine.
+
+33
+02:40.660 --> 02:43.200
+You might call your networks different things.
+
+34
+02:43.270 --> 02:43.940
+That's fine.
+
+35
+02:43.950 --> 02:48.010
+At the end result is that the application works, that they're able to talk to each other in the proper
+
+36
+02:48.010 --> 02:52.180
+way, that you've got all the ports published and that you’ve got the data protected in a volume.
+
+37
+02:52.180 --> 02:55.020
+Let's take a quick look at what you're up against.
+
+38
+02:55.030 --> 02:59.170
+Imagine you're having to design the commands and the architecture for this.
+
+39
+02:59.170 --> 03:01.970
+And this is what the developer would give to you that wrote this app.
+
+40
+03:02.140 --> 03:05.280
+Well in this case, it's probably lots of developers that wrote this app, right?
+
+41
+03:05.290 --> 03:10.120
+Because we've actually got a web frontend that's in Python we've got a Web backend that's running
+
+42
+03:10.120 --> 03:11.140
+in Node.
+
+43
+03:11.140 --> 03:17.170
+We've got a worker process that's running in .NET and then we've got a Redis key value store and
+
+44
+03:17.180 --> 03:19.600
+a PostgreSQL database.
+
+45
+03:19.630 --> 03:24.610
+This is actually something I see more and more often, where different teams are writing different parts
+
+46
+03:24.610 --> 03:29.510
+of a solution, and they're able to just pick the language that they think is best for that scenario.
+
+47
+03:29.660 --> 03:34.660
+And in the world of containers, this kind of application really shines. Because our applications are
+
+48
+03:34.660 --> 03:35.750
+all segmented,
+
+49
+03:35.770 --> 03:40.630
+they can still technically run on the same machine but they're all protected from each other so that
+
+50
+03:40.630 --> 03:45.170
+you don't end up with Node conflicting with dependencies on Python or whatever.
+
+51
+03:45.190 --> 03:49.810
+You’ll also notice here the traffic flow, and the voting-app doesn't have it,
+
+52
+03:49.810 --> 03:53.680
+but it should have a little arrow coming in that this is where the users would be coming in on the voting-app
+
+53
+03:53.710 --> 03:54.320
+part.
+
+54
+03:54.460 --> 03:59.530
+And you can see that the voting-app actually has to push your votes for this application which, by the way, you’re
+
+55
+03:59.530 --> 04:01.300
+going to be voting for cats and dogs.
+
+56
+04:01.400 --> 04:07.780
+It'll be pushing that into Redis and then the worker will actually be checking the Redis system for anything
+
+57
+04:07.780 --> 04:15.060
+in the queue and then be pushing the results into Postgres which will then be shown on a WebSockets
+
+58
+04:15.100 --> 04:19.960
+backend that's actually live-updating as you're voting.
+
+59
+04:19.990 --> 04:25.540
+If we jump into the Directory real quick I've put some notes in here to help you along the way because
+
+60
+04:25.540 --> 04:28.400
+there's a few things that are a little different and new.
+
+61
+04:28.510 --> 04:34.240
+But, the services area would be kind of written like it was from someone who knew their application but
+
+62
+04:34.240 --> 04:38.390
+didn't know actually how to implement this in Docker. And that's a pretty common scenario.
+
+63
+04:38.530 --> 04:43.110
+You can see that in the services I've listed which image you need to deploy,
+
+64
+04:43.270 --> 04:46.310
+the actual name that you need to give it, because those are important.
+
+65
+04:46.360 --> 04:51.130
+These are images that are, unfortunately, hard coded for what names they are going to look for on the network.
+
+66
+04:51.130 --> 04:55.350
+Ideally, you'd want applications that you could configure on the fly for what they need to do for names,
+
+67
+04:55.360 --> 05:01.360
+but, in this case, vote is going to specifically look for a DNS record called redis. You can see that
+
+68
+05:01.360 --> 05:06.460
+there's actually two networks here. We have a frontend and a backend network. That's pretty typical
+
+69
+05:06.460 --> 05:11.500
+also of a larger application where you maybe want to protect your database on a backend network so
+
+70
+05:11.500 --> 05:14.580
+that the frontend user app doesn't have direct access to it.
+
+71
+05:14.680 --> 05:19.790
+And that's what we are showing here and you’ll notice that the worker actually is connected to two networks.
+
+72
+05:19.930 --> 05:25.830
+So when you use your create command, remember you're using docker service create not docker run.
+
+73
+05:25.840 --> 05:29.950
+So when you using your docker service create command you're going to need to specify the --network
+
+74
+05:29.980 --> 05:33.460
+twice, once for the frontend, and once for the backend.
+
+75
+05:33.490 --> 05:36.100
+Obviously, you know to create your networks first.
+
+76
+05:36.100 --> 05:41.290
+So some of that’s specified up here. And if you need the image again the architecture diagram is also in
+
+77
+05:41.290 --> 05:45.350
+here, just in case that helps conceptually with how you're going to deploy this.
+
+78
+05:45.700 --> 05:50.680
+And, of course, you're going to have the Docker documentation. You might need to use the --help on
+
+79
+05:50.680 --> 05:54.790
+the service create command that will give you all the various options that you might need.
+
+80
+05:54.790 --> 06:00.580
+You only are going to need three or four of those. If you get stuck with the commands themselves, you
+
+81
+06:00.580 --> 06:06.430
+might want to review the actual documentation, which I will put into the resources of this section.
+
+82
+06:06.520 --> 06:13.250
+But this particular document under Swarm actually goes into creating services and configuring services.
+
+83
+06:13.330 --> 06:18.610
+So, it's a little wordy, but it's got a lot of information in it that might help you if you get stuck
+
+84
+06:18.610 --> 06:19.160
+in here.
+
+85
+06:19.180 --> 06:22.700
+The next video I will actually run through this whole thing myself as if I was you.
+
+86
+06:22.750 --> 06:23.980
+Good luck and have some fun.

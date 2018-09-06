@@ -1,0 +1,560 @@
+1
+00:00:04,820 --> 00:00:12,470
+In this section, we've covered a lot about Swarm. Swarm, Stacks and Secrets are kind of like a
+
+2
+00:00:12,470 --> 00:00:17,510
+trilogy of awesome features that can really make things much easier in production for us.
+
+3
+00:00:17,600 --> 00:00:23,120
+I want to show you what it might be like if you actually took your Compose files, organize them in
+
+4
+00:00:23,120 --> 00:00:24,710
+a couple of ways,
+
+5
+00:00:24,920 --> 00:00:27,210
+and this is what I basically call living the dream.
+
+6
+00:00:27,230 --> 00:00:32,690
+It turns out you can actually use a single file to do a lot of things, but sometimes your complexity
+
+7
+00:00:32,690 --> 00:00:36,080
+grows and you're going to need multiple Compose files.
+
+8
+00:00:36,080 --> 00:00:38,060
+I want to just run through real quick.
+
+9
+00:00:38,060 --> 00:00:42,620
+You don't actually have to do this yourself if you don't want to. I'm just going to show you an example of
+
+10
+00:00:42,620 --> 00:00:47,520
+how these Compose files might work together to build up your environment as you go.
+
+11
+00:00:47,780 --> 00:00:52,490
+In this scenario, we're going to use docker compose up for our local development environment.
+
+12
+00:00:52,490 --> 00:00:59,170
+We're going to use a docker compose up config and file for our CI environment to do integration testing.
+
+13
+00:00:59,390 --> 00:01:04,580
+Then when we're in production, we're going to use those files for docker stack deploy to actually deploy
+
+14
+00:01:04,580 --> 00:01:10,630
+the production environment with a stack. So, I'm on my local machine and we're going to be using the example
+
+15
+00:01:10,630 --> 00:01:14,330
+before of the Drupal scenario, with a database server, and a web frontend.
+
+16
+00:01:14,380 --> 00:01:19,630
+We have the Dockerfile we have used in our previous assignments. We're rebuilding a custom, yet simple,
+
+17
+00:01:19,690 --> 00:01:21,880
+drupal config with a template.
+
+18
+00:01:22,060 --> 00:01:25,540
+Then we're going to have this default compose file.
+
+19
+00:01:25,540 --> 00:01:26,990
+This is called an override,
+
+20
+00:01:26,980 --> 00:01:32,350
+what we're about to do. An override is where I have the standard Docker Compose file, and it sets the
+
+21
+00:01:32,350 --> 00:01:35,710
+defaults that are the same across all my environments.
+
+22
+00:01:35,710 --> 00:01:42,370
+Then, I have this override file that by default, Docker Compose, if it's named this exact name, docker
+
+23
+00:01:42,370 --> 00:01:48,060
+compose.override.yml, it will automatically bring this in whenever I do a docker compose up.
+
+24
+00:01:48,190 --> 00:01:53,200
+You'll see that in this scenario, we're assuming local development because we really want the hand-typed
+
+25
+00:01:53,200 --> 00:01:55,650
+commands we're going to type to be easiest locally.
+
+26
+00:01:55,720 --> 00:02:00,400
+Normally in your CI environment, it's all automated so we don't really care if those commands are
+
+27
+00:02:00,400 --> 00:02:01,470
+a little bit longer.
+
+28
+00:02:01,520 --> 00:02:04,750
+But we really want locally is the easy docker compose up.
+
+29
+00:02:04,750 --> 00:02:08,890
+The cool thing is Docker Compose will read this file automatically and it will apply this over
+
+30
+00:02:08,890 --> 00:02:13,750
+top, or override, any settings in the Docker Compose yml file.
+
+31
+00:02:13,750 --> 00:02:14,590
+And so here,
+
+32
+00:02:14,630 --> 00:02:19,780
+notice I don't have the image name, because that's already specified over here. In this override file,
+
+33
+00:02:19,840 --> 00:02:25,800
+I override by saying I want to build the image locally using the Dockerfile in this current directory.
+
+34
+00:02:26,020 --> 00:02:32,920
+I want to create a port on 8080 for local development. And I'm setting up some volumes, and you'll even notice
+
+35
+00:02:32,920 --> 00:02:39,190
+I gave you an example here of a bind mount, where I might be doing a custom theme. And I want to mount
+
+36
+00:02:39,190 --> 00:02:45,550
+my theme on my host into the container like we did in previous sections, so that I can change it locally
+
+37
+00:02:45,580 --> 00:02:48,130
+and then see it right away on the server.
+
+38
+00:02:48,130 --> 00:02:52,790
+And by the way, for this example, I don't actually know how to develop themes in Drupal.
+
+39
+00:02:52,810 --> 00:02:57,170
+I'm not exactly sure that if I change a file in there, it will automatically be reflected.
+
+40
+00:02:57,310 --> 00:03:02,050
+I just wanted to show an example of how when you're doing development in web, typically this is the way
+
+41
+00:03:02,050 --> 00:03:07,480
+you would do it without having to stop and start the Compose every time. Down here, under postgres, we
+
+42
+00:03:07,480 --> 00:03:12,610
+have the environment variable and the Secret settings like before. We have the defined volumes, and you'll
+
+43
+00:03:12,610 --> 00:03:13,470
+see down at the bottom,
+
+44
+00:03:13,480 --> 00:03:18,780
+I actually have the file-based secret because when we're doing local development, we have to use the file-
+
+45
+00:03:18,790 --> 00:03:19,690
+based secret.
+
+46
+00:03:19,960 --> 00:03:24,130
+Things get a little interesting when I look at this prod, or test files. The way this is going
+
+47
+00:03:24,130 --> 00:03:29,680
+to work is, remember that the .override.yml automatically gets picked up by the Docker Compose
+
+48
+00:03:29,680 --> 00:03:32,130
+command line. In prod or test,
+
+49
+00:03:32,140 --> 00:03:34,640
+I'm going to have to specify them manually.
+
+50
+00:03:34,810 --> 00:03:38,420
+So for test, we're going to have to use the -f command.
+
+51
+00:03:38,530 --> 00:03:44,770
+If you remember from earlier sections, the -f is when we do a docker compose that we want to specify
+
+52
+00:03:44,770 --> 00:03:47,590
+a custom file. I'll show you that in a minute.
+
+53
+00:03:47,590 --> 00:03:53,170
+Then in production, since we're not going to actually have the Docker Compose command line on a production
+
+54
+00:03:53,170 --> 00:03:59,260
+server, what we're going to do here is we're actually going to use a docker compose config command.
+
+55
+00:03:59,260 --> 00:04:05,590
+The config command is actually going to do an output by squishing together, or combining, the output of
+
+56
+00:04:05,590 --> 00:04:07,050
+multiple config files.
+
+57
+00:04:07,060 --> 00:04:08,290
+So that will be really cool.
+
+58
+00:04:08,290 --> 00:04:12,520
+Real quick, the test file just has the drupal and the postgres.
+
+59
+00:04:12,520 --> 00:04:18,820
+Imagine if this was your Jenkins CI or Codeship CI solution, where I want it to build the image
+
+60
+00:04:18,850 --> 00:04:24,430
+every time I commit my code, and I want to call it this, and I want it to be on this port for testing
+
+61
+00:04:24,430 --> 00:04:30,520
+purposes. Then I'm going to use a fake password. But I don't need to define any of the volumes because
+
+62
+00:04:30,520 --> 00:04:35,080
+I'm not going to actually try to keep named volume data because again, it's just a CI platform.
+
+63
+00:04:35,080 --> 00:04:39,040
+As soon as it passes tests or fails tests, it'll get rid of everything.
+
+64
+00:04:39,190 --> 00:04:44,950
+Then in this scenario, you might see that I've actually got this sample data scenario where maybe
+
+65
+00:04:45,040 --> 00:04:51,310
+in your CI solution, you have simply databases sitting there that come from either a custom Git repository
+
+66
+00:04:51,340 --> 00:04:56,470
+or maybe they're an FTP download. Or something happens during the initialization of your CI where it actually
+
+67
+00:04:56,470 --> 00:05:02,320
+downloads a database file. And instead of us having to create our database every single time we do CI
+
+68
+00:05:02,320 --> 00:05:08,260
+testing, we would just mount this directory of sample data into where our postgres data is supposed to
+
+69
+00:05:08,260 --> 00:05:08,840
+be.
+
+70
+00:05:08,920 --> 00:05:13,740
+And that way, we could guarantee we had the same sample data every single time we do a CI test.
+
+71
+00:05:14,050 --> 00:05:17,710
+I'm not going to go into that any further. I just wanted to show that that might be how this file
+
+72
+00:05:17,710 --> 00:05:19,320
+for CI would be different.
+
+73
+00:05:19,600 --> 00:05:25,840
+Then in production, we have all of our normal production concerns. We're specifying volumes for our
+
+74
+00:05:25,840 --> 00:05:32,260
+specific data. We're specifying our secret. And notice down at the bottom, we have the external secret.
+
+75
+00:05:32,260 --> 00:05:37,030
+Because we're going to have put the secret in already via the command line like we did in the earlier
+
+76
+00:05:37,030 --> 00:05:38,080
+assignment.
+
+77
+00:05:38,080 --> 00:05:43,690
+The point here is that all three of these configs are different in some way, but they all relate to
+
+78
+00:05:43,690 --> 00:05:51,010
+the core config, or the base config, which just defines the two services and their images.
+
+79
+00:05:51,250 --> 00:05:53,700
+You can see here. Here's a reminder of what it looks like.
+
+80
+00:05:53,710 --> 00:05:56,910
+Let's exit this and run a couple of commands.
+
+81
+00:05:57,090 --> 00:06:01,870
+If I look in this directory, you'll see that I have the base file and then the three override files.
+
+82
+00:06:01,960 --> 00:06:04,640
+Again, remember, that the override.yml is the default.
+
+83
+00:06:04,660 --> 00:06:12,590
+If I do a docker compose up, what it will actually do here is use the docker-compose.yml first,
+
+84
+00:06:12,710 --> 00:06:19,190
+and then it will overlay the override.yml one on top. I want to put a -d in so we can
+
+85
+00:06:19,190 --> 00:06:26,960
+take a quick look after it started. I'm going to do a docker inspect on the drupal image.
+
+86
+00:06:27,260 --> 00:06:30,800
+And what I wanted to show you was in here, it's got all the mounts listed.
+
+87
+00:06:30,800 --> 00:06:36,920
+So we know that it took the override file because the override file was where we defined all of these
+
+88
+00:06:36,920 --> 00:06:37,720
+mounts.
+
+89
+00:06:37,880 --> 00:06:39,460
+So we know that it picked that up.
+
+90
+00:06:39,590 --> 00:06:43,400
+Obviously, if it didn't pick up the base one, it wouldn't even know what images to use so it would
+
+91
+00:06:43,400 --> 00:06:47,050
+actually be complaining to us and saying that the Compose file was incomplete.
+
+92
+00:06:47,240 --> 00:06:48,160
+That one worked.
+
+93
+00:06:48,170 --> 00:06:50,710
+Let's do a down real quick.
+
+94
+00:06:50,900 --> 00:06:56,600
+If we were going to actually do the command we needed for our CI solution, what we would have to
+
+95
+00:06:56,600 --> 00:07:02,960
+do on our CI solution was to make sure that Docker Compose was there, and installed, and available so that
+
+96
+00:07:02,960 --> 00:07:07,610
+we could do docker compose commands. Then we can specify the -f,
+
+97
+00:07:07,790 --> 00:07:12,210
+and then the order of the f's is the base file always needs to be first.
+
+98
+00:07:12,260 --> 00:07:18,010
+So docker compose yml, then docker compose test.
+
+99
+00:07:18,290 --> 00:07:26,970
+If we did this with an up at the end and a -d, and then I went and inspected that same drupal,
+
+100
+00:07:27,050 --> 00:07:30,060
+you'll notice that there's no bind mounts.
+
+101
+00:07:30,060 --> 00:07:34,250
+They're completely missing because in the test file, we didn't specify those.
+
+102
+00:07:34,250 --> 00:07:38,270
+We didn't actually need Drupal to save information because it was going to be thrown away at the end
+
+103
+00:07:38,270 --> 00:07:39,760
+of our CI run.
+
+104
+00:07:39,980 --> 00:07:42,710
+And then third, we have the production config.
+
+105
+00:07:42,710 --> 00:07:44,980
+The production config is going to be a little bit different.
+
+106
+00:07:45,200 --> 00:07:50,450
+I'm going to hit the Up Arrow, and then here I'm going to do the prod. Instead of an up command, what I want to do
+
+107
+00:07:50,450 --> 00:07:53,120
+here is a config.
+
+108
+00:07:53,290 --> 00:07:58,640
+If you just look at the help real fast for the config, it has only two options and neither one of
+
+109
+00:07:58,640 --> 00:08:00,880
+those are really relevant in this situation.
+
+110
+00:08:00,890 --> 00:08:05,990
+What we want to just do is just run config by itself. What it's going to actually do is look at both
+
+111
+00:08:05,990 --> 00:08:11,080
+files and push them together into a single Compose file equivalent.
+
+112
+00:08:11,090 --> 00:08:16,010
+So what we could do here is just run this command somewhere in our CI solution. Then have
+
+113
+00:08:16,010 --> 00:08:23,690
+it output to a file, maybe with you know, something like that. That output file would be the one we would
+
+114
+00:08:23,690 --> 00:08:28,220
+use officially in production to create or update our stack.
+
+115
+00:08:28,220 --> 00:08:31,490
+However, I want to throw in a little caveat here.
+
+116
+00:08:31,550 --> 00:08:34,130
+This is all relatively new stuff.
+
+117
+00:08:34,160 --> 00:08:37,340
+We know that Secrets and Swarm Stacks are relatively new.
+
+118
+00:08:37,340 --> 00:08:38,620
+They're only a couple of months old.
+
+119
+00:08:38,630 --> 00:08:39,920
+As of this recording.
+
+120
+00:08:40,040 --> 00:08:41,980
+So there's a couple of rough edges.
+
+121
+00:08:42,050 --> 00:08:48,850
+We just ran that config command, and you'll actually notice that the secrets weren't listed in there.
+
+122
+00:08:49,070 --> 00:08:50,490
+That's a bug currently.
+
+123
+00:08:50,510 --> 00:08:53,870
+I'm actually working with the Docker team to see if we can't squash that bug.
+
+124
+00:08:53,870 --> 00:08:57,760
+So by the time you read this, it may have already been fixed.
+
+125
+00:08:57,770 --> 00:09:01,490
+Make sure you inspect that output of the config line before you go
+
+126
+00:09:01,480 --> 00:09:02,680
+deploying in production.
+
+127
+00:09:02,810 --> 00:09:10,070
+Secondly, the Compose Extends option, which I did not discuss here, is another way to override these
+
+128
+00:09:10,070 --> 00:09:16,580
+Compose files where you actually use the override file and you actually define an extends section in
+
+129
+00:09:16,580 --> 00:09:17,150
+there.
+
+130
+00:09:17,180 --> 00:09:23,120
+It's a little bit more declarative, so it's easier to understand. I'll provide a link in the references
+
+131
+00:09:23,120 --> 00:09:28,970
+for this section. Just know that that Extends option doesn't yet work in Swarms stacks.
+
+132
+00:09:29,000 --> 00:09:33,770
+I didn't mention it here because it doesn't really give you the full app lifecycle that we were hoping
+
+133
+00:09:33,770 --> 00:09:37,360
+for, but I do expect them at some point to do something about that.
+
+134
+00:09:37,370 --> 00:09:42,860
+Like either add it into Swarm or create a better workflow. Because that's really the idea
+
+135
+00:09:42,860 --> 00:09:48,800
+we're trying to get to with all of these tools, is to have a complete and easy lifecycle from development
+
+136
+00:09:48,830 --> 00:09:53,850
+all the way through test, into production, with the same set of configurations, in the same set of images.
+
+137
+00:09:53,850 --> 00:09:58,220
+I hope this got you thinking about how you might make your apps this way, and how you might extend
+
+138
+00:09:58,220 --> 00:10:00,980
+your own Compose files for complex scenarios.
+
+139
+00:10:00,980 --> 00:10:06,140
+Because nothing puts a smile on my face faster with Docker than when I see someone run a one line command
+
+140
+00:10:06,140 --> 00:10:09,550
+to do something that previously took multiple scripts to execute.
+

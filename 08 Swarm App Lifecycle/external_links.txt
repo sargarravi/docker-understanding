@@ -1,0 +1,6 @@
+- b'Healthcheck-in-Compose-files-Docker-Docs-'
+- b'https://docs.docker.com/compose/compose-file/#healthcheck'
+- b'Service-Update-command-Docker-Docs-'
+- b'https://docs.docker.com/engine/reference/commandline/service_update/'
+- b'Using-Compose-Files-In-Production-Docker-Docs-'
+- b'https://docs.docker.com/compose/production/'

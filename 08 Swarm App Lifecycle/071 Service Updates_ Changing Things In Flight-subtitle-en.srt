@@ -1,0 +1,472 @@
+1
+00:00:04,210 --> 00:00:10,090
+Service updates. You've probably assumed all along that there's some way to update your services even
+
+2
+00:00:10,090 --> 00:00:12,080
+though we haven't been focusing on that yet.
+
+3
+00:00:12,130 --> 00:00:19,090
+Let's talk about it because updates has a whole lot of stuff going on under the covers. Swarm's
+
+4
+00:00:19,260 --> 00:00:26,140
+update functionality is centered around a rolling update pattern for your replicas. Which means if you
+
+5
+00:00:26,140 --> 00:00:31,810
+have a service with more than one replica, and hopefully you do, it's going to roll through them by default,
+
+6
+00:00:32,080 --> 00:00:37,480
+one at a time, updating each container by replacing it with the new settings that you're putting in the
+
+7
+00:00:37,480 --> 00:00:38,480
+update command.
+
+8
+00:00:39,460 --> 00:00:44,590
+A lot of people will say that orchestrators prevent downtime in updates, but I'm not going to say that
+
+9
+00:00:44,590 --> 00:00:45,980
+this prevents downtime.
+
+10
+00:00:46,000 --> 00:00:53,320
+I'm going to say it limits downtime. Because preventing downtime in any system is the job of testing.
+
+11
+00:00:53,380 --> 00:01:00,010
+You really need to start testing how you do your updates and determining, does it impact my users?
+
+12
+00:01:00,010 --> 00:01:05,260
+Does updating a database impact my web application? It probably does.
+
+13
+00:01:05,260 --> 00:01:10,510
+Each application that you have a service for is going to update and impact the other things around it
+
+14
+00:01:10,510 --> 00:01:11,450
+differently.
+
+15
+00:01:11,500 --> 00:01:13,000
+That's not the job of an orchestrator.
+
+16
+00:01:13,040 --> 00:01:13,330
+An
+
+17
+00:01:13,340 --> 00:01:19,930
+orchestrator can't determine that this one is a database protocol, and this one is a REST application protocol
+
+18
+00:01:19,930 --> 00:01:20,890
+that's easy.
+
+19
+00:01:20,890 --> 00:01:24,550
+So those are going to be different, complicated things that you need to deal with.
+
+20
+00:01:24,700 --> 00:01:30,820
+In the case of service updates, if it's just a REST API or a web frontend that's not doing anything
+
+21
+00:01:30,820 --> 00:01:36,700
+fancy like web sockets or long polling, if it's something very simple like that or a static website,
+
+22
+00:01:37,060 --> 00:01:40,720
+you'll probably have an easy update and it won't be a problem.
+
+23
+00:01:40,780 --> 00:01:47,070
+But other services like databases or persistent storage or anything that requires a persistent connection...
+
+24
+00:01:47,230 --> 00:01:50,430
+those are always going to be a challenge no matter what you're trying to update.
+
+25
+00:01:50,440 --> 00:01:53,180
+So test early and test often.
+
+26
+00:01:53,380 --> 00:01:58,450
+Like I said before, this will definitely replace containers in most updates. Unless you're updating
+
+27
+00:01:58,450 --> 00:02:01,910
+a label or some other metadata with the service,
+
+28
+00:02:02,050 --> 00:02:06,560
+it's going to roll through and change out each container with a totally new one.
+
+29
+00:02:06,580 --> 00:02:10,500
+Just be prepared for that. It has many options. In fact,
+
+30
+00:02:10,510 --> 00:02:16,630
+the last I counted, there was at least 77 options for the update command. But just about everything you
+
+31
+00:02:16,630 --> 00:02:18,400
+want to do can be tweaked.
+
+32
+00:02:18,400 --> 00:02:24,940
+A lot of the options in the update command are actually create options that just have a -rm
+
+33
+00:02:24,940 --> 00:02:31,660
+and a -add on the end of them. Because if it's an option that can be used for multiple values,
+
+34
+00:02:31,660 --> 00:02:37,210
+let's say a port to publish or an environment variable, those you can use many of them.
+
+35
+00:02:37,240 --> 00:02:37,770
+Right?
+
+36
+00:02:37,840 --> 00:02:42,860
+So, you need to be able to tell the update command which ones you're adding and which ones you're removing.
+
+37
+00:02:42,880 --> 00:02:44,620
+We'll see those in a minute.
+
+38
+00:02:44,620 --> 00:02:47,840
+This also includes rollback and health check options.
+
+39
+00:02:47,920 --> 00:02:53,320
+You should look at the options for those and see if their default values aren't ideal for your application
+
+40
+00:02:53,320 --> 00:02:58,370
+and test different settings to see if it makes an update easier for you and your system.
+
+41
+00:02:59,300 --> 00:03:04,260
+You also will see that we have scale and rollback options in here that are their own commands now.
+
+42
+00:03:04,280 --> 00:03:10,010
+They used to be options that you had to specify with the --rollback or --scale, but so many
+
+43
+00:03:10,010 --> 00:03:15,410
+people have been using those so frequently that Docker is now making them sort of first class citizens
+
+44
+00:03:15,410 --> 00:03:16,420
+in the command line.
+
+45
+00:03:16,640 --> 00:03:19,020
+They might be adding more of those in the future.
+
+46
+00:03:20,600 --> 00:03:27,920
+Lastly, before we get to some examples, if you're doing stacks, a stack deploy to the same stack is
+
+47
+00:03:27,920 --> 00:03:28,820
+an update.
+
+48
+00:03:28,850 --> 00:03:32,540
+In fact, there is no separate option for stack updates.
+
+49
+00:03:32,540 --> 00:03:35,850
+You just do a stack deploy with the same file that's been edited.
+
+50
+00:03:35,870 --> 00:03:40,520
+Then, it will work with the service commands and the networks, and every other thing it does. It will
+
+51
+00:03:40,520 --> 00:03:44,760
+work with them to make sure if any changes are necessary, that they get applied.
+
+52
+00:03:44,990 --> 00:03:47,940
+Let's look at some quick examples and then we'll get to the command line.
+
+53
+00:03:48,910 --> 00:03:54,310
+This one is probably the most common example that you'll be using, which is to change the image of a
+
+54
+00:03:54,310 --> 00:03:55,000
+service.
+
+55
+00:03:55,150 --> 00:03:59,260
+Every time you update your app and you build a new image, you're going to have to do a service update
+
+56
+00:03:59,260 --> 00:04:03,190
+command, with the image name, and then the service name.
+
+57
+00:04:03,190 --> 00:04:07,750
+So in this case, maybe I had my application with a tag of 1.2.0.
+
+58
+00:04:07,770 --> 00:04:13,140
+And in this case I'm now applying a 1.2.1 image, and the service will determine,
+
+59
+00:04:13,180 --> 00:04:16,180
+ah yes, that's a different image than I have running in my service,
+
+60
+00:04:16,210 --> 00:04:22,400
+and we'll go and update them. On this next one, we're showing how you can do multiple things at once inside
+
+61
+00:04:22,400 --> 00:04:23,900
+a single update command.
+
+62
+00:04:23,990 --> 00:04:30,070
+You can add an environment variable with the env-add, and then you can remove a port with the publish
+
+63
+00:04:30,070 --> 00:04:31,240
+-rm.
+
+64
+00:04:31,250 --> 00:04:36,650
+We could also be adding and removing environment variables and publish ports in the same update command
+
+65
+00:04:36,920 --> 00:04:41,840
+as much as we want. On this last one, this is showing how we can use these new scale and rollback
+
+66
+00:04:41,840 --> 00:04:47,300
+commands on multiple services at the same time. Which is one of the advantages of using them over the
+
+67
+00:04:47,300 --> 00:04:51,170
+update command is that they can apply to multiple services.
+
+68
+00:04:51,170 --> 00:04:56,360
+In this case, I'm actually going to be changing the number of replicas of the web and the API services
+
+69
+00:04:56,360 --> 00:04:57,950
+at the same time.
+
+70
+00:04:58,010 --> 00:05:03,060
+Like I said a while ago, in the Swarm updates, you don't have a different deploy command.
+
+71
+00:05:03,140 --> 00:05:08,930
+It's just the same docker stack deploy, with the file that you've edited, and it's job is to work with
+
+72
+00:05:09,020 --> 00:05:12,590
+all of the other parts of the API to determine if there's any changes needed,
+
+73
+00:05:12,650 --> 00:05:16,830
+and then roll those out with a service update.
+
+74
+00:05:16,830 --> 00:05:21,780
+All right. Let's start by actually creating a service so that we can manipulate it with some update commands.
+
+75
+00:05:22,470 --> 00:05:36,200
+docker service create -p 8088 80 name web, and we'll use Nginx, and we're going to specify a version like
+
+76
+00:05:36,200 --> 00:05:41,220
+we always should in production.
+
+77
+00:05:41,250 --> 00:05:49,140
+It's nice, now that we actually have in the last half of 2017, the detach option with our service create
+
+78
+00:05:49,140 --> 00:05:53,450
+and update commands, we can actually see this happen synchronously in real time.
+
+79
+00:05:53,460 --> 00:05:59,490
+So this will be good for update commands to see how updates actually roll out via the command line.
+
+80
+00:05:59,490 --> 00:06:04,800
+All right. Now, if we do a docker service ls, we see that our service is running and that it's got
+
+81
+00:06:04,800 --> 00:06:08,470
+1 of 1 replicas, so it's good to go.
+
+82
+00:06:08,470 --> 00:06:15,910
+Now let's scale our service up so we can have some more replicas to work with. docker service scale
+
+83
+00:06:16,840 --> 00:06:23,110
+Web=5. And you just saw that one of those was already running,
+
+84
+00:06:23,120 --> 00:06:27,770
+and the other 4 had to start. It went by pretty quickly on mine because I already had the image
+
+85
+00:06:27,770 --> 00:06:33,170
+downloaded, but yours may take a few minutes while they're in pending state as the image downloads on
+
+86
+00:06:33,170 --> 00:06:34,190
+the other nodes.
+
+87
+00:06:35,110 --> 00:06:35,380
+All right.
+
+88
+00:06:35,380 --> 00:06:40,400
+Let's do a rolling update by changing the image of that Nginx.
+
+89
+00:06:48,340 --> 00:06:50,510
+You'll see here that I've picked an older image.
+
+90
+00:06:50,520 --> 00:06:53,850
+Now, Docker doesn't care about what the image actually is.
+
+91
+00:06:53,850 --> 00:06:55,870
+It could be a completely different application
+
+92
+00:06:55,980 --> 00:07:00,710
+for all it cares. It just knows that in this service, I'm changing it to a different image.
+
+93
+00:07:02,190 --> 00:07:06,320
+Remember, by default, it's going to go through here one at a time.
+
+94
+00:07:06,330 --> 00:07:11,030
+It will first remove it, create a new one, and then when that one's good to go,
+
+95
+00:07:11,040 --> 00:07:18,010
+and it looks healthy, it'll start in the next one. In the next example, we're going to change the published
+
+96
+00:07:18,010 --> 00:07:18,740
+port.
+
+97
+00:07:18,820 --> 00:07:20,520
+But you can't change a port.
+
+98
+00:07:20,530 --> 00:07:24,060
+You actually have to add and remove them at the same time.
+
+99
+00:07:24,070 --> 00:07:31,000
+So in this case, because we first published it with an 8088, we need to do a docker Service update
+
+100
+00:07:33,160 --> 00:07:41,770
+publish rm 8088. I don't need to specify the value. I just need to specify the key. Then
+
+101
+00:07:41,770 --> 00:07:53,170
+we're going to publish the new one, 9090. Then the value, which in this case is 80. You'll see that
+
+102
+00:07:53,170 --> 00:07:57,970
+it will do the same update process as before.
+
+103
+00:07:57,980 --> 00:08:04,850
+The last example I want to talk about is kind of a tip. Because you'll often have a challenge with
+
+104
+00:08:04,850 --> 00:08:10,010
+something called rebalancing. Or if you change the number of nodes or if you move a lot of things around,
+
+105
+00:08:10,610 --> 00:08:15,710
+if you have a lot of containers in your swarm, you may find that they're not really evened out. You've
+
+106
+00:08:15,710 --> 00:08:20,660
+got maybe some nodes that are pretty light on how many containers are running and other ones that have
+
+107
+00:08:20,660 --> 00:08:27,500
+a lot. If you have a lot of things changing, Swarm will not move things around to keep everything balanced
+
+108
+00:08:27,500 --> 00:08:30,140
+in terms of the number of resources used.
+
+109
+00:08:30,200 --> 00:08:38,090
+But, what you can do is you can force an update of a service even without changing anything in that service.
+
+110
+00:08:38,090 --> 00:08:45,770
+Then, it will reissue tasks, and in that case, it will pick the least used nodes, which is a form of rebalancing.
+
+111
+00:08:46,040 --> 00:08:52,640
+A lot of times in a smaller swarm when I move something big, or add a bunch of nodes, I suddenly have
+
+112
+00:08:52,640 --> 00:08:56,310
+a bunch of empty servers doing nothing and I need to get work on them.
+
+113
+00:08:56,330 --> 00:09:03,800
+So what I'll do is take one or two of my services, and I will do a docker service update --
+
+114
+00:09:03,810 --> 00:09:11,080
+force, and in this case it's going to roll through and completely replace the tasks.
+
+115
+00:09:11,080 --> 00:09:15,670
+Of course it will use the schedule's default of looking for nodes with the least number of containers
+
+116
+00:09:15,670 --> 00:09:17,830
+and the least number of resources used.
+
+117
+00:09:18,140 --> 00:09:24,720
+That's kind of a trick to get around an uneven amount of work on your nodes.
+
+118
+00:09:24,850 --> 00:09:28,180
+Remember to clean up by removing the service that we created in this lecture.
+

@@ -1,0 +1,6 @@
+- b'-Docker-Docs-Compose-file-build-options'
+- b'https://docs.docker.com/compose/compose-file/#build'
+- b'Docker-Compose-Release-Downloads-good-for-Linux-users-that-need-to-download-manually-'
+- b'https://github.com/docker/compose/releases'
+- b'docker-compose-download-for-Linux-via-GitHub-Win-Mac-already-have-it.'
+- b'https://github.com/docker/compose/releases'

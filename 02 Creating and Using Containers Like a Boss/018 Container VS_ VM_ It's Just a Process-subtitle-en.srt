@@ -1,0 +1,179 @@
+0
+00:04.890 --> 00:10.750
+If you go looking around the web for a definition of what a container is, you'll often see people
+
+1
+00:10.750 --> 00:13.840
+comparing containers to virtual machines.
+
+2
+00:14.290 --> 00:21.140
+True, there are some similarities, but there's so many things that just aren't the same.
+
+3
+00:21.160 --> 00:26.680
+I want us to back up and say let's not even compare them to virtual machines. Because really they're just
+
+4
+00:26.680 --> 00:30.580
+a process. They're a process running on your host operating system,
+
+5
+00:30.580 --> 00:38.800
+in our case Linux. Let's take a look because it's super easy to understand the concept that's really
+
+6
+00:38.800 --> 00:46.300
+just a restricted process inside our host operating system and nothing like a virtual machine.
+
+7
+00:46.300 --> 00:54.530
+Let's start up a Mongo database.
+
+8
+00:55.060 --> 00:58.230
+We're going to call it mongo. We're going to run it in the background.
+
+9
+00:58.660 --> 01:02.050
+And we're using the Mongo image.
+
+10
+01:02.440 --> 01:09.520
+All right. We can see that it's running and Docker also has something called docker top that will let
+
+11
+01:09.520 --> 01:13.750
+me list the processes that are running inside a specific container.
+
+12
+01:16.490 --> 01:20.410
+We'll see there that we have a single process called mongod.
+
+13
+01:20.810 --> 01:28.490
+You can see it's PID, which is its process ID. We can also do that from the host. Because this
+
+14
+01:28.490 --> 01:31.610
+is just a process running on our host operating system,
+
+15
+01:31.700 --> 01:39.270
+any host tool that I would use to look at processes is going to see this process.
+
+16
+01:39.800 --> 01:47.030
+We can use a process list, for example. I'm going to list all of them on the system. You'll actually
+
+17
+01:47.030 --> 01:54.140
+see in here, if I search, one of them is called mongod. You'll even notice that it's actually running under
+
+18
+01:54.470 --> 01:57.860
+a different process ID than the rest of the system.
+
+19
+01:57.920 --> 02:02.710
+And that's just because of the security layers that we'll talk about with the containers and how they're
+
+20
+02:02.720 --> 02:05.300
+a little different than regular processes running on the host.
+
+21
+02:05.360 --> 02:09.440
+We can clearly see here this is a process on the host.
+
+22
+02:09.440 --> 02:14.050
+It's not hiding inside a virtual machine that we can't get access to.
+
+23
+02:14.180 --> 02:15.640
+It's right there in front of us.
+
+24
+02:17.270 --> 02:18.560
+If I stop this container,
+
+25
+02:24.810 --> 02:27.680
+you can do a docker ps. You'll see it's not running.
+
+26
+02:27.680 --> 02:30.300
+You can do a docker top mongo.
+
+27
+02:30.480 --> 02:33.990
+It's not actually going to give us anything because the container's not running.
+
+28
+02:34.170 --> 02:39.120
+And if we do a ps aux,
+
+29
+02:41.780 --> 02:43.300
+and we search for mongo again,
+
+30
+02:46.150 --> 02:55.500
+we're not going to see anything highlighted in that list. I'm actually searching inside my terminal.
+
+31
+02:55.500 --> 02:57.850
+An easier way to do this would be to do
+
+32
+02:58.740 --> 03:10.930
+ps aux and then use grep, which is a filtering tool that will look through the output, and we can tell it
+
+33
+03:10.930 --> 03:12.320
+to look for the word mongo.
+
+34
+03:12.790 --> 03:19.300
+The only thing it's actually going to find is the command that I just run to search for the word
+
+35
+03:19.300 --> 03:20.020
+mongo.
+
+36
+03:20.050 --> 03:25.320
+It's listing that. We would expect to see another command here
+
+37
+03:25.390 --> 03:28.800
+right below it, another output of a process,
+
+38
+03:29.170 --> 03:38.020
+if it was indeed running. We can start back up again, docker start mongo, because that container
+
+39
+03:38.260 --> 03:40.800
+was still there, just not running in the background,
+
+40
+03:40.800 --> 03:46.080
+kind of like a stopped process. We can do a docker ps again and it's back to running again.
+
+41
+03:46.360 --> 03:53.670
+We can do a docker top mongo again and see that there is one process again running inside the container.
+
+42
+03:53.740 --> 03:55.890
+It's just been started new.
+
+43
+03:56.440 --> 03:58.910
+It's only been up for six seconds as we can see here.
+
+44
+03:59.320 --> 04:09.190
+If we do a ps aux grep mongo, you'll see that I'm now actually seeing the mongod process.

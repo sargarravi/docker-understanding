@@ -1,0 +1,496 @@
+1
+00:00:04,980 --> 00:00:12,210
+This lecture is going to be all about adding image building into your Compose files so that it automatically
+
+2
+00:00:12,420 --> 00:00:15,660
+ensures that you have an image ready to go
+
+3
+00:00:15,870 --> 00:00:21,570
+when you're running compose commands. Like other lecturers in this section, you really need to have a good
+
+4
+00:00:21,570 --> 00:00:29,010
+sense of Docker container and Docker image command line functionality.
+
+5
+00:00:29,010 --> 00:00:34,980
+Another thing that Compose can do for you is build your images at runtime. It'll actually look in the
+
+6
+00:00:34,980 --> 00:00:41,250
+cache for images, and if it has build options in it, it will build that image when you use the up command.
+
+7
+00:00:42,120 --> 00:00:44,820
+It won't build the image every single time.
+
+8
+00:00:44,850 --> 00:00:47,670
+It'll only build it if it doesn't find it.
+
+9
+00:00:47,670 --> 00:00:51,840
+You'll need to either use the docker compose build to rebuild your images if you change them,
+
+10
+00:00:51,870 --> 00:00:55,060
+or you can use docker compose up --build.
+
+11
+00:00:55,200 --> 00:00:57,100
+We'll actually see that in a minute.
+
+12
+00:00:57,150 --> 00:01:02,700
+This is really great for when you're using Compose locally and you have images you want to build. Maybe
+
+13
+00:01:02,700 --> 00:01:06,840
+you don't want to use volume mount. You actually want to copy files in, or something, into the image.
+
+14
+00:01:07,290 --> 00:01:12,240
+Your build command might be fairly complex. It might have some custom environment variables or build
+
+15
+00:01:12,240 --> 00:01:13,290
+arguments.
+
+16
+00:01:13,410 --> 00:01:17,550
+By the way, build arguments, we haven't talked about. That's really just environment variables that
+
+17
+00:01:17,550 --> 00:01:24,620
+are available only during builds. You can look at the docs. docker.com documentation on Dockerfiles
+
+18
+00:01:24,620 --> 00:01:27,940
+and it'll talk about build arguments in depth.
+
+19
+00:01:28,020 --> 00:01:33,970
+Here, we're going to look at an example of how you might use that locally.
+
+20
+00:01:33,990 --> 00:01:40,520
+I'm in the compose sample 3 directory. You can see here I have a pre-built Docker Compose file
+
+21
+00:01:40,520 --> 00:01:41,450
+here.
+
+22
+00:01:41,480 --> 00:01:48,860
+I have actually a Dockerfile called nginx.Dockerfile. Then a similar nginx config to what
+
+23
+00:01:48,860 --> 00:01:54,910
+we had earlier, where we're actually using Nginx as a reverse proxy for our website.
+
+24
+00:01:54,930 --> 00:01:59,880
+If we go into the Docker Compose, you can see how I've architected this solution.
+
+25
+00:01:59,880 --> 00:02:02,000
+I've actually got two services.
+
+26
+00:02:02,010 --> 00:02:07,320
+One is the Nginx proxy like before, and one is the Apache web server like before.
+
+27
+00:02:07,440 --> 00:02:09,040
+But a couple of things are different.
+
+28
+00:02:09,060 --> 00:02:14,730
+Instead of me specifying the default image for Nginx, I'm actually building a custom one.
+
+29
+00:02:14,850 --> 00:02:19,720
+You can see here that I've actually given it some arguments where I'm telling it that the Dockerfile
+
+30
+00:02:19,800 --> 00:02:23,070
+it needs to use is a specially named Dockerfile.
+
+31
+00:02:23,100 --> 00:02:29,640
+I want it to build that Dockerfile in this current directory that it's in. I want it to name that image
+
+32
+00:02:29,640 --> 00:02:31,530
+when it builds it, nginx
+
+33
+00:02:31,530 --> 00:02:36,780
+-custom. It's going to store that in my local cache. Then down there at the bottom, we have a web
+
+34
+00:02:36,780 --> 00:02:38,250
+server running Apache.
+
+35
+00:02:38,270 --> 00:02:45,300
+What I've done here is I've actually mounted some HTML source files that I have into the Apache server.
+
+36
+00:02:45,510 --> 00:02:48,360
+So the scenario here is maybe I'm a web developer,
+
+37
+00:02:48,360 --> 00:02:50,940
+I have a static website here,
+
+38
+00:02:51,110 --> 00:02:54,920
+underneath this HTML directory that I don't really need to worry about too much.
+
+39
+00:02:54,990 --> 00:02:57,490
+It's just using a little bootstrap template.
+
+40
+00:02:57,660 --> 00:03:03,690
+I'm going to be editing on that locally, in my editor here, but I know when I go to production with this,
+
+41
+00:03:03,780 --> 00:03:06,960
+it's actually going to be sitting behind an Nginx proxy.
+
+42
+00:03:06,960 --> 00:03:12,210
+So, I want to emulate that production environment as much as possible, locally, just to make sure that
+
+43
+00:03:12,210 --> 00:03:15,480
+I've weeded out any bugs or any problems. In this case,
+
+44
+00:03:15,480 --> 00:03:19,920
+I want this Nginx, and I know that this Nginx config is the one they're going to use on the
+
+45
+00:03:19,920 --> 00:03:23,210
+production server, so that I'm just going to use that here.
+
+46
+00:03:23,290 --> 00:03:25,740
+This is actually the same Nginx config as before.
+
+47
+00:03:25,920 --> 00:03:32,520
+When I run the docker compose up command, it's going to first check for the name of this image in
+
+48
+00:03:32,520 --> 00:03:39,040
+my cache. If it doesn't find it, then it's going to use these build commands here to look up the Dockerfile
+
+49
+00:03:39,060 --> 00:03:44,100
+and then build my image. You can see from this Dockerfile, it's pretty simple actually.
+
+50
+00:03:44,280 --> 00:03:49,930
+It's just going to use a specific version of Nginx and then it's just going to copy a file in.
+
+51
+00:03:50,070 --> 00:03:55,260
+It's going to get the rest of its information from that Nginx config from Docker Hub and then
+
+52
+00:03:55,290 --> 00:03:57,620
+it's going to copy in my Nginx config.
+
+53
+00:03:57,690 --> 00:04:03,720
+If you remember in a previous example, we actually did a bind mount to get this Nginx config in
+
+54
+00:04:03,720 --> 00:04:05,040
+through our compose file.
+
+55
+00:04:05,280 --> 00:04:07,800
+In this case, we're just wanting it to build the whole image.
+
+56
+00:04:07,800 --> 00:04:12,360
+We don't really need to be changing this proxy config, so I don't really need to mount it so that I can
+
+57
+00:04:12,360 --> 00:04:13,570
+change it all the time.
+
+58
+00:04:13,650 --> 00:04:18,540
+I just want it to run. Right? So, I'm going to build it. Let it sit in the image cache. Once it's built the
+
+59
+00:04:18,540 --> 00:04:21,200
+first time, it won't need to be really rebuilt very often.
+
+60
+00:04:21,210 --> 00:04:22,450
+So I'm just going to leave there.
+
+61
+00:04:22,560 --> 00:04:27,060
+Then when I'm editing and developing on my website, I'm going to have this configuration so I can
+
+62
+00:04:27,060 --> 00:04:31,770
+do live edits. If we go back over here and I do a docker compose up,
+
+63
+00:04:35,020 --> 00:04:36,460
+let's step through what happened.
+
+64
+00:04:36,460 --> 00:04:37,870
+It first created the network.
+
+65
+00:04:37,870 --> 00:04:39,700
+That's a normal thing. It does that.
+
+66
+00:04:39,700 --> 00:04:45,430
+Then it actually is seen that the proxy service doesn't have the image it's looking for. So it's
+
+67
+00:04:45,430 --> 00:04:46,470
+going to build that.
+
+68
+00:04:46,480 --> 00:04:50,740
+So it's pulling out the Dockerfile and building it just like it would do a normal docker build command.
+
+69
+00:04:51,240 --> 00:04:55,990
+Then it's giving me this helpful tip to let me know that it built the image this time because it
+
+70
+00:04:55,990 --> 00:04:56,700
+couldn't find it.
+
+71
+00:04:56,710 --> 00:05:01,570
+But in the future, if I need to change that image, I'm going to need to use the docker compose build
+
+72
+00:05:01,780 --> 00:05:06,320
+or the docker compose up --build commands. Now that it's got the image,
+
+73
+00:05:06,340 --> 00:05:11,860
+it can actually create the containers. Then it's starting my web server and my proxy server.
+
+74
+00:05:11,860 --> 00:05:20,100
+If everything worked correctly, I should be able to get a localhost. It pulled up my default template
+
+75
+00:05:20,100 --> 00:05:22,810
+here, which is a bootstrap template actually.
+
+76
+00:05:23,250 --> 00:05:24,750
+It looks like everything works.
+
+77
+00:05:24,770 --> 00:05:29,760
+Actually, I go over here and I can see all my logs coming up and obviously there's a lots of assets. There's
+
+78
+00:05:29,790 --> 00:05:34,230
+a log entry for each one and it's going to go through the proxy and through the web server.
+
+79
+00:05:34,470 --> 00:05:40,980
+Because I've bind mounted that directory for editing, I can actually go back into my editor. As
+
+80
+00:05:40,980 --> 00:05:47,190
+a web developer, I could go in and maybe, you know, edit something on the website. Maybe I'll go into the start
+
+81
+00:05:47,190 --> 00:05:54,610
+bootstrap title, which should be this little title up top here.
+
+82
+00:05:54,710 --> 00:06:01,720
+I'll just save that file. Then if I refresh, my website's updated because of that bind mount again.
+
+83
+00:06:01,740 --> 00:06:07,320
+This is a great example of a very common developer setup where you need to build some custom images
+
+84
+00:06:07,320 --> 00:06:08,400
+locally.
+
+85
+00:06:08,400 --> 00:06:14,410
+You also need to mount some files into your application so that you can edit them at runtime.
+
+86
+00:06:14,430 --> 00:06:18,960
+And, of course, if this needed to be a database-backed application, I would just add a third service down
+
+87
+00:06:18,960 --> 00:06:23,250
+here for the database server. Then, I'll go back and do my cleanup.
+
+88
+00:06:27,150 --> 00:06:32,990
+You'll notice that, by default, it won't actually delete that image.
+
+89
+00:06:34,700 --> 00:06:40,380
+You'll notice up at the top here, we have the nginx custom that it built. But there is a docker compose
+
+90
+00:06:40,460 --> 00:06:41,330
+down command.
+
+91
+00:06:44,990 --> 00:06:51,340
+If you look at the help, you see that there's an rmi option that actually removes images it may have
+
+92
+00:06:51,340 --> 00:06:53,420
+built or it may be using.
+
+93
+00:06:53,440 --> 00:06:59,680
+There's this actual option here says, 'remove only images that don't have a custom tag set by the image
+
+94
+00:06:59,680 --> 00:07:00,850
+field.'
+
+95
+00:07:00,850 --> 00:07:05,830
+One thing I could do here if I wanted to make this a little more automated, is I could just take out
+
+96
+00:07:05,920 --> 00:07:10,900
+that image command right there. Let's just remove that. Then I want to clean up real quick. I'm just
+
+97
+00:07:10,900 --> 00:07:22,170
+going to remove my image. docker image rm custom. As you can see, it's gone there.
+
+98
+00:07:22,190 --> 00:07:24,900
+All right. I want to do docker compose up again.
+
+99
+00:07:27,540 --> 00:07:31,600
+And this time we'll do a -d.
+
+100
+00:07:31,610 --> 00:07:38,480
+You'll notice throughout these examples of Compose, that it actually names containers, volumes, and
+
+101
+00:07:38,660 --> 00:07:42,620
+networks with the name of the directory as the project name.
+
+102
+00:07:42,620 --> 00:07:46,930
+That's actually something in Compose where, to prevent name conflicts,
+
+103
+00:07:46,940 --> 00:07:53,210
+it will actually always add the directory name on the beginning of all of the assets so that they don't
+
+104
+00:07:53,210 --> 00:07:54,230
+conflict with other ones.
+
+105
+00:07:54,230 --> 00:07:57,130
+You can actually change that proxy name through the command line.
+
+106
+00:07:57,170 --> 00:07:59,190
+If you go check out the Compose documentation.
+
+107
+00:07:59,240 --> 00:08:07,010
+But the point I wanted to make here is if I do a docker image ls here, you'll see that it actually
+
+108
+00:08:07,010 --> 00:08:08,300
+named my image for me.
+
+109
+00:08:08,300 --> 00:08:11,880
+So I don't technically have to use that image option.
+
+110
+00:08:12,780 --> 00:08:17,820
+But if I wanted a specific name for it so that I could maybe identify it later, I could.
+
+111
+00:08:17,820 --> 00:08:22,020
+The reason I was bringing that up is this is actually a little bit cleaner because what I can do
+
+112
+00:08:22,020 --> 00:08:31,050
+then is docker compose down, and remember in the help, it said I could use an rmi type. So when I clean
+
+113
+00:08:31,050 --> 00:08:36,390
+it up, and I like to keep my Docker environment clean, I can do am rmi local.
+
+114
+00:08:36,420 --> 00:08:39,600
+What that will do is actually delete those images as well.
+
+115
+00:08:40,980 --> 00:08:43,340
+You'll see here down at the bottom that it deleted the image.
+
+116
+00:08:43,740 --> 00:08:48,690
+Not something that I do all the time but maybe if I have a big project with lots of custom images
+
+117
+00:08:48,690 --> 00:08:53,130
+and I don't want it to blow up my system when I'm not developing on that project, I'll use the rmi
+
+118
+00:08:53,130 --> 00:08:57,250
+local, and it'll always keep track of the custom images it had to create.
+
+119
+00:08:57,420 --> 00:09:02,220
+Of course, here if I use the all, it will actually delete every image that was used in this project
+
+120
+00:09:02,700 --> 00:09:08,040
+which you may not want to do because in this case, it might delete the httpd Apache web server, and you
+
+121
+00:09:08,040 --> 00:09:11,820
+might want that image to stay around for a while. OK.
+
+122
+00:09:11,860 --> 00:09:13,960
+You learned a lot about Compose in this section.
+
+123
+00:09:13,990 --> 00:09:17,120
+We're going to be using Compose throughout the rest of this course.
+
+124
+00:09:17,170 --> 00:09:19,870
+We'll keep building on these skills as we go.
+

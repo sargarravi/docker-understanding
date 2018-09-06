@@ -1,0 +1,548 @@
+1
+00:00:04,580 --> 00:00:10,350
+Requirements for this lecture include knowing the basics about what a container and an image are in
+
+2
+00:00:10,370 --> 00:00:14,030
+Docker and understanding the layers,
+
+3
+00:00:14,060 --> 00:00:22,070
+or at least the basics of layers. Know a few things about Docker Hub.
+
+4
+00:00:22,140 --> 00:00:29,620
+This lecture is going to be all about image tags and how to upload them to Docker Hub.
+
+5
+00:00:29,850 --> 00:00:36,150
+There's actually a lot to tags because they're not as intuitive as you might think when you first
+
+6
+00:00:36,150 --> 00:00:42,840
+start using them. They need to actually be in a specific format in order to work with a registry,
+
+7
+00:00:42,870 --> 00:00:48,580
+specifically with Docker Hub. Then I'll talk to you about the relationship between the tags that are
+
+8
+00:00:48,580 --> 00:00:52,260
+assigned to your images and the IDs of those images.
+
+9
+00:00:52,300 --> 00:00:53,360
+So let's get started.
+
+10
+00:00:56,170 --> 00:01:09,130
+First let's talk about tagging. docker image tag --help. Images don't technically have a name even
+
+11
+00:01:09,130 --> 00:01:12,720
+though we kind of refer to them like that when we're talking casually.
+
+12
+00:01:12,820 --> 00:01:14,220
+If we do a docker image ls,
+
+13
+00:01:14,220 --> 00:01:18,580
+you notice that there's no name column.
+
+14
+00:01:18,800 --> 00:01:22,280
+Besides the image ID, which none of us are going to remember those right?
+
+15
+00:01:22,280 --> 00:01:26,870
+We have to refer to them by three different pieces of information.
+
+16
+00:01:26,910 --> 00:01:33,170
+On this screen for the image ls command, we actually only see two of them. Over on the left,
+
+17
+00:01:33,170 --> 00:01:35,810
+we're seeing the repository,
+
+18
+00:01:35,810 --> 00:01:43,370
+then we're seeing the tag. The repository is actually made up of either the user name or the
+
+19
+00:01:43,370 --> 00:01:47,180
+organization slash the repository.
+
+20
+00:01:47,180 --> 00:01:51,030
+Here we're only dealing with official repository images
+
+21
+00:01:51,500 --> 00:01:55,110
+so we're only going to see the actual repository name.
+
+22
+00:01:55,130 --> 00:02:01,250
+We mentioned earlier that the special images that are considered official are the only ones that
+
+23
+00:02:01,250 --> 00:02:07,310
+get the right to just be called their name of the repository, not the actual name of the organization
+
+24
+00:02:07,610 --> 00:02:08,790
+slash repository.
+
+25
+00:02:08,810 --> 00:02:16,370
+But if we go over to Docker Hub, and I just do a search on mysql, we'll find that there's actually an
+
+26
+00:02:16,370 --> 00:02:22,370
+organization, not only just the official mysql, which is just referred to as mysql, but there is
+
+27
+00:02:22,370 --> 00:02:28,790
+the SQL organization with a mysql-server, which seems to be pretty popular as, well, it's got
+
+28
+00:02:28,790 --> 00:02:34,850
+over a million downloads. It looks like what it is here is this is actually the same MySQL server
+
+29
+00:02:34,880 --> 00:02:39,250
+but it's actually created by the MySQL team at Oracle.
+
+30
+00:02:39,260 --> 00:02:41,960
+If I actually wanted to download it, you'll notice here on the right,
+
+31
+00:02:42,050 --> 00:02:49,190
+I have to do a docker pull mysql/mysql-server. I can actually click the copy button and
+
+32
+00:02:49,190 --> 00:02:59,420
+I copy this in. It will actually download this unique organizational-based image and if I do a docker
+
+33
+00:02:59,430 --> 00:03:06,520
+image ls again, you'll notice that the repository name includes the organization name.
+
+34
+00:03:06,590 --> 00:03:12,900
+On my account on Docker Hub, I'm known as bretfisher. You can see it from the top right.
+
+35
+00:03:12,920 --> 00:03:18,210
+So if I were to look at my dashboard and look at my images that I have that are public,
+
+36
+00:03:18,530 --> 00:03:21,380
+for example, let's look at the nodemongoapp.
+
+37
+00:03:21,800 --> 00:03:23,450
+If you were to download this, I would need to do
+
+38
+00:03:23,460 --> 00:03:26,520
+docker pull bretfisher/nodemongoapp.
+
+39
+00:03:26,900 --> 00:03:31,610
+Now that we understand how the repository is named what does the tag for?
+
+40
+00:03:31,610 --> 00:03:38,930
+The tag is not quite a version and it's not quite a branch, but it is a lot like Git tags.
+
+41
+00:03:38,930 --> 00:03:41,080
+So it's kind of a little bit of both.
+
+42
+00:03:41,150 --> 00:03:48,150
+It's really just a pointer to a specific image commit, and really could be anything, into that repository.
+
+43
+00:03:48,150 --> 00:03:57,080
+If we went back to Docker Hub for a minute, and we went up to mysql official image, you'll see on the
+
+44
+00:03:57,080 --> 00:04:05,260
+front page it has these different tags. What they're trying to say here is that the 8.0.0 and the
+
+45
+00:04:05,280 --> 00:04:12,260
+8.0 and the 8 are all tags for the same image ID.
+
+46
+00:04:12,400 --> 00:04:19,420
+If I scroll up here and look at the tags button, I get a full detailed list of all the various tags
+
+47
+00:04:20,140 --> 00:04:22,520
+that they've given to the mysql.
+
+48
+00:04:22,600 --> 00:04:27,580
+So let's go to Nginx, which is what we've been working on a lot.
+
+49
+00:04:27,700 --> 00:04:34,860
+We'll see in here that it isn't just numbers but it's actually names as well.
+
+50
+00:04:35,190 --> 00:04:40,620
+It's important to point out that these are actually all the exact same image and Docker's smart enough
+
+51
+00:04:40,620 --> 00:04:47,400
+to know that. I go to my command line and I see that I already have the nginx latest downloaded.
+
+52
+00:04:48,150 --> 00:04:54,410
+If I looked at the web page, I see the latest tag right here but it's also called mainline.
+
+53
+00:04:54,420 --> 00:05:05,410
+So what if I did a docker pull nginx:mainline? What this is telling us is it actually already
+
+54
+00:05:05,410 --> 00:05:12,530
+knew that based on the image ID, this image is already in my cache. Now if I do a docker image
+
+55
+00:05:12,860 --> 00:05:20,290
+ls again, I'll see two different nginx. You'll notice that they have the exact same image ID because
+
+56
+00:05:20,290 --> 00:05:25,390
+they're not really stored twice in the cache and, again, this goes back to a lot of the savings. These
+
+57
+00:05:25,390 --> 00:05:33,520
+tags are just labels that point to an actual image ID and we can have many of them all point to the same
+
+58
+00:05:33,520 --> 00:05:34,250
+one.
+
+59
+00:05:34,690 --> 00:05:36,730
+So how do I make new labels?
+
+60
+00:05:36,730 --> 00:05:44,380
+Well I could make my own Dockerfile and create my own custom image, but we can also re-tag existing Docker
+
+61
+00:05:44,380 --> 00:05:51,200
+images so I can just do a docker image tag nginx
+
+62
+00:05:51,380 --> 00:05:59,500
+bretfisher/nginx. The format of this command is the image that I'm going to give a new tag
+
+63
+00:05:59,500 --> 00:06:03,680
+to goes first, and then the new tag that I want to give it.
+
+64
+00:06:05,490 --> 00:06:13,210
+If I did a docker image tag --help again, just to refresh your memory, it shows the SOURCE_IMAGE and an
+
+65
+00:06:13,210 --> 00:06:14,330
+optional tag
+
+66
+00:06:14,620 --> 00:06:18,730
+and then the NEW_IMAGE an optional tag.
+
+67
+00:06:18,730 --> 00:06:25,600
+So if you don't specify the tag, it'll always default to latest. Latest doesn't actually always mean
+
+68
+00:06:25,600 --> 00:06:29,700
+latest because I technically could take some old software and tag it latest.
+
+69
+00:06:29,720 --> 00:06:33,430
+There's nothing special about it but it is just kind of the default. Really,
+
+70
+00:06:33,730 --> 00:06:36,920
+I wish they would just call it default and not latest.
+
+71
+00:06:36,940 --> 00:06:38,320
+So it is a little confusing,
+
+72
+00:06:38,440 --> 00:06:44,140
+but generally on Docker Hub, especially when you're using official images, you can trust that the latest
+
+73
+00:06:44,170 --> 00:06:50,120
+is generally the latest stable version of the software that you want to use.
+
+74
+00:06:50,170 --> 00:06:53,080
+So let's do a docker image ls
+
+75
+00:06:53,080 --> 00:06:57,660
+again. Notice what's happened.
+
+76
+00:06:58,620 --> 00:07:04,370
+I have added a new tag to an existing image that I didn't make.
+
+77
+00:07:04,440 --> 00:07:06,530
+It shows the same image ID
+
+78
+00:07:06,840 --> 00:07:14,050
+and now it's labeled with my user name and a new repo that doesn't exist yet on Docker Hub.
+
+79
+00:07:15,700 --> 00:07:18,640
+If we went and looked at my dashboard,
+
+80
+00:07:18,680 --> 00:07:23,220
+I don't have anything called bretfisher/nginx.
+
+81
+00:07:23,260 --> 00:07:33,890
+So what if I did a docker image push, similar to like a Git push, bretfisher/nginx?
+
+82
+00:07:37,450 --> 00:07:40,680
+denied: requested access to the resource is denied.
+
+83
+00:07:40,900 --> 00:07:47,950
+So it clearly tried to upload what I just created, it tried to upload that tag, but it gave me access
+
+84
+00:07:47,950 --> 00:07:48,850
+denied.
+
+85
+00:07:48,850 --> 00:07:51,520
+That's because I haven't actually logged in.
+
+86
+00:07:51,520 --> 00:07:59,220
+So if you look at the docker --help you'll see a login and logout command. We haven't used those yet.
+
+87
+00:07:59,440 --> 00:08:05,050
+So once you have your own free Docker Hub account, you can actually login from the command line docker login.
+
+88
+00:08:05,260 --> 00:08:07,580
+...
+
+89
+00:08:07,960 --> 00:08:15,160
+So what this actually did was there was this wrote to a file, that by default is in my profile under cat .docker/config.json,
+
+90
+00:08:16,030 --> 00:08:26,350
+and it actually stored an authentication key that would allow my local docker CLI to access
+
+91
+00:08:26,430 --> 00:08:27,710
+Docker Hub as me.
+
+92
+00:08:27,880 --> 00:08:32,740
+This is an important point that we'll learn about later on in production is that wherever you login
+
+93
+00:08:32,740 --> 00:08:38,920
+with the Docker CLI, by default, it's going to store this authentication key for your account in the
+
+94
+00:08:38,920 --> 00:08:40,560
+profile of that user.
+
+95
+00:08:40,570 --> 00:08:41,670
+So just be aware of that.
+
+96
+00:08:41,680 --> 00:08:47,770
+If you're using a machine that you don't trust, when you're done just type docker logout.
+
+97
+00:08:47,810 --> 00:08:53,180
+So now that we're logged in, I'm going to hit the up arrow to try to push that image again.
+
+98
+00:08:59,230 --> 00:08:59,550
+OK.
+
+99
+00:08:59,560 --> 00:09:01,300
+So it seems like it's done.
+
+100
+00:09:01,360 --> 00:09:06,480
+Let's go over to Docker Hub and hit refresh. There it is,
+
+101
+00:09:06,490 --> 00:09:11,890
+bretfisher/nginx. Again, I didn't actually have to create this from scratch to upload
+
+102
+00:09:11,890 --> 00:09:12,000
+it.
+
+103
+00:09:12,010 --> 00:09:18,580
+I just simply gave a new tag to an existing image and when I uploaded it, it automatically created a
+
+104
+00:09:18,580 --> 00:09:21,730
+new repo based on that tag.
+
+105
+00:09:22,030 --> 00:09:27,820
+Of course I could fill out all the information here, and you'll see that it defaulted to the latest
+
+106
+00:09:28,000 --> 00:09:36,520
+tag name because I didn't specify one. So I could actually go back and do the up arrow thing until I
+
+107
+00:09:36,520 --> 00:09:43,520
+get to my tag and I could actually give it a different tag.
+
+108
+00:09:44,170 --> 00:09:51,970
+We're going to add an additional tag to that same image and I'm going to call it testing. If we do a
+
+109
+00:09:51,970 --> 00:09:52,900
+docker image ls,
+
+110
+00:09:52,900 --> 00:10:00,240
+you'll see that I now have three all with the same image ID.
+
+111
+00:10:01,210 --> 00:10:09,690
+If I did a docker image push bretfisher/nginx:testing, and this time I specified testing,
+
+112
+00:10:09,730 --> 00:10:12,570
+notice how it says layers already exist.
+
+113
+00:10:12,730 --> 00:10:14,890
+That's part of our awesome savings rate.
+
+114
+00:10:14,890 --> 00:10:20,530
+When we're downloading and uploading images, that there's already layers that exist, it won't bother
+
+115
+00:10:20,680 --> 00:10:21,680
+re-uploading them.
+
+116
+00:10:22,900 --> 00:10:28,260
+If we go back and I hit refresh, you'll see that I now have another tag.
+
+117
+00:10:28,450 --> 00:10:36,310
+But of course if I just did a docker image ls, we see just like we saw that it's the same image ID and
+
+118
+00:10:36,310 --> 00:10:43,810
+both sides of this connection know it. If I wanted this to be a private repository, because that is
+
+119
+00:10:43,810 --> 00:10:50,290
+a supported feature of Docker Hub, what I'd probably want to do is create the repository first, and when
+
+120
+00:10:50,290 --> 00:10:53,790
+I created it, I specified for it to be private.
+
+121
+00:10:54,010 --> 00:10:58,050
+Then when I pushed to it, the code would never be publicly on the Internet.
+
+122
+00:10:59,580 --> 00:11:02,890
+Wow, there's a lot to images and their tags.
+
+123
+00:11:02,940 --> 00:11:05,340
+So let's just do a quick review.
+
+124
+00:11:05,610 --> 00:11:12,060
+As you can see, you can pretty much tag anything on to images but they have to be in a specific format
+
+125
+00:11:12,060 --> 00:11:18,810
+to work with Docker Hub. You can't just call something nginx and then upload it because it's
+
+126
+00:11:18,810 --> 00:11:23,770
+not going to work unless it has your account ID or organization ID in the front of it.
+
+127
+00:11:26,310 --> 00:11:31,320
+Then I talked about how you can actually have many tags for the same image ID and just because you
+
+128
+00:11:31,470 --> 00:11:36,500
+re-tag or tag differently an existing image, it doesn't actually change that image ID.
+
+129
+00:11:37,830 --> 00:11:41,730
+Remember that the latest tag is really just the default tag.
+
+130
+00:11:41,730 --> 00:11:47,790
+There's nothing inherently special about it, but we do kind of assume on Docker Hub, it is pretty
+
+131
+00:11:47,790 --> 00:11:54,330
+much a standard there, that people use the latest tag as a way to indicate the latest stable version
+
+132
+00:11:54,360 --> 00:12:01,080
+of their image. I showed you how to quickly login and out of Docker Hub from the CLI. Remember
+
+133
+00:12:01,080 --> 00:12:07,530
+that that stores a session ID in your local config if you're on a Linux machine and you make sure that
+
+134
+00:12:07,530 --> 00:12:09,730
+you logout to remove that
+
+135
+00:12:09,750 --> 00:12:15,870
+if you're on a shared Linux machine or a host, like a server. Then, just a reminder, if you want to
+
+136
+00:12:15,870 --> 00:12:21,210
+create a private Docker Hub image, you should probably create the repository first before you upload
+
+137
+00:12:21,210 --> 00:12:21,520
+it.
+

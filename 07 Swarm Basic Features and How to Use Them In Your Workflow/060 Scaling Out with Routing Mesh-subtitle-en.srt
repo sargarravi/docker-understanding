@@ -1,0 +1,451 @@
+0
+00:05.060 --> 00:11.310
+So that little bit of magic wasn't actually magic. It was the Routing Mesh. The Routing Mesh is
+
+1
+00:11.310 --> 00:18.510
+an incoming or ingress network that distributes packets for our service to the tasks for that service,
+
+2
+00:18.510 --> 00:20.880
+because we can have more than one task.
+
+3
+00:20.940 --> 00:26.700
+This actually spans all the nodes, and it's using Kernel primitives that have been around a while
+
+4
+00:26.700 --> 00:28.310
+actually called IPVS.
+
+5
+00:28.320 --> 00:29.050
+...
+
+6
+00:29.100 --> 00:33.150
+So we're not talking about some fancy new service. We're really just talking about the core features
+
+7
+00:33.150 --> 00:39.780
+of the Linux Kernel. What it's really doing here is it's load balancing across all the nodes and
+
+8
+00:39.780 --> 00:43.360
+listening on all the nodes for traffic.
+
+9
+00:43.380 --> 00:46.110
+There's a couple of ways we can talk about how this works.
+
+10
+00:46.110 --> 00:50.050
+The first example is from one container to another.
+
+11
+00:50.160 --> 00:57.780
+If our backend system, like say the databases, were increased to two replicas, the frontends talking
+
+12
+00:57.780 --> 00:58.900
+to the backends,
+
+13
+00:58.900 --> 01:01.920
+wouldn't actually talk directly to their IP address.
+
+14
+01:01.920 --> 01:07.530
+They would actually talk to something called a VIP, or a Virtual IP, that Swarm puts in front of all
+
+15
+01:07.530 --> 01:08.570
+services.
+
+16
+01:08.640 --> 01:14.730
+This is a private IP inside the virtual networking of Swarm, and it ensures that the load is distributed
+
+17
+01:14.730 --> 01:16.680
+amongst all the tasks for a service.
+
+18
+01:16.690 --> 01:24.000
+So if you can imagine if you had a worker role in your application, and it had 10 different containers,
+
+19
+01:24.180 --> 01:26.210
+you don't have to put a load balancer in front of that.
+
+20
+01:26.220 --> 01:27.550
+This does that for you.
+
+21
+01:27.570 --> 01:33.420
+When you're talking about traffic from one service inside your virtual network talking to another service
+
+22
+01:33.480 --> 01:34.910
+inside your virtual network.
+
+23
+01:35.340 --> 01:41.400
+And the second example of how the routing mesh works is external traffic coming into your swarm can
+
+24
+01:41.400 --> 01:45.180
+actually choose to hit any of the nodes in your swarm.
+
+25
+01:45.180 --> 01:51.990
+Any of the worker nodes are going to have that published port open and listening for that container's
+
+26
+01:51.990 --> 01:57.990
+traffic, and then it will reroute that traffic to the proper container based on its load balancing.
+
+27
+01:57.990 --> 02:02.610
+What this means is when you're deploying containers in a swarm, you're not supposed to have to care about
+
+28
+02:02.700 --> 02:05.280
+what server it's on because that might move, right?
+
+29
+02:05.280 --> 02:10.560
+If a container fails, and the task is recreated by the swarm, it might put that on a different node. And
+
+30
+02:10.560 --> 02:15.000
+you certainly don't want to have to change your firewall around or your DNS settings to make that container
+
+31
+02:15.000 --> 02:15.840
+work again.
+
+32
+02:15.840 --> 02:21.480
+The routing mesh solves a lot of those problems by allowing our Drupal website on port 80 to be
+
+33
+02:21.480 --> 02:26.880
+accessible from any node in the swarm. And in the background, it's taking those packets from that server
+
+34
+02:26.910 --> 02:31.170
+and then routing them to the container. If it's on a different node, in it'll route it over the virtual
+
+35
+02:31.170 --> 02:31.960
+networks.
+
+36
+02:32.100 --> 02:35.580
+If it's on the same node, it'll just reroute it to the port of that container.
+
+37
+02:35.760 --> 02:37.500
+And we didn't have to do anything to enable this.
+
+38
+02:37.500 --> 02:39.590
+This was all out of the box.
+
+39
+02:39.750 --> 02:41.640
+Let's see a diagram of how this might work.
+
+40
+02:42.560 --> 02:49.340
+If I created a newsform service, and I told it to have three replicas. And it created three tasks, with
+
+41
+02:49.340 --> 02:56.930
+three containers, on three nodes. Inside that overlay network, it's actually creating a virtual IP that's
+
+42
+02:57.050 --> 03:02.810
+mapped to the DNS name of the service, right? And the service, by default, the DNS name, is the name of the
+
+43
+03:02.810 --> 03:03.190
+service.
+
+44
+03:03.190 --> 03:09.470
+In this case, I created a service called my-web, and any other containers I have in my overlay
+
+45
+03:09.470 --> 03:13.160
+networks that need to talk to that service inside the swarm,
+
+46
+03:13.160 --> 03:19.370
+they only have to worry about using the my web DNS. The virtual IP properly load bounces the traffic
+
+47
+03:19.460 --> 03:23.750
+amongst all the tasks in that service.
+
+48
+03:23.750 --> 03:29.240
+This isn't actually DNS Round Robin. That's actually a slightly different configuration. We could
+
+49
+03:29.240 --> 03:33.040
+enable that if we wanted to. There's actually an option to use DNS Round Robin.
+
+50
+03:33.350 --> 03:41.230
+The benefits of VIPs over Round Robin is that a lot of times our DNS caches inside our apps prevent
+
+51
+03:41.240 --> 03:43.480
+us from properly distributing the load.
+
+52
+03:43.490 --> 03:49.640
+Rather than fight with our DNS clients in DNS configuration, we're just relying on the VIP, which is
+
+53
+03:49.640 --> 03:54.700
+kind of like what you would have if you bought a dedicated hardware load balancer.
+
+54
+03:54.780 --> 03:59.640
+In the second example, this is actually showing what it would be like with external traffic coming
+
+55
+03:59.640 --> 03:59.990
+in.
+
+56
+04:00.000 --> 04:06.150
+This is similar to what we just did with Drupal, where when I created those yellow boxes, by creating
+
+57
+04:06.150 --> 04:13.950
+one service, called my web, and it created two tasks, and applied them to two different nodes, each one of
+
+58
+04:13.950 --> 04:21.120
+those nodes has a built-in load balancer on the external IP address. For me, because I'm using DigitalOcean,
+
+59
+04:21.120 --> 04:27.950
+that IP address is the one that DigitalOcean gave me. When I use the -p and published
+
+60
+04:27.950 --> 04:34.260
+it on a port, in this example it's using port 80:80, any traffic that comes in to any of these three nodes
+
+61
+04:34.800 --> 04:42.270
+hits that load balancer on port 80:80. The load balancer decides which container should get the traffic
+
+62
+04:42.300 --> 04:46.740
+and whether or not that traffic is on the local node, or it needs to send the traffic over the
+
+63
+04:46.740 --> 04:48.570
+network to a different node.
+
+64
+04:48.570 --> 04:53.450
+Again, this actually all happens in the background without any special effort on our part.
+
+65
+04:54.970 --> 04:57.080
+All right. Let's see this Routing Mesh in action.
+
+66
+04:57.100 --> 05:00.700
+We already saw the example with Drupal and how it listens on all three nodes.
+
+67
+05:00.790 --> 05:05.090
+But what if we had multiple tasks that see that load balancer working.
+
+68
+05:05.110 --> 05:07.780
+If we do a docker service create,
+
+69
+05:10.430 --> 05:19.610
+what we're going to do is, we're going to use an Elasticsearch container. We're going to call it search and
+
+70
+05:19.610 --> 05:25.550
+give it three replicas. And want to publish it on port 9200, which is its default port.
+
+71
+05:30.880 --> 05:35.240
+In this case, we definitely want the :2 in there because it's the easiest version to deploy
+
+72
+05:35.240 --> 05:37.930
+right now. While that's creating,
+
+73
+05:37.970 --> 05:43.820
+I'll just mention that Elasticsearch is actually a search database that's accessible via a JSON web
+
+74
+05:43.820 --> 05:44.290
+API.
+
+75
+05:44.300 --> 05:49.500
+So it's really easy to hit with curl and give us good examples of how this works.
+
+76
+05:49.550 --> 05:59.480
+I do a docker service ps search, we can see that it's smartly created each task on a different node.
+
+77
+05:59.710 --> 06:08.290
+If I just do a curl on my localhost, on node one on port 9200 because I published that port,
+
+78
+06:09.580 --> 06:16.810
+I'll get back the Elasticsearch basic information. Part of that is it will actually create a random
+
+79
+06:16.810 --> 06:17.360
+name.
+
+80
+06:17.380 --> 06:20.020
+That's just a feature out of Elasticsearch.
+
+81
+06:20.020 --> 06:27.160
+If I curl this multiple times, you'll see on this one it's Patch, the Patch server, and then a third
+
+82
+06:27.160 --> 06:28.260
+time,
+
+83
+06:28.330 --> 06:34.080
+Jane Foster, and then it'll start repeating itself like such.
+
+84
+06:34.160 --> 06:40.610
+That's actually the virtual IP acting as a load balancer and distributing my load across the three
+
+85
+06:40.610 --> 06:41.790
+tasks.
+
+86
+06:41.840 --> 06:50.700
+A few more notes on the routing mesh. In 17.03, which is the release that I'm showing you this on, the
+
+87
+06:50.700 --> 06:55.570
+routing mesh and the load balancing are currently a stateless load balancer.
+
+88
+06:55.590 --> 07:02.930
+If you've ever dealt with State inside of maybe Amazon's classic load balancer, or other load balancer
+
+89
+07:02.940 --> 07:05.200
+technologies, you know what this is about.
+
+90
+07:05.280 --> 07:12.330
+This is basically saying that if you have to use session cookies on your application, or it expects a
+
+91
+07:12.330 --> 07:18.420
+consistent container to be talking to a consistent client, then you may need to add some other things
+
+92
+07:18.480 --> 07:19.740
+to help solve that problem.
+
+93
+07:19.740 --> 07:25.350
+Out of the box, every time you hit a service with multiple tasks, it's going to give you potentially
+
+94
+07:25.350 --> 07:26.320
+a different result.
+
+95
+07:27.890 --> 07:34.640
+Also, if you get into the details of this, it's actually a layer-3 load balancer, and that actually
+
+96
+07:34.640 --> 07:37.510
+operates at the IP and port layer.
+
+97
+07:37.520 --> 07:40.720
+It doesn't actually operate at the DNS layer.
+
+98
+07:40.790 --> 07:46.940
+If you've ever run multiple websites on the same port, on the same server, this isn't going to do that
+
+99
+07:46.940 --> 07:47.360
+yet.
+
+100
+07:47.480 --> 07:51.290
+You're still going to need another piece of the puzzle
+
+101
+07:51.290 --> 07:57.840
+on top of that if you're actually wanting to run multiple websites on the same port, on the same swarm.
+
+102
+07:58.130 --> 08:03.080
+Luckily, that's a pretty common request, and there's several options you can do to solve both of these
+
+103
+08:03.080 --> 08:04.070
+problems.
+
+104
+08:04.950 --> 08:12.220
+One of them is to use Nginx or HAProxy, which there are pretty good examples out there of containers
+
+105
+08:12.340 --> 08:19.480
+that will sit in front with your routing mesh, and actually act as a stateful load balancer or a layer
+
+106
+08:19.480 --> 08:24.970
+for load balancer, that can also do caching and lots of other things. If you need that, you might want
+
+107
+08:24.970 --> 08:28.220
+to check some of those out in the resources of this section.
+
+108
+08:28.330 --> 08:33.700
+I should also mention that if you were to pay for a subscription of Docker Enterprise edition, with
+
+109
+08:33.700 --> 08:39.760
+it comes something called UCP or Docker Data Center, which is a web interface. But I should mention that
+
+110
+08:39.760 --> 08:45.190
+Docker Enterprise edition, if you get a subscription to that for your swarm nodes, it actually comes with
+
+111
+08:45.190 --> 08:52.090
+a built-in layer for web proxy that allows you to just throw DNS names in the web config of your swarm
+
+112
+08:52.090 --> 08:54.240
+services and everything just works.

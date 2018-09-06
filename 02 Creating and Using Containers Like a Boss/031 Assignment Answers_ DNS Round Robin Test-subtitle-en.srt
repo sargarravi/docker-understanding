@@ -1,0 +1,168 @@
+1
+00:00:05,250 --> 00:00:11,490
+For this tutorial, I'm going to go through the assignment of DNS Round Robin testing and you'll get
+
+2
+00:00:11,490 --> 00:00:14,020
+to see how I would have done it.
+
+3
+00:00:14,020 --> 00:00:17,190
+First, we need to create a network.
+
+4
+00:00:20,610 --> 00:00:22,520
+I'm going to call it dude.
+
+5
+00:00:22,520 --> 00:00:24,920
+Then I need to create two containers. So,
+
+6
+00:00:29,180 --> 00:00:35,560
+I'm going to run them in the background. I don't actually care about their names.
+
+7
+00:00:35,690 --> 00:00:41,730
+So, I'm just going to run the network and attach them to dude.
+
+8
+00:00:41,790 --> 00:00:43,820
+And then I'm going to do a net
+
+9
+00:00:44,820 --> 00:00:50,780
+alias so I can find them with the DNS name search.
+
+10
+00:00:50,890 --> 00:00:51,760
+And then...
+
+11
+00:00:55,000 --> 00:00:56,240
+there we go.
+
+12
+00:00:56,390 --> 00:00:58,450
+Because I'm not specifying a name,
+
+13
+00:00:58,450 --> 00:01:01,540
+I can actually just hit the Up arrow and type the exact same command again,
+
+14
+00:01:04,380 --> 00:01:07,490
+and I should get both of those containers.
+
+15
+00:01:07,720 --> 00:01:13,450
+I didn't open any ports because all we need to do is test inside of this virtual network.
+
+16
+00:01:13,690 --> 00:01:20,080
+You'll notice that there's exposed ports, which we'll talk about later in the next section. But exposed
+
+17
+00:01:20,080 --> 00:01:26,470
+ports are listed in the Docker file, and they're always exposed in the virtual network. It's only
+
+18
+00:01:26,560 --> 00:01:31,810
+necessary to use the -p when we want to actually publish those ports to the outside interface of
+
+19
+00:01:31,810 --> 00:01:33,520
+our host.
+
+20
+00:01:33,520 --> 00:01:36,820
+We're not doing that here so I can skip that part.
+
+21
+00:01:36,820 --> 00:01:42,940
+Now I need to run a test to make sure I can get to both of these with the same DNS names. So docker
+
+22
+00:01:44,940 --> 00:01:56,670
+container run, and I'm going to do this the easy way by doing a --rm on alpine nslookup search.
+
+23
+00:01:56,930 --> 00:02:01,620
+Oops...net dude.
+
+24
+00:02:01,710 --> 00:02:08,550
+This should run the nslookup command on the search DNS entry and then immediately exit. Then it'll
+
+25
+00:02:08,550 --> 00:02:12,820
+clean itself up with a --rm.
+
+26
+00:02:13,110 --> 00:02:14,670
+All right. There we go.
+
+27
+00:02:14,670 --> 00:02:23,910
+I have two DNS entries. For the next one, docker container run rm net
+
+28
+00:02:23,940 --> 00:02:29,520
+dude centos curl with a -s
+
+29
+00:02:29,520 --> 00:02:33,040
+on search
+
+30
+00:02:33,310 --> 00:02:35,870
+9200.
+
+31
+00:02:35,890 --> 00:02:36,270
+All right.
+
+32
+00:02:36,290 --> 00:02:41,660
+That will get me back the Elasticsearch server named Interloper.
+
+33
+00:02:42,350 --> 00:02:46,090
+If I run it again, I get the other one.
+
+34
+00:02:46,180 --> 00:02:47,390
+Mr. M.
+
+35
+00:02:47,590 --> 00:02:53,530
+You'll notice that there's also a unique ID for each one of these, and that if I hit the Up Arrow
+
+36
+00:02:53,530 --> 00:03:01,180
+and run this command over and over, it's not exactly going to be even steven here.
+
+37
+00:03:01,190 --> 00:03:08,890
+It's going to be a little random.
+
+38
+00:03:09,470 --> 00:03:12,690
+You see two in a row and that sort of thing.
+
+39
+00:03:12,710 --> 00:03:18,520
+That's just indicative of DNS Round Robin due to things like name caching and whatnot.
+
+40
+00:03:18,770 --> 00:03:23,800
+If I do docker container...oops
+
+41
+00:03:24,140 --> 00:03:36,720
+ls. I can actually remove these...I'm going to force them.
+
+42
+00:03:36,780 --> 00:03:37,490
+And there we go.
+

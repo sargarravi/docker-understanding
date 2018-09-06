@@ -1,0 +1,1268 @@
+1
+00:00:04,330 --> 00:00:07,180
+Are you a Mac user and ready to use Docker.
+
+2
+00:00:07,370 --> 00:00:12,050
+Well this lecture is going to get you all the tools you need to use this course with Docker and to get
+
+3
+00:00:12,050 --> 00:00:14,550
+the best doc or set up on your Mac.
+
+4
+00:00:14,930 --> 00:00:20,630
+So the nice thing is I'm going to be using all the demos or at least most of the demos on my Mac so
+
+5
+00:00:20,840 --> 00:00:23,160
+it'll feel very native for you.
+
+6
+00:00:23,300 --> 00:00:30,320
+The required version of Mac isn't actually even recent So you probably will be on the minimum version.
+
+7
+00:00:30,350 --> 00:00:37,760
+It's actually a three year old OS at this point on Yosemite and really Yosemite works on every Mac hardware
+
+8
+00:00:37,790 --> 00:00:39,450
+for the last 10 years.
+
+9
+00:00:39,470 --> 00:00:45,950
+So as long as your laptop is less than 10 years old and you're using a version of Mac that was released
+
+10
+00:00:45,950 --> 00:00:52,460
+in the last three years that Docker for Mac product that you can get from store docker.com will work
+
+11
+00:00:52,490 --> 00:00:55,150
+and it's the best way to use Docker on your Mac.
+
+12
+00:00:55,250 --> 00:01:03,050
+It has all the features and all the new bonus sort of ease of use things going on in terms of like networking
+
+13
+00:01:03,050 --> 00:01:03,980
+and storage and stuff.
+
+14
+00:01:03,980 --> 00:01:04,970
+And we'll get into that.
+
+15
+00:01:05,120 --> 00:01:08,960
+But that's really the best way to go if for some reason you can't do that.
+
+16
+00:01:08,960 --> 00:01:15,260
+Maybe your office that you use your Mac from it requires an Mavericks or one of the older versions like
+
+17
+00:01:15,270 --> 00:01:16,680
+line or something.
+
+18
+00:01:16,970 --> 00:01:22,460
+That's OK there's still an option known as Doc or tool box which is sort of the legacy.
+
+19
+00:01:22,610 --> 00:01:25,220
+It was actually the only version of Dr We could use on a Mac.
+
+20
+00:01:25,280 --> 00:01:30,660
+Up until mid 2016 when they created Docker for Mac.
+
+21
+00:01:30,770 --> 00:01:35,030
+So Dr. toolbox is still supported still get the latest versions of Doc are in it.
+
+22
+00:01:35,030 --> 00:01:41,630
+It's just not going to have all of the nice little extra features and performance benefits of doc or
+
+23
+00:01:41,630 --> 00:01:42,380
+for Mac.
+
+24
+00:01:42,710 --> 00:01:48,950
+Other options for using Docker on your Mac include just installing it in a Linux VM.
+
+25
+00:01:48,980 --> 00:01:56,330
+I mean however you want to create a VM do that whether it's locally with virtual box or VMWare Fusion
+
+26
+00:01:56,330 --> 00:02:01,170
+or Parallels or installing it on a Linux VM on the Internet on the cloud.
+
+27
+00:02:01,190 --> 00:02:04,840
+You know right on us or Azure or Digital Ocean.
+
+28
+00:02:04,880 --> 00:02:11,420
+So wherever you can get a Linux VM installed you just can install Dagar on that and you can do 98 percent
+
+29
+00:02:11,510 --> 00:02:13,800
+of this course that way.
+
+30
+00:02:14,180 --> 00:02:19,690
+Other options include actually installing Docker in a Windows VM on your Mac.
+
+31
+00:02:20,090 --> 00:02:21,810
+That might sound kind of weird.
+
+32
+00:02:21,980 --> 00:02:28,130
+It's like too many layers of stuff going on right and actually that requires something called nested
+
+33
+00:02:28,130 --> 00:02:29,450
+virtualization.
+
+34
+00:02:29,450 --> 00:02:30,820
+So I don't really recommend it.
+
+35
+00:02:30,830 --> 00:02:33,550
+I won't support it in this course really I won't talk about it.
+
+36
+00:02:33,560 --> 00:02:40,190
+It is possible to make it work in case you for some reason just want to run DR on a Windows machine
+
+37
+00:02:40,280 --> 00:02:41,690
+on your Mac.
+
+38
+00:02:41,690 --> 00:02:46,730
+I personally just do that for testing and demo purposes but if you want to do that it works with VM
+
+39
+00:02:46,730 --> 00:02:47,990
+or fusion.
+
+40
+00:02:47,990 --> 00:02:54,230
+It does require a little special setting for nested virtualization which means virtualization inside
+
+41
+00:02:54,230 --> 00:02:55,350
+of virtualization.
+
+42
+00:02:55,400 --> 00:02:56,750
+So you've got to get that working.
+
+43
+00:02:56,930 --> 00:03:03,030
+But I'm told by the doctor team that it does work and the last little option here or tidbit I guess
+
+44
+00:03:03,360 --> 00:03:06,400
+is that don't use homebrew to install Docker.
+
+45
+00:03:06,450 --> 00:03:12,120
+If you've actually already done that you need to uninstall that doctor because what that is is the command
+
+46
+00:03:12,120 --> 00:03:12,990
+line only.
+
+47
+00:03:13,110 --> 00:03:18,010
+It's not going to actually have the Docker server or any of the other features that Docker comes with.
+
+48
+00:03:18,060 --> 00:03:23,190
+It's only going to have the Docker command line tool and that's useful if you want to use Docker to
+
+49
+00:03:23,190 --> 00:03:24,990
+talk to a server remotely.
+
+50
+00:03:25,080 --> 00:03:27,510
+But we're not going to do a whole lot of that in this course.
+
+51
+00:03:27,510 --> 00:03:30,410
+We're going to focus on using Dr on your machine.
+
+52
+00:03:32,490 --> 00:03:35,790
+So the setup process is going to basically go like this.
+
+53
+00:03:35,790 --> 00:03:42,720
+In this lecture we're going to actually install Docker and then check out some of the settings or preferences
+
+54
+00:03:42,720 --> 00:03:47,460
+for Doc or for Mac and tweak does a little bit and then we're going to download my get up repo that
+
+55
+00:03:47,460 --> 00:03:49,100
+you're going to need in this course.
+
+56
+00:03:49,170 --> 00:03:55,470
+With all of the code samples and stuff then we're going to talk about code editors and I prefer a specific
+
+57
+00:03:55,470 --> 00:03:58,750
+one visual studio code just because it works really well with Docker.
+
+58
+00:03:58,950 --> 00:04:03,290
+But just about any one will work whatever favorite one you use will work fine.
+
+59
+00:04:03,390 --> 00:04:08,670
+And then we're going to show some optional things where maybe you want to tweak your terminal or your
+
+60
+00:04:08,670 --> 00:04:14,700
+shell set up in your Mac so that it works easier from the command line if you're going to be doing or
+
+61
+00:04:14,760 --> 00:04:15,930
+stuff all day long.
+
+62
+00:04:24,940 --> 00:04:27,720
+OK so let's get started with the install.
+
+63
+00:04:27,770 --> 00:04:35,020
+So go to store dot dot dot dot com as you can see I'm already there and everything in this course is
+
+64
+00:04:35,020 --> 00:04:39,970
+focused on the free version or the Docker community edition Ducker S.E.
+
+65
+00:04:40,210 --> 00:04:45,100
+So when this interface changes because all interfaces changes on the web right you're going to have
+
+66
+00:04:45,100 --> 00:04:51,070
+to find the D'Agostini download area and you'll see that there is an addition for all sorts of different
+
+67
+00:04:51,130 --> 00:04:59,970
+Wes's and we're going to look for the Mac one which happens to be at the top and over here on the right.
+
+68
+00:05:00,010 --> 00:05:04,540
+I had this get download now you can just click this but you'll notice that.
+
+69
+00:05:04,540 --> 00:05:08,670
+Also if you're if you're an older version of Mac it'll tell you hey the backup option is Takhar tool
+
+70
+00:05:08,670 --> 00:05:09,610
+box.
+
+71
+00:05:09,730 --> 00:05:16,470
+But if we scroll down a little bit we get two options and I'm going to use the edge version.
+
+72
+00:05:16,480 --> 00:05:23,320
+The edge is kind of like a beta and I'm of course a tester so I like testing the software and I'd prefer
+
+73
+00:05:23,320 --> 00:05:27,690
+to see the new features first but I find edge actually to be quite stable.
+
+74
+00:05:27,790 --> 00:05:33,160
+And with this product only being like a year old I actually find that it gets the things I need the
+
+75
+00:05:33,160 --> 00:05:36,430
+new features or bug fixes faster as well so I don't know.
+
+76
+00:05:36,430 --> 00:05:42,550
+Your experience may vary and so generally I tell people if you're in an enterprise environment and you're
+
+77
+00:05:42,550 --> 00:05:47,500
+looking to have your whole team on exactly the same version that you have in production and to sort
+
+78
+00:05:47,500 --> 00:05:51,100
+of match all that up then I'd say that stick was stable for everyone else.
+
+79
+00:05:51,100 --> 00:05:56,170
+I say give em a shot and if at any time you want to change these two it's actually super easy in the
+
+80
+00:05:56,170 --> 00:05:57,670
+interface to change.
+
+81
+00:05:57,880 --> 00:06:00,930
+Built in from stable back to edge and back and forth.
+
+82
+00:06:01,030 --> 00:06:07,020
+So I'm going to do the edge and we're going to run that DMG file
+
+83
+00:06:09,670 --> 00:06:15,880
+and it should open up a screen that allows you to drag the Docker app into your applications folder
+
+84
+00:06:16,060 --> 00:06:24,660
+like a typical Mac would and it'll copy that over and allow you to run it and close this window.
+
+85
+00:06:24,760 --> 00:06:28,290
+You can actually close the web browser and go launched Docker.
+
+86
+00:06:28,300 --> 00:06:32,810
+Now the first time you run it it'll give you this warning just simply because you're downloading it
+
+87
+00:06:32,800 --> 00:06:35,090
+over the Internet and not from the Apple store.
+
+88
+00:06:35,110 --> 00:06:38,630
+So go ahead and click open but you won't get that after that.
+
+89
+00:06:38,830 --> 00:06:40,420
+Now we're going to walk through the setup process.
+
+90
+00:06:40,420 --> 00:06:41,880
+It's really easy.
+
+91
+00:06:41,920 --> 00:06:47,680
+We're just going to click next and it's going to ask us for root privileges and then we're going to
+
+92
+00:06:47,680 --> 00:06:54,310
+get a nice set up menu and one of the options is you can sign in and create a Docker I.D. It actually
+
+93
+00:06:54,310 --> 00:06:57,850
+gives you some neat cloud services that we'll talk later in this course.
+
+94
+00:06:57,940 --> 00:06:59,780
+But you don't have to do that right now.
+
+95
+00:06:59,810 --> 00:07:01,250
+That's not a requirement.
+
+96
+00:07:01,270 --> 00:07:05,480
+We're just going to wait for it to start and you'll see what a top it says Docker is now running.
+
+97
+00:07:05,500 --> 00:07:10,750
+And you'll notice that it gives me a menu bar icons so I can get lots of options from here including
+
+98
+00:07:10,750 --> 00:07:16,450
+everything from checking for updates to restarting Docker, to exiting Docker, and by default this thing
+
+99
+00:07:16,450 --> 00:07:16,980
+will start.
+
+100
+00:07:16,990 --> 00:07:21,190
+Every time your computer starts when you log in and away we go.
+
+101
+00:07:21,190 --> 00:07:26,920
+So before we go any further I want to talk about a few preferences that you might want to change.
+
+102
+00:07:26,950 --> 00:07:31,660
+One of them is I mentioned the option of switching between the edge and the stable versions in case
+
+103
+00:07:31,660 --> 00:07:33,770
+maybe you ever have an issue with edge.
+
+104
+00:07:33,820 --> 00:07:41,630
+You can actually do that here and it will sort of remove your Docker VM and then create a new one but
+
+105
+00:07:42,400 --> 00:07:45,820
+so you don't want to do this every day but in case you have a bug and you think maybe there's something
+
+106
+00:07:45,820 --> 00:07:49,970
+to do with the edge version you can always switch back to stable.
+
+107
+00:07:49,970 --> 00:07:56,970
+Second thing is whenever you're working with code that's on your host machine and you want to work with
+
+108
+00:07:56,980 --> 00:07:59,180
+it in a Docker container.
+
+109
+00:07:59,180 --> 00:08:00,880
+This is known as bind mounting.
+
+110
+00:08:00,920 --> 00:08:02,730
+We'll talk a lot about that later.
+
+111
+00:08:02,840 --> 00:08:08,300
+But for now just remember that when we get to that section you need to make sure that your code whatever
+
+112
+00:08:08,300 --> 00:08:13,440
+you're going to use is in one of these volumes or one of these directories on your Mac I should say.
+
+113
+00:08:13,490 --> 00:08:19,880
+And so really for me I just make sure that my code is inside my user directories and for me that slash
+
+114
+00:08:19,880 --> 00:08:21,040
+users slash Bret.
+
+115
+00:08:21,230 --> 00:08:25,580
+And for you it's your probably your user name after the users and so you notice that that's already
+
+116
+00:08:25,580 --> 00:08:26,270
+in here.
+
+117
+00:08:26,270 --> 00:08:31,910
+But if you're a someone who makes a custom root directory on your Mac you're going to need to add that
+
+118
+00:08:31,910 --> 00:08:33,380
+in here with the plus symbol.
+
+119
+00:08:34,540 --> 00:08:38,830
+Docker is actually on a Mac running a tiny VM in the background.
+
+120
+00:08:38,830 --> 00:08:46,300
+It's running a tiny Linux VM and that's because Docker doesn't run natively on the Mac kernel.
+
+121
+00:08:46,300 --> 00:08:51,850
+Apple hasn't actually built in Docker functionality into its OS kernel so we have to run this tiny
+
+122
+00:08:51,850 --> 00:08:52,890
+little VM.
+
+123
+00:08:52,960 --> 00:08:57,490
+And if you've ever run any virtualization you know that it can give it however many C-p use and however
+
+124
+00:08:57,490 --> 00:09:06,790
+much RAM and I normally leave mine at the to C-p use of the for my laptop and then I usually ramp my
+
+125
+00:09:06,790 --> 00:09:09,540
+RAM up to like let's say for.
+
+126
+00:09:09,640 --> 00:09:11,100
+You don't have to do that.
+
+127
+00:09:11,110 --> 00:09:13,960
+It all depends on how much memory is in your system.
+
+128
+00:09:13,960 --> 00:09:21,670
+I happen to have 16 gig of RAM on my Mac so I have plenty of room to give it more access in Mac or in
+
+129
+00:09:21,850 --> 00:09:23,770
+the Docker preferences.
+
+130
+00:09:23,770 --> 00:09:29,410
+Do note though that Docker won't actually take up all of that RAM unless it needs it.
+
+131
+00:09:29,410 --> 00:09:31,600
+So it's nice and conservative.
+
+132
+00:09:31,600 --> 00:09:33,430
+That's the same thing with the space too.
+
+133
+00:09:33,520 --> 00:09:38,680
+On the hard drive it won't take up a huge amount of space it will only grow as it needs to.
+
+134
+00:09:38,950 --> 00:09:44,380
+And so just because you're giving it for a gig bigger RAM doesn't mean that it's not able to share that
+
+135
+00:09:44,380 --> 00:09:47,050
+ram with other applications on your Mac.
+
+136
+00:09:47,080 --> 00:09:53,770
+It just means that Docker can use up to 4 gig of memory and my computer and over here I have to click
+
+137
+00:09:53,800 --> 00:09:55,280
+Apply and restart.
+
+138
+00:09:55,300 --> 00:10:02,110
+Now that I've made that change and there's lots of other options you can look at here and read about
+
+139
+00:10:02,350 --> 00:10:04,910
+and actually see the help on inside the menu.
+
+140
+00:10:05,080 --> 00:10:07,550
+But for now let's just get into the command line.
+
+141
+00:10:07,720 --> 00:10:09,960
+So I'm going to bring up the terminal.
+
+142
+00:10:10,030 --> 00:10:14,500
+It's actually called terminal it's the Mac application and if you're familiar with this you may have
+
+143
+00:10:14,500 --> 00:10:15,720
+all your own set up.
+
+144
+00:10:15,790 --> 00:10:22,030
+If you're not familiar with terminal it is like power shell or command prompt and windows and like a
+
+145
+00:10:22,030 --> 00:10:25,780
+standard Linux shell and Linux and it actually is by default.
+
+146
+00:10:25,790 --> 00:10:31,870
+Runs bash which is just a standard shell very common and you can see that it's here the top and I can
+
+147
+00:10:31,870 --> 00:10:33,580
+actually run Docker version here.
+
+148
+00:10:33,580 --> 00:10:35,940
+To know that my doctor is running.
+
+149
+00:10:36,070 --> 00:10:41,170
+And which version of Docker I've got running here so you can see the client and the server are both
+
+150
+00:10:41,170 --> 00:10:47,040
+listed and we'll talk in the next lecture after the section about what all that stuff means but this
+
+151
+00:10:47,050 --> 00:10:54,570
+basically getting this back does mean that your doctor is working and you can talk to it.
+
+152
+00:10:54,660 --> 00:11:00,870
+So now that we know that Docker is installed and working correctly let's clone my repository for this
+
+153
+00:11:00,870 --> 00:11:08,280
+course and if you're used to get and get hub then this is a super easy part that you probably have done.
+
+154
+00:11:08,370 --> 00:11:10,860
+Lots of times in your career.
+
+155
+00:11:10,950 --> 00:11:13,900
+Probably just this week and it's no big deal.
+
+156
+00:11:14,010 --> 00:11:19,050
+But if you're new to get or specifically to get hub then let me just drop you through a couple of quick
+
+157
+00:11:19,050 --> 00:11:22,340
+steps on the easiest way to get my repository downloaded.
+
+158
+00:11:23,750 --> 00:11:29,810
+So in a previous lecture in this section I gave you some information about where to find my repository
+
+159
+00:11:30,140 --> 00:11:31,430
+and the link to it.
+
+160
+00:11:31,430 --> 00:11:36,250
+It's a good dot com slash Bret Fisher slash you to me dasht auger Dasch mastery.
+
+161
+00:11:36,260 --> 00:11:37,290
+That's a lot to type.
+
+162
+00:11:37,310 --> 00:11:45,020
+So check out the previous lecture on cloning the class repository and that'll get you to this directory
+
+163
+00:11:45,170 --> 00:11:50,060
+and write in here is basically you can actually view it on the web but we need the whole thing on our
+
+164
+00:11:50,060 --> 00:11:56,060
+local computer so you would normally on get hub come over here to the clone and download area and I
+
+165
+00:11:56,060 --> 00:11:58,280
+don't recommend you download the zip.
+
+166
+00:11:58,280 --> 00:12:01,920
+The reason is is that this course is fluid right.
+
+167
+00:12:02,090 --> 00:12:06,860
+Tucker is always changing they're always updating and so this course will be as well and you actually
+
+168
+00:12:06,860 --> 00:12:09,860
+notice even on this page on this it like something changed.
+
+169
+00:12:09,860 --> 00:12:16,340
+Less than a month ago something changed two months ago so things are fluid and if you download a zip
+
+170
+00:12:16,580 --> 00:12:19,920
+it's not easy to update it once you're in the course.
+
+171
+00:12:20,030 --> 00:12:25,760
+But if you open it in the desktop it'll actually open it in the get hub gooey and let you keep it in
+
+172
+00:12:25,760 --> 00:12:26,210
+sync.
+
+173
+00:12:26,210 --> 00:12:32,420
+Doing a get pull on occasion and get hub now has a new desktop and once you've downloaded installed
+
+174
+00:12:32,420 --> 00:12:36,860
+that you can actually jump back over my repository and use several different options.
+
+175
+00:12:36,860 --> 00:12:43,550
+You can click the open and desktop which will open it in the gooey for get hub or you can copy the link
+
+176
+00:12:43,850 --> 00:12:50,170
+and manually paste it into this gooey and then you can put it on your local machine.
+
+177
+00:12:50,180 --> 00:12:56,210
+The one important part here is that you want to make sure that you're putting it inside your user directories
+
+178
+00:12:56,210 --> 00:13:03,240
+so slash users slash Brett is my user directory on my Mac and I just have a default standard.
+
+179
+00:13:03,350 --> 00:13:05,430
+I put everything inside a code directory.
+
+180
+00:13:05,600 --> 00:13:10,850
+The settings for Doc are as we mentioned previously one to make sure that you have all the location
+
+181
+00:13:10,850 --> 00:13:15,410
+on your hard drive where you might put code that is going to be used inside a container.
+
+182
+00:13:15,410 --> 00:13:19,610
+I won't cover that all again but if you make sure that it's in your side your user directory then you're
+
+183
+00:13:19,610 --> 00:13:20,640
+good to go.
+
+184
+00:13:20,690 --> 00:13:26,270
+Once you've downloaded it I would probably do a get pull once a month or so while you're still working
+
+185
+00:13:26,270 --> 00:13:31,670
+on the course to make sure that you have all the latest fixes and updates as this course evolves.
+
+186
+00:13:33,790 --> 00:13:38,060
+And while we're on the topic of this terminal this terminal works great.
+
+187
+00:13:38,080 --> 00:13:42,430
+You can use it your whole career there are lots of people that's been all day long in this particular
+
+188
+00:13:42,430 --> 00:13:43,860
+terminal application.
+
+189
+00:13:44,080 --> 00:13:50,250
+But in this course you'll see me use one with a few more features known as i term to.
+
+190
+00:13:50,360 --> 00:13:51,520
+And you can find that at.
+
+191
+00:13:51,540 --> 00:13:53,100
+I turned to dot.
+
+192
+00:13:53,160 --> 00:13:55,440
+It's actually open source and free.
+
+193
+00:13:55,500 --> 00:14:00,050
+And I actually donate money to them because I use it so often.
+
+194
+00:14:00,060 --> 00:14:03,510
+And there's one gentleman that actually develops it and I really like it.
+
+195
+00:14:03,540 --> 00:14:08,780
+So from here you're going to click the download and install it just like you would every other Mac application
+
+196
+00:14:11,020 --> 00:14:15,730
+and you can see that I have it here running on the right and then I have the terminal actually running
+
+197
+00:14:15,730 --> 00:14:22,700
+on the left and I can do a version on this right side.
+
+198
+00:14:22,780 --> 00:14:28,240
+And really honestly the only thing that I have different on my I turn to versus the standard terminal
+
+199
+00:14:28,480 --> 00:14:29,430
+is I've customized it.
+
+200
+00:14:29,440 --> 00:14:31,020
+I've changed the colors.
+
+201
+00:14:31,030 --> 00:14:35,160
+I've changed the shell and the options in there.
+
+202
+00:14:35,170 --> 00:14:40,050
+You can actually find more out about that at Brett Fisher Dotcom's shell.
+
+203
+00:14:40,060 --> 00:14:44,010
+That'll come at the end of this lecture I'll mention that again so you know where to go find it.
+
+204
+00:14:44,020 --> 00:14:48,770
+But there's lots of little things and tweaks and stuff I do that you can go get.
+
+205
+00:14:48,950 --> 00:14:51,970
+And as a reminder none of that is required for this course.
+
+206
+00:14:51,980 --> 00:14:57,110
+You can use a default terminal and the default Selye just like this or the entire course and it'll work
+
+207
+00:14:57,110 --> 00:14:57,740
+just fine.
+
+208
+00:14:58,450 --> 00:15:03,010
+And the next little tip I want to give you is to check out a visual studio code.
+
+209
+00:15:03,200 --> 00:15:07,340
+So if you don't have a preferred editor you can check out visual studio code.
+
+210
+00:15:07,340 --> 00:15:14,060
+It's actually a free version of a code editor from Microsoft that's very similar to Adam from get help
+
+211
+00:15:14,060 --> 00:15:15,300
+if you ever use that.
+
+212
+00:15:15,410 --> 00:15:18,980
+But it actually comes out of a box with a lot more functionality.
+
+213
+00:15:19,220 --> 00:15:25,780
+And one of the nice things is it has a darker feature that you can actually download as an extension.
+
+214
+00:15:25,910 --> 00:15:30,070
+So you'll see that I have downloaded and installed it already.
+
+215
+00:15:30,080 --> 00:15:37,010
+And under this button on the left there's an extension's option and you can see that I have some basics
+
+216
+00:15:37,010 --> 00:15:38,680
+like a spell-checker.
+
+217
+00:15:38,820 --> 00:15:44,510
+The darker one which is actually really handy in this course it helps you with darker files and compose
+
+218
+00:15:44,510 --> 00:15:49,970
+files that you will learn about and it gives you syntax highlighting and you'll see that commonly throughout
+
+219
+00:15:49,970 --> 00:15:55,460
+this course and I actually have a few other ones in there four different languages and tools but really
+
+220
+00:15:55,460 --> 00:15:58,790
+just the doctor one is the one that I recommend for this course.
+
+221
+00:15:59,730 --> 00:16:05,980
+And so the last little thing we're going to go through is actually the command tab completion.
+
+222
+00:16:06,000 --> 00:16:13,350
+So I'm going to bring up a new tab and I'll give you the link in the end of this lecture and also in
+
+223
+00:16:13,380 --> 00:16:15,370
+the resources for this lecture.
+
+224
+00:16:15,450 --> 00:16:22,020
+But Docker has some great documentation on how to get the Basche completion weren't working and what
+
+225
+00:16:22,020 --> 00:16:29,490
+that really looks like is when I'm in a shell and we make this a little bigger for you and I start typing
+
+226
+00:16:29,520 --> 00:16:41,030
+a doc or come in Docker container I get if I hit tab I get the options of what I can type and it helps
+
+227
+00:16:41,030 --> 00:16:49,210
+me complete Docker commands so I can do something like this and hit tab again and I get a bunch of options.
+
+228
+00:16:49,340 --> 00:16:51,870
+So you can do this on your system too.
+
+229
+00:16:52,160 --> 00:17:01,430
+And all we can do that real quick simply by copying this after we do a few things and all the instructions
+
+230
+00:17:01,430 --> 00:17:02,120
+are here.
+
+231
+00:17:02,120 --> 00:17:07,890
+So the first thing is it says to use homebrew Well what is homebrew if you're not familiar with homebrew.
+
+232
+00:17:08,090 --> 00:17:10,480
+It's actually a another tool.
+
+233
+00:17:10,540 --> 00:17:12,960
+And this by the way again all optional.
+
+234
+00:17:13,010 --> 00:17:19,220
+You can download it from the homebrew Web site which is brewed at SH and what it is is a command line
+
+235
+00:17:19,220 --> 00:17:24,190
+tool that helps you install open source command line utilities with a one liner.
+
+236
+00:17:24,200 --> 00:17:31,550
+It's very similar to apt get on Linux power shell also has one on Windows but basically once you have
+
+237
+00:17:31,550 --> 00:17:36,770
+it installed you can just type Brue install something and it and it will go get that.
+
+238
+00:17:36,770 --> 00:17:43,120
+So in this case what they're saying is that you need to make sure you have the bash completion.
+
+239
+00:17:43,190 --> 00:17:45,040
+So let's go through that real quick.
+
+240
+00:17:46,530 --> 00:17:53,930
+So first install homebrew using this command line right here which I already have on my machine but
+
+241
+00:17:53,930 --> 00:18:00,230
+it will install the homebrew application and then from that terminal window meaning large for you you
+
+242
+00:18:00,230 --> 00:18:06,170
+can actually type Brou install Bash completion.
+
+243
+00:18:06,510 --> 00:18:12,720
+And when I do that it's actually going to download the bash completion and automatically set it up on
+
+244
+00:18:12,720 --> 00:18:13,740
+my machine.
+
+245
+00:18:13,740 --> 00:18:14,790
+Now I already have that installed.
+
+246
+00:18:14,790 --> 00:18:19,170
+So when I hit Enter it's actually going to just tell me that it's already there but for you it will
+
+247
+00:18:19,170 --> 00:18:22,840
+actually install the best completion and set it up so that you're good to go.
+
+248
+00:18:23,790 --> 00:18:28,080
+Yeah it says it's already installed when it clear my screen here.
+
+249
+00:18:28,090 --> 00:18:38,140
+And then the next step is to actually link these three resources into your terminals.
+
+250
+00:18:38,140 --> 00:18:40,390
+So I'm just going to copy and paste that.
+
+251
+00:18:40,680 --> 00:18:45,230
+And those three lines will make permanent links so that way when I type.
+
+252
+00:18:45,240 --> 00:18:54,310
+Now Doctor container run dash dash and hit tab you'll see that it gives me all the options again and
+
+253
+00:18:54,310 --> 00:18:59,770
+I can also start from the very beginning and just type Docker and hit tab twice to get all the options
+
+254
+00:18:59,770 --> 00:19:05,930
+here or I can type part of one and hit tab and automake and complete it for me.
+
+255
+00:19:05,930 --> 00:19:07,900
+So basically I'm hitting tab all the time.
+
+256
+00:19:07,900 --> 00:19:08,110
+Right.
+
+257
+00:19:08,120 --> 00:19:09,820
+And that's known as tab completion.
+
+258
+00:19:09,830 --> 00:19:14,660
+It works out of the box in a lot of Linux distributions but that's how you get it set up on Docker.
+
+259
+00:19:14,930 --> 00:19:20,570
+I brought that into this lecture because a lot of people originally were asking me how to get that working
+
+260
+00:19:20,960 --> 00:19:24,100
+and the doctor's documentation is pretty good on getting that started.
+
+261
+00:19:24,380 --> 00:19:25,160
+OK.
+
+262
+00:19:25,310 --> 00:19:30,290
+To sum up this lecture Let's cover a few of the tips that I just talked about and also give you a couple
+
+263
+00:19:30,290 --> 00:19:32,350
+of extra ones before we get started.
+
+264
+00:19:32,360 --> 00:19:37,850
+So the command completion for your shell is totally optional but it will help you.
+
+265
+00:19:37,850 --> 00:19:42,560
+This link will actually be in the top left of your screen under the resources and then you can jump
+
+266
+00:19:42,560 --> 00:19:45,150
+over to the doctor documentation for that.
+
+267
+00:19:45,170 --> 00:19:51,250
+We talked about where to store your code for the samples and the work you're going to be doing in Dakar.
+
+268
+00:19:51,380 --> 00:19:57,440
+I recommend just sticking it inside slash users slash your user name on your Mac.
+
+269
+00:19:57,530 --> 00:19:59,020
+That's the easiest place to do it.
+
+270
+00:19:59,150 --> 00:20:01,820
+But if you do it somewhere else you have to change the settings.
+
+271
+00:20:02,000 --> 00:20:07,730
+And when you do that we're going to get into the bind mount thing later but just realize that you probably
+
+272
+00:20:07,730 --> 00:20:12,850
+shouldn't use the bind mounts for databases really just use it for software code.
+
+273
+00:20:12,860 --> 00:20:14,570
+That's really what it's meant for.
+
+274
+00:20:14,600 --> 00:20:16,420
+And it works the best with.
+
+275
+00:20:16,610 --> 00:20:19,090
+Next one is we didn't talk about this at all.
+
+276
+00:20:19,090 --> 00:20:26,210
+We will later in the course Docker machine allows you to create virtual machines on the fly with Docker
+
+277
+00:20:26,210 --> 00:20:32,000
+built into them and you can use that to create machines and manage them very easily either locally on
+
+278
+00:20:32,000 --> 00:20:38,350
+your Mac with something like virtual box or even on the Internet with Azure or digital ocean.
+
+279
+00:20:38,360 --> 00:20:41,240
+So do check that out if you're interested in that.
+
+280
+00:20:41,240 --> 00:20:46,220
+It's not required for this course but it is yet another way that you can use Docker and manage it pretty
+
+281
+00:20:46,220 --> 00:20:46,870
+quickly.
+
+282
+00:20:47,720 --> 00:20:49,980
+We talked about the code editor for this course.
+
+283
+00:20:50,000 --> 00:20:52,760
+I'm going to be using Visual Studio code a lot.
+
+284
+00:20:52,760 --> 00:20:56,560
+I will also sometimes use them but you can use whatever you want.
+
+285
+00:20:56,570 --> 00:21:00,520
+There is no requirement for anything specific.
+
+286
+00:21:00,530 --> 00:21:01,720
+It's really just text files.
+
+287
+00:21:01,720 --> 00:21:08,910
+We're gonna be editing and then we talked about I turned to as a potential replacement for terminal.
+
+288
+00:21:08,910 --> 00:21:12,360
+I know lots of people that are professionals that use Terminal all day long.
+
+289
+00:21:12,450 --> 00:21:13,590
+They're fine with it.
+
+290
+00:21:13,620 --> 00:21:16,470
+I just happen to like some of the features in term too.
+
+291
+00:21:16,560 --> 00:21:17,800
+And so hopefully you will too.
+
+292
+00:21:17,800 --> 00:21:19,830
+It's open source and it's great stuff.
+
+293
+00:21:21,250 --> 00:21:27,230
+And if you have any problems with your installation definitely check out the docs at doggers Web site.
+
+294
+00:21:27,310 --> 00:21:28,810
+That link is fantastic.
+
+295
+00:21:28,810 --> 00:21:30,700
+There is so much information there.
+
+296
+00:21:30,760 --> 00:21:36,170
+I personally recommend you just read it eventually because you'll learn more things about your doctor
+
+297
+00:21:36,190 --> 00:21:38,830
+install on your Mac and how the Mac works with it.
+
+298
+00:21:39,700 --> 00:21:45,880
+And lastly my specific shell set up that I'm going to be using in this course happens to be the I term
+
+299
+00:21:45,880 --> 00:21:51,120
+two plus not using the bash shell it's something called Oh My Zep's H.
+
+300
+00:21:51,310 --> 00:21:52,680
+And then I have a lot of other things.
+
+301
+00:21:52,690 --> 00:21:53,850
+I change the colors.
+
+302
+00:21:53,890 --> 00:21:56,130
+I have a little whale emoji in there.
+
+303
+00:21:56,230 --> 00:22:01,150
+I do lots of stuff right but that's not going to distract you from the course like don't think that
+
+304
+00:22:01,150 --> 00:22:03,110
+you have to have all those things set up.
+
+305
+00:22:03,160 --> 00:22:09,940
+But I do get a lot of questions from people on how my cool little shell is set up and I do spend an
+
+306
+00:22:09,940 --> 00:22:13,310
+obsessive amount of time trying to figure that thing out and make it perfect.
+
+307
+00:22:13,330 --> 00:22:16,190
+So do check out if you're interested in any of those add ons.
+
+308
+00:22:16,270 --> 00:22:21,940
+Brett Fisher dot com slash shell I do list everything that I currently use in my shell setup in there
+
+309
+00:22:22,180 --> 00:22:25,430
+and someday I might make a full video on how to set each one of those up.
+
+310
+00:22:25,480 --> 00:22:30,550
+But for now it's really just a list of links and information about them OK.
+
+311
+00:22:30,570 --> 00:22:34,740
+I hope you got Docker from X set up the just the way you want it and it's working great.
+
+312
+00:22:34,740 --> 00:22:42,270
+If you have to use doc or tool box for the legacy option on Mac do check out the lecture on Docker tool
+
+313
+00:22:42,270 --> 00:22:43,980
+box for Windows.
+
+314
+00:22:44,010 --> 00:22:50,490
+I know it's not Mac obviously but the tool box works the same way on Windows and on Macs so that lecture
+
+315
+00:22:50,490 --> 00:22:52,070
+will actually teach you how to use the toolbox.
+
+316
+00:22:52,080 --> 00:22:57,090
+If you have to but if you don't have to highly recommend the Duggar for Mac get it all set up at the
+
+317
+00:22:57,090 --> 00:23:01,050
+terminal working and then jump to the next section to get started right now with Dr..
+

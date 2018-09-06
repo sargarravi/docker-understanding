@@ -1,0 +1,208 @@
+1
+00:00:05,810 --> 00:00:10,720
+This section is going to be full of lectures and assignments around persistent data.
+
+2
+00:00:11,230 --> 00:00:16,490
+First, we're going to discuss the problems of persistent data and how that even became a problem
+
+3
+00:00:16,490 --> 00:00:18,280
+in the first place.
+
+4
+00:00:18,290 --> 00:00:23,640
+Key concepts there that you need to understand are the idea of immutable infrastructure.
+
+5
+00:00:23,810 --> 00:00:28,580
+And the idea around containers being naturally ephemeral in design.
+
+6
+00:00:28,880 --> 00:00:36,680
+We'll cover those in the first lecture. Then we'll dive into data volumes and how those solve
+
+7
+00:00:36,680 --> 00:00:44,270
+some of our problems around persistent data. Then we'll also dig into bind mounts and how that solves
+
+8
+00:00:44,360 --> 00:00:50,660
+different problems with persistent data. Then we'll end up this section with a couple of assignments
+
+9
+00:00:50,720 --> 00:00:57,530
+around how to preserve database data, while replacing containers for databases. And then also around
+
+10
+00:00:57,740 --> 00:01:03,320
+actually mounting code into a container from the host while you're editing it, so that you can run that
+
+11
+00:01:03,320 --> 00:01:11,560
+code inside the container live. Requirements for this first lecture are just understanding how to
+
+12
+00:01:11,560 --> 00:01:16,970
+run containers, and the container and image concepts we've discussed so far.
+
+13
+00:01:17,050 --> 00:01:23,230
+Until now, you've only worried about what's needed to run a container, not the unique data that might
+
+14
+00:01:23,230 --> 00:01:24,920
+be created once a container is running.
+
+15
+00:01:25,840 --> 00:01:29,200
+Containers are meant to be immutable and ephemeral.
+
+16
+00:01:29,320 --> 00:01:34,220
+Those are just fancy buzzwords for unchanging and temporary, or disposable.
+
+17
+00:01:34,480 --> 00:01:40,180
+The idea here is that we can just throw away a container and create a new one from an image,
+
+18
+00:01:40,180 --> 00:01:40,770
+Right?
+
+19
+00:01:41,790 --> 00:01:47,820
+Then we're not talking about an actual limitation of containers, but more of a design goal, or a best
+
+20
+00:01:47,820 --> 00:01:49,070
+practice.
+
+21
+00:01:49,080 --> 00:01:54,690
+This is the idea of immutable infrastructure where we don't change things once they're running.
+
+22
+00:01:54,840 --> 00:02:00,330
+If a config change needs to happen, or maybe the container version upgrade needs to happen, then we
+
+23
+00:02:00,330 --> 00:02:02,420
+redeploy a whole new container.
+
+24
+00:02:02,490 --> 00:02:08,370
+This gives us huge benefits in reliability and consistency, and making changes reproducible.
+
+25
+00:02:08,490 --> 00:02:10,350
+But there's a tradeoff.
+
+26
+00:02:10,350 --> 00:02:16,140
+What about the unique data that your app will produce? Those databases, or a key value stores, or anything
+
+27
+00:02:16,140 --> 00:02:18,150
+else that your app spits out into a file?
+
+28
+00:02:18,330 --> 00:02:24,810
+Ideally, the containers shouldn't contain your unique data mixed in with the application binaries. This
+
+29
+00:02:24,810 --> 00:02:30,340
+is known as "separation of concerns" and Docker actually gives us a big benefit here.
+
+30
+00:02:30,450 --> 00:02:36,780
+We can update our application by recreating a new container, with an updated version of our app, and ideally,
+
+31
+00:02:36,990 --> 00:02:42,530
+our unique data is still where it needs to be and was preserved for us while our container was recycled.
+
+32
+00:02:42,540 --> 00:02:48,510
+In case you haven't noticed so far, the containers that we've been using, by default, were persistent.
+
+33
+00:02:48,510 --> 00:02:53,880
+Any changes in them actually were kept across restarts and reboots until we removed the container.
+
+34
+00:02:54,240 --> 00:02:57,160
+Just because we stopped the container or restarted the host,
+
+35
+00:02:57,300 --> 00:03:00,030
+doesn't mean the container's file changes go away.
+
+36
+00:03:00,210 --> 00:03:05,910
+It's only when we remove the container that it's UFS layer goes away, but we want to be able to do
+
+37
+00:03:05,910 --> 00:03:07,160
+that at will.
+
+38
+00:03:07,170 --> 00:03:13,320
+This problem of unique data is known in the industry as "persistent data" and until containers,
+
+39
+00:03:13,320 --> 00:03:19,230
+we didn't really have a name for that. Because, well, most things we built were persistent, like you know
+
+40
+00:03:19,230 --> 00:03:24,090
+those old servers that have been running that old app for five or 10 years or longer.
+
+41
+00:03:24,270 --> 00:03:26,850
+Everything was persistent by default.
+
+42
+00:03:26,850 --> 00:03:32,400
+Now in the new world of containers and application auto scaling, persistent data creates a unique
+
+43
+00:03:32,400 --> 00:03:33,280
+problem.
+
+44
+00:03:33,420 --> 00:03:36,640
+Docker has two solutions to this problem,
+
+45
+00:03:36,720 --> 00:03:42,450
+known as "data volumes" and "bind mounts." Docker volumes are a configuration option for a container that
+
+46
+00:03:42,450 --> 00:03:46,620
+creates a special location outside of that container's
+
+47
+00:03:46,620 --> 00:03:50,130
+union file system to store unique data.
+
+48
+00:03:50,210 --> 00:03:55,470
+This preserves it across container removals and allows us to attach it to whatever container we want.
+
+49
+00:03:55,940 --> 00:03:58,210
+And the container just sees it like a local file path.
+
+50
+00:03:58,440 --> 00:04:05,670
+Then there's bind mounts, which are simply us sharing or mounting a host directory, or file, into a container.
+
+51
+00:04:05,970 --> 00:04:10,470
+Again, it will just look like a local file path, or a directory path, to the container.
+
+52
+00:04:10,470 --> 00:04:12,590
+It won't actually know that it's coming from the host.
+

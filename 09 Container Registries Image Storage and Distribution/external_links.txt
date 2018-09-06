@@ -1,0 +1,8 @@
+- b'Docker-Cloud'
+- b'https://cloud.docker.com'
+- b'Docker-Hub'
+- b'https://hub.docker.com'
+- b'Docker-Store'
+- b'https://store.docker.com'
+- b'Use-Registry-As-A-Mirror-of-Docker-Hub'
+- b'https://docs.docker.com/registry/recipes/mirror/'

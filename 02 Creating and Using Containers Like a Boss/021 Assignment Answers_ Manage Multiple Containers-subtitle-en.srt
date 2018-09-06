@@ -1,0 +1,279 @@
+0
+00:02.520 --> 00:10.250
+This lecture is the answers to the assignment lecture right before this one for managing multiple
+
+1
+00:10.250 --> 00:11.160
+containers.
+
+2
+00:11.180 --> 00:17.810
+This is basically just a recording of me thinking out loud and walking through the assignment. You
+
+3
+00:17.810 --> 00:22.310
+might have slightly different commands. That's OK as long as you got to the end result of the three
+
+4
+00:22.310 --> 00:26.210
+different containers, running the three different images, with the required parameters.
+
+5
+00:26.210 --> 00:28.310
+Here we go.
+
+6
+00:28.670 --> 00:32.240
+I'll probably want to run the MySQL one first.
+
+7
+00:34.790 --> 00:43.220
+mysql, but I'm going to need to detach it and then open up port
+
+8
+00:45.780 --> 00:56.030
+3306. Then I'm going to give it a name called db. Then I'm also going to throw in this environment
+
+9
+00:56.030 --> 00:57.020
+variable.
+
+10
+01:07.860 --> 01:10.470
+That should do it.
+
+11
+01:10.480 --> 01:14.020
+Oop, I have too many dashes on the e.
+
+12
+01:15.070 --> 01:15.980
+OK.
+
+13
+01:16.090 --> 01:21.830
+Now I shall do docker container log mysql.
+
+14
+01:22.000 --> 01:23.130
+Nope. Sorry. db 
+
+15
+01:29.180 --> 01:32.180
+logs not log.
+
+16
+01:33.260 --> 01:38.850
+So I don't -- let's see, I'm not sure -- I don't see it yet.
+
+17
+01:38.880 --> 01:41.660
+I don't see the password.
+
+18
+01:41.660 --> 01:42.920
+It's pretty obvious.
+
+19
+01:47.310 --> 01:49.350
+Let me try it again.
+
+20
+01:57.110 --> 02:01.980
+There we go. Generated root password right there.
+
+21
+02:03.110 --> 02:05.540
+I want to copy that for later.
+
+22
+02:05.540 --> 02:07.550
+I don't actually need it for this assignment.
+
+23
+02:07.550 --> 02:13.490
+But that's how I would get the password if I needed to log into that MySQL server. All right. We're going to run
+
+24
+02:13.490 --> 02:15.870
+the next one...docker container
+
+25
+02:15.920 --> 02:17.150
+run
+
+26
+02:17.300 --> 02:18.830
+detached
+
+27
+02:18.830 --> 02:20.010
+name
+
+28
+02:20.150 --> 02:22.220
+webserver
+
+29
+02:23.240 --> 02:25.040
+and then port.
+
+30
+02:25.070 --> 02:32.840
+It's going to be the Apache one so port 8080 on my host is going to go to 80 in my container. Then
+
+31
+02:32.840 --> 02:37.160
+httpd.
+
+32
+02:37.970 --> 02:45.310
+OK, and if I do a docker ps, both of those should be running. I can see on the right that their proper ports
+
+33
+02:45.310 --> 02:52.930
+are redirecting from my host into my container. That's what that little arrow means. Then, let's see one more
+
+34
+02:52.930 --> 02:56.160
+docker container run.
+
+35
+02:56.300 --> 03:10.980
+Give it a name of proxy. I'm going to have that listed on port 80 and forward to port 80. It's detached. And proper name.
+
+36
+03:11.450 --> 03:17.200
+OK I think that one's good. docker ps
+
+37
+03:21.540 --> 03:26.450
+You'll notice, by the way, that I'm typing doctor ps, not docker container
+
+38
+03:26.460 --> 03:27.240
+ls
+
+39
+03:27.240 --> 03:31.540
+just because old habits die hard and the old command is docker
+
+40
+03:31.540 --> 03:35.950
+ps. But it still works. All right.
+
+41
+03:36.000 --> 03:41.490
+All three are running. All the ports are forwarding. I properly named them...
+
+42
+03:43.700 --> 03:44.360
+And
+
+43
+03:47.720 --> 03:49.190
+I'm actually going to...
+
+44
+03:58.040 --> 04:03.080
+I'm actually going to test their ports. If I do curl local host,
+
+45
+04:03.600 --> 04:14.350
+it should give me back the nginx. If I curl...let's see, localhost 8080, I should get back the Apache.
+
+46
+04:18.560 --> 04:19.050
+All right.
+
+47
+04:19.060 --> 04:23.000
+Those are open.
+
+48
+04:23.460 --> 04:23.690
+All right.
+
+49
+04:23.700 --> 04:27.740
+Now I need to clean them up. I want to do docker container
+
+50
+04:28.530 --> 04:34.760
+stop
+
+51
+04:36.960 --> 04:37.740
+Oh that's right.
+
+52
+04:37.740 --> 04:38.840
+I didn't name them that.
+
+53
+04:38.880 --> 04:40.440
+That's silly.
+
+54
+04:40.500 --> 04:50.580
+I'm just going to use tab to give me a tab completion. I can do this one and this one.
+
+55
+04:50.630 --> 04:50.920
+Now.
+
+56
+04:54.880 --> 04:55.650
+OK.
+
+57
+04:55.920 --> 04:59.870
+All three are stopped.  docker ps -a.
+
+58
+05:00.360 --> 05:01.030
+Yep.
+
+59
+05:01.230 --> 05:06.360
+All three of them. I could have also done docker container ls -a.
+
+60
+05:07.410 --> 05:08.310
+Same thing.
+
+61
+05:08.320 --> 05:10.170
+Now, I need to remove them.
+
+62
+05:10.170 --> 05:10.860
+I'm going to do a
+
+63
+05:10.860 --> 05:15.190
+docker container rm.
+
+64
+05:15.460 --> 05:17.280
+I'm going to use tab completion again
+
+65
+05:20.430 --> 05:22.980
+and remove them.
+
+66
+05:23.010 --> 05:28.360
+docker ps -a -- nothing there. docker images.
+
+67
+05:28.670 --> 05:36.030
+This is a new command actually -- image ls. That shows me the three different images that are still there.
+
+68
+05:36.180 --> 05:36.930
+OK.
+
+69
+05:37.350 --> 05:40.460
+Everything's cleaned up. That's my assignment.

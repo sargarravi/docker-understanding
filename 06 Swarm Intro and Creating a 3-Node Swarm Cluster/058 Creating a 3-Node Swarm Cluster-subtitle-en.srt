@@ -1,0 +1,735 @@
+0
+00:04.820 --> 00:11.510
+This is going to be the first lecture where we're actually going to use multiple hosts or nodes,
+
+1
+00:11.570 --> 00:17.900
+or instances, or whatever you want...multiple OS's. We're going to set up a 3-node swarm across
+
+2
+00:17.900 --> 00:19.630
+all three of those nodes.
+
+3
+00:19.670 --> 00:24.620
+We unfortunately can't do this part with the built-in Docker on your machine because that's only going to
+
+4
+00:24.620 --> 00:31.150
+provide us one OS. We need three Linux OS's to play with this next set of features.
+
+5
+00:31.190 --> 00:35.600
+The first option you're going to have is using play-with-docker.com.
+
+6
+00:35.630 --> 00:37.900
+It's absolutely the easiest way to get started.
+
+7
+00:37.910 --> 00:43.400
+It comes with Docker pre-installed. It takes you seconds to provision three different machines, and it requires
+
+8
+00:43.430 --> 00:50.160
+no investment on your end. But it does mean that every four hours it will wipe all the work you've done.
+
+9
+00:50.180 --> 00:54.590
+So if you think you're going to do the rest of this section over the course of days, then this may not
+
+10
+00:54.590 --> 00:59.210
+be the best option for you. But if you're going to focus for a few hours, you can definitely get through
+
+11
+00:59.210 --> 01:05.030
+most, if not all, of the multi node swarm stuff using Play With Docker in one sitting.
+
+12
+01:05.030 --> 01:09.380
+Another option you have is you can use docker-machine, which is not something we've talked about yet,
+
+13
+01:09.530 --> 01:14.570
+but it's a command line tool that actually gets installed with Docker for Windows and Docker for Mac.
+
+14
+01:14.720 --> 01:22.040
+You can download it for Linux, and it is basically an automation tool for provisioning virtual machines
+
+15
+01:22.040 --> 01:26.960
+locally, and on the Internet, and then automatically setting up Docker for you.
+
+16
+01:26.960 --> 01:31.850
+The default way that it works is with VirtualBox, which you can install free. But it does mean that if
+
+17
+01:31.850 --> 01:37.340
+you're going to run three virtual machines locally, each one of them probably needs a gig of RAM or so
+
+18
+01:37.340 --> 01:42.440
+to run through a lot of these examples. So you'll need a machine with a good amount of RAM in it. Another
+
+19
+01:42.530 --> 01:48.350
+option, and the one that I'm going to default to for a lot of these demos and walk throughs, is DigitalOcean.
+
+20
+01:48.350 --> 01:52.910
+I just recommend DigitalOcean just because they have the cheapest and easiest service to
+
+21
+01:52.910 --> 01:58.760
+get started, and they run everything on SSD so it's nice and fast. You can actually use this in a
+
+22
+01:58.760 --> 02:04.130
+very, very similar set up to what production would be because you're using three actual virtual machines,
+
+23
+02:04.190 --> 02:07.810
+in the cloud, and it takes about a minute to launch each virtual machine.
+
+24
+02:07.910 --> 02:12.050
+If you're thinking that that might be an option, you can use my referral code and the references to
+
+25
+02:12.050 --> 02:15.630
+this section to get your first $10 free.
+
+26
+02:15.650 --> 02:21.740
+If you're only going to take a few days to get through this swarm stuff, you can provision three, $10 a
+
+27
+02:21.740 --> 02:25.480
+month nodes and have them up for days or a week.
+
+28
+02:25.520 --> 02:30.280
+And that might fit within the $10 budget so technically wouldn't cost you anything.
+
+29
+02:30.290 --> 02:35.270
+And then lastly, there are so many ways to get Docker installed, and that's really all you need is three
+
+30
+02:35.270 --> 02:39.900
+machines with Docker installed on them. You can use Docker Machine.
+
+31
+02:40.010 --> 02:47.120
+It has built in drivers that allow you to use it to provision Amazon instances, or Azure instances, or
+
+32
+02:47.120 --> 02:54.170
+DigitalOcean Droplets, or Google Compute nodes or any place you can get a Linux virtual machine, you
+
+33
+02:54.170 --> 02:58.460
+can actually just install Docker with an automated script from get.docker.com.
+
+34
+02:58.520 --> 03:04.640
+Frankly, I prefer the get.docker.com version only because Docker Machine may save you a few steps,
+
+35
+03:04.640 --> 03:09.230
+especially for locations like Amazon and Azure that require you to provision a lot of different things
+
+36
+03:09.230 --> 03:13.760
+before you can get to just provisioning a virtual machine. But you're probably not going to be using
+
+37
+03:13.760 --> 03:15.580
+Docker Machine in production.
+
+38
+03:15.590 --> 03:20.960
+It is a tool to simply automate dev and test environments. It was never really designed to set up all
+
+39
+03:20.960 --> 03:24.500
+of the production settings you might need for a multi-node swarm.
+
+40
+03:24.530 --> 03:30.170
+There's nothing inherently wrong with it, but typically get.docker.com works on all the major
+
+41
+03:30.170 --> 03:35.140
+Linux distributions and doesn't take any longer than actually using Docker Machine itself.
+
+42
+03:35.210 --> 03:41.390
+I'm going to give you a really quick example of just getting any of these scenarios to the point
+
+43
+03:41.390 --> 03:46.540
+where Docker is installed. Then they all will be very similar in the way we actually create the
+
+44
+03:46.540 --> 03:48.850
+swarm and do our services.
+
+45
+03:48.860 --> 03:52.250
+So don't think that you have to do it the way I do it.
+
+46
+03:52.250 --> 03:56.600
+Really we're just trying to get Docker info to actually bring back information, and then just to make
+
+47
+03:56.600 --> 04:01.400
+sure that the three nodes have networking access to each other and they're on a well connected network.
+
+48
+04:01.400 --> 04:04.630
+So ideally they should be in the same network.
+
+49
+04:04.670 --> 04:09.560
+If you were going to use Play With Docker, you actually just go to play-with-docker.com and check
+
+50
+04:09.560 --> 04:11.430
+on the box for I'm not a robot.
+
+51
+04:11.540 --> 04:15.580
+And if it gives you the CAPTCHA screen, just follow along.
+
+52
+04:17.720 --> 04:20.290
+All right. You'll see that it's counting down by four hours.
+
+53
+04:20.310 --> 04:26.130
+But if I just click the creating instance, and then I click it two more times, it'll create three virtual
+
+54
+04:26.130 --> 04:27.480
+environments very quickly.
+
+55
+04:27.570 --> 04:31.680
+As a side note, this is actually using Docker in Docker, which is a pretty neat technology where we're
+
+56
+04:31.680 --> 04:34.480
+actually running Docker inside a Docker container.
+
+57
+04:34.500 --> 04:39.870
+But in this set up with Play With Docker, which was created by other Docker captains and the Docker team,
+
+58
+04:40.020 --> 04:41.450
+it's really hard to tell a difference.
+
+59
+04:41.580 --> 04:51.240
+If I go to node1, I can already see that Docker info gives me the latest version. And if I even tried
+
+60
+04:51.240 --> 04:58.200
+to ping node2, it actually recognizes friendly names, so it will make it easier to communicate back and
+
+61
+04:58.200 --> 04:59.220
+forth between them.
+
+62
+04:59.260 --> 05:03.990
+So if this is something you want to try, it's a great and easy way on either low-powered machines
+
+63
+05:04.020 --> 05:07.290
+or if you just don't want to take the time to set up an environment for the next four hours.
+
+64
+05:08.180 --> 05:15.290
+Option two is to use docker-machine. If you have it installed, it should be at least version 10
+
+65
+05:15.380 --> 05:16.610
+if not newer.
+
+66
+05:16.670 --> 05:20.450
+You'll know if it's installed because you'll type the docker-machine command from your command line and
+
+67
+05:20.450 --> 05:22.340
+it'll either work or it won't.
+
+68
+05:22.430 --> 05:28.370
+If you need to download it for your particular Linux OS, then you can hop over to the Docker Documentation,
+
+69
+05:28.370 --> 05:31.580
+which will actually give you a quick curl line to download it.
+
+70
+05:31.730 --> 05:37.840
+If you're using the ToolBox on Windows 7 and 8, or Docker for Windows on Windows 10, or Docker for
+
+71
+05:37.840 --> 05:42.040
+Mac on Mac OS, it's already going to be up to date on those OS's for you.
+
+72
+05:42.260 --> 05:48.260
+If you want to use the VirtualBox option, which is the default, you just need to jump over to
+
+73
+05:48.260 --> 05:54.170
+virtualbox.org and download the latest version for your OS. And you don't even have to do anything with
+
+74
+05:54.170 --> 05:54.500
+VirtualBox.
+
+75
+05:54.500 --> 06:02.150
+It just needs to be installed. And then from your command line, you can just type docker-machine create
+
+76
+06:02.510 --> 06:09.530
+node1, and this will actually run through creating a virtual machine with BusyBox, which is a very
+
+77
+06:09.530 --> 06:12.430
+lightweight Linux distribution.
+
+78
+06:12.640 --> 06:18.160
+This will actually run through creating a very lightweight Linux machine, and you'll just repeat those
+
+79
+06:18.160 --> 06:20.920
+two commands for node2 and 3.
+
+80
+06:21.070 --> 06:26.590
+If you need more information on a Docker Machine, you can actually look at my reference section
+
+81
+06:26.620 --> 06:30.130
+for tutorial links.
+
+82
+06:30.390 --> 06:34.400
+Once your machines are created, you really have two options for how you can access those machines.
+
+83
+06:34.410 --> 06:41.580
+You can either use docker-machine ssh, and then the name of the node you created and that'll hop you right
+
+84
+06:41.660 --> 06:42.630
+into that machine.
+
+85
+06:42.960 --> 06:45.870
+Or you can use the environment command.
+
+86
+06:45.960 --> 06:54.030
+So the command docker-machine env, and then the name of the machine you want, will give you some output,
+
+87
+06:54.180 --> 06:59.760
+and you can either cut and paste these options to your command line or you can copy and paste the bottom
+
+88
+06:59.760 --> 07:05.280
+option, and that will actually create the environment variable so that when I run my docker command,
+
+89
+07:05.640 --> 07:10.830
+because again, the Docker CLI just needs to know what Docker host to talk to. And by default, it's talking
+
+90
+07:10.830 --> 07:11.850
+to your local machine.
+
+91
+07:11.880 --> 07:14.530
+But that just reprogrammed it to talk to the Docker Machine
+
+92
+07:14.540 --> 07:15.560
+node1.
+
+93
+07:15.630 --> 07:20.550
+If I do docker info, you'll see that its name is node1 because that's the one I'm actually now operating
+
+94
+07:20.550 --> 07:20.920
+on.
+
+95
+07:22.460 --> 07:27.010
+For the last example, I'm going to use DigitalOcean, which I have created an account on.
+
+96
+07:27.080 --> 07:33.830
+Here, they call servers Droplets. I recommend if you don't have a specific reason to run another
+
+97
+07:33.830 --> 07:41.900
+OS, to start with Ubuntu 16.04 because that tends to be the first Linux distribution to support the
+
+98
+07:41.900 --> 07:43.430
+newer Docker features.
+
+99
+07:43.430 --> 07:44.870
+So that's the default there.
+
+100
+07:44.870 --> 07:50.990
+Then I would recommend for the remainder of this course for us to use the $10 a month server. You
+
+101
+07:50.990 --> 07:55.850
+might be able to get away with the $5 a month server, but it might get a little bit slow during some of
+
+102
+07:55.850 --> 08:01.860
+the later demos when we do monitoring and logging containers on top of our applications.
+
+103
+08:01.910 --> 08:06.860
+Then you can pick the data center closest to you. Then the only other option is to add an SSH key.
+
+104
+08:07.430 --> 08:12.690
+If you're not familiar with how to create your own SSH key locally and then upload the public into
+
+105
+08:12.710 --> 08:13.830
+DigitalOcean,
+
+106
+08:13.830 --> 08:17.930
+there's a great tutorial that they have for it that you can find in the resources of this section.
+
+107
+08:19.140 --> 08:27.320
+Down at the bottom I'm going to create three machines, and I'm going to call them node1, 2 and 3.
+
+108
+08:27.520 --> 08:34.570
+Then I need to wait probably about 60 seconds and they'll be ready for me.
+
+109
+08:34.620 --> 08:38.040
+You could just use the IP addresses here...jump on these machines.
+
+110
+08:38.090 --> 08:43.440
+Clicking the copy button and then ssh root @ the IP address.
+
+111
+08:43.560 --> 08:49.230
+And if your SSH key is properly set up on your machine, then it'll automatically log in with that
+
+112
+08:49.230 --> 08:49.870
+key.
+
+113
+08:49.950 --> 08:56.070
+But in the resources section, I've given you an example of how to set up a .ssh config file that will
+
+114
+08:56.070 --> 09:00.800
+allow you to have these three nodes in a config so you can just simply call them node1, node2,
+
+115
+09:00.830 --> 09:04.980
+node3, instead of having to remember their IP addresses, in case you're going to be doing this over multiple
+
+116
+09:04.980 --> 09:10.650
+days. That's really an easy way to get in and out of these servers.
+
+117
+09:10.660 --> 09:15.550
+If you've used Docker Machine, or if you used Play With Docker, then Docker is already installed
+
+118
+09:15.850 --> 09:17.760
+and you're getting ready to create your swarm.
+
+119
+09:17.830 --> 09:22.400
+But if you use DigitalOcean, or you roll your own VMs, then you need to get Docker installed.
+
+120
+09:22.540 --> 09:28.180
+The easiest way to do that, that I like to use, is to use the script over at get.docker.com.
+
+121
+09:28.660 --> 09:33.520
+You can see examples up here of how to use this script to get the current production release of
+
+122
+09:33.520 --> 09:34.850
+Docker on your machine.
+
+123
+09:39.470 --> 09:45.020
+Now, all three of my servers have the latest version of Docker installed and we're ready to set
+
+124
+09:45.020 --> 09:46.400
+up our swarm.
+
+125
+09:46.400 --> 09:50.960
+Again, all that's required is that these three nodes have solid networking to each other and specific
+
+126
+09:50.960 --> 09:51.760
+ports open.
+
+127
+09:51.830 --> 09:56.360
+If you're curious about the ports of swarm, look in the resources of this section where I actually
+
+128
+09:56.360 --> 10:01.220
+have a link to my own list of the firewall ports necessary for Swarm to work.
+
+129
+10:01.220 --> 10:08.630
+If you remember before, we did docker swarm init. Now, in this case, which is pretty common in cloud
+
+130
+10:08.630 --> 10:14.510
+servers, it wants us to specify an IP address to advertise the Swarm service on.
+
+131
+10:14.510 --> 10:19.240
+You want to use an IP address that is accessible from the other servers.
+
+132
+10:19.250 --> 10:23.570
+In this case, I'm going to use the public IP address for my DigitalOcean
+
+133
+10:23.580 --> 10:24.050
+host.
+
+134
+10:29.750 --> 10:30.650
+And there we go.
+
+135
+10:30.700 --> 10:33.100
+So far, this is just like on our local machine.
+
+136
+10:33.170 --> 10:39.530
+This time, though, I'm going to copy the swarm join command and go over to node2 and add it in.
+
+137
+10:39.890 --> 10:40.720
+And there we go.
+
+138
+10:41.000 --> 10:42.940
+This node is now a part of the swarm.
+
+139
+10:43.010 --> 10:50.300
+So we go back to node1, docker node ls, and now we have two.
+
+140
+10:50.510 --> 10:58.070
+You'll notice the second node is only a worker. Because as it says, if we wanted it to be a manager,
+
+141
+10:58.070 --> 11:05.090
+we should have gotten this manager token. But no worries. We can actually update this worker to promote
+
+142
+11:05.090 --> 11:06.160
+it to being a manager.
+
+143
+11:06.200 --> 11:15.500
+But if we're over on node2, notice that I can't use Swarm commands. Because workers aren't really privileged.
+
+144
+11:15.860 --> 11:18.720
+They don't have access to control the swarm.
+
+145
+11:18.830 --> 11:23.510
+So they're not going to be able to use any of the Swarm commands that we're used to using on the managers.
+
+146
+11:23.510 --> 11:28.280
+Back on node1 and the manager, I'm going to do a docker node update...
+
+147
+11:37.470 --> 11:42.120
+What I was doing there was hitting Tab for tab completion, which is always a fantastic feature in
+
+148
+11:42.120 --> 11:47.520
+Docker, especially with so many features. It was walking me through each step of how to use that update
+
+149
+11:47.520 --> 11:48.240
+command.
+
+150
+11:48.240 --> 11:53.390
+Now I've got this final update finished and it has changed node2.
+
+151
+11:53.430 --> 11:59.930
+Now if I do my docker node ls, you'll see that now it's considered reachable.
+
+152
+12:00.030 --> 12:04.920
+But the original node is still the leader. By the way, the little asterisk? That just means that's the
+
+153
+12:04.920 --> 12:06.770
+node you're currently talking to.
+
+154
+12:07.020 --> 12:10.750
+For node3, let's add it as a manager by default.
+
+155
+12:10.890 --> 12:18.130
+We need to go back to our original command of docker swarm, and then we need to get the join-token
+
+156
+12:20.740 --> 12:22.400
+manager.
+
+157
+12:22.450 --> 12:25.430
+You can get these tokens at any time.
+
+158
+12:25.510 --> 12:27.500
+You don't have to write them down or save them.
+
+159
+12:27.520 --> 12:33.100
+They're part of the swarm configuration and stored encrypted on disk, so don't worry about that.
+
+160
+12:33.220 --> 12:38.620
+You can also change these in case they possibly get exposed or you maybe get a server that might have
+
+161
+12:38.620 --> 12:43.900
+had a vulnerability on it, and you want to make sure that no nodes can join the swarm from the old key,
+
+162
+12:43.900 --> 12:45.790
+you can actually rotate these keys.
+
+163
+12:45.910 --> 12:50.270
+I'm going to copy this, paste it into node3.
+
+164
+12:50.770 --> 12:53.820
+And there we go. Back on node1.
+
+165
+12:53.830 --> 13:00.670
+If I do a docker node ls again, you'll see I've got three nodes. And they all have a manager status indicating
+
+166
+13:00.670 --> 13:03.540
+that they are managers.
+
+167
+13:03.560 --> 13:11.600
+So now we have a 3-node, redundant swarm, with three managers. Let's just do the same thing
+
+168
+13:11.600 --> 13:16.540
+we did earlier, docker service create alpine
+
+169
+13:19.150 --> 13:22.420
+ping 8.8.8.8
+
+170
+13:22.690 --> 13:23.770
+Only this time,
+
+171
+13:27.350 --> 13:29.040
+let's give it three replicas.
+
+172
+13:31.690 --> 13:33.920
+And then do a docker service
+
+173
+13:34.010 --> 13:36.820
+ls, and we'll see
+
+174
+13:36.820 --> 13:39.350
+we've got three of three already running.
+
+175
+13:39.760 --> 13:50.050
+If I did a docker node ps, I can actually see my local node is actually running this task or container.
+
+176
+13:50.320 --> 13:59.740
+I can actually specify the node, node2, and it'll give me just the containers running on node2.
+
+177
+13:59.980 --> 14:07.900
+If I wanted to get a full list, I could do a docker service ps, and then sleepy brown is the name that
+
+178
+14:07.900 --> 14:13.350
+it gave our service. And you'll see here..let me expand the screen a little bit.
+
+179
+14:13.510 --> 14:17.210
+You can see here that it's listing all three of our tasks.
+
+180
+14:17.470 --> 14:22.450
+Once you've got this swarm created, you normally don't need to be typing commands into all the different
+
+181
+14:22.450 --> 14:26.910
+nodes. You can really operate the whole swarm, for most things, from node1.
+
+182
+14:26.950 --> 14:33.250
+So we'll be doing a lot of our work from node1 in future lectures, but for now, pat yourself on the back
+
+183
+14:33.280 --> 14:36.420
+because you have a fully operational swarm cluster.

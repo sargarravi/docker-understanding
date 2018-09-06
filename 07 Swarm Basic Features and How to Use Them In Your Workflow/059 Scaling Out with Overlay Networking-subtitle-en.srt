@@ -1,0 +1,339 @@
+0
+00:05.060 --> 00:11.000
+Before we expand our services to start running across a bunch of nodes and all of the services talking
+
+1
+00:11.000 --> 00:15.140
+to each other, let's go over a couple of new concepts that Swarm brings to the table.
+
+2
+00:15.320 --> 00:20.900
+The first one is a new networking driver called Overlay, and you really just create a network like you're
+
+3
+00:20.900 --> 00:21.890
+used to creating it,
+
+4
+00:21.940 --> 00:26.000
+docker network create, and you put in a --driver overlay.
+
+5
+00:26.000 --> 00:33.020
+What that's like is basically creating a Swarm-wide bridge network where the containers across
+
+6
+00:33.020 --> 00:38.380
+hosts on the same virtual network can access each other kind of like they're on a VLAN.
+
+7
+00:38.440 --> 00:41.970
+This is only for intra swarm communication.
+
+8
+00:42.040 --> 00:47.770
+The overlay driver doesn't play a huge amount in traffic coming inside, as it's trying to take a wholistic
+
+9
+00:47.770 --> 00:53.230
+swarm view of the network so that you're not constantly messing around with networking settings on individual
+
+10
+00:53.230 --> 00:54.550
+nodes.
+
+11
+00:54.550 --> 01:01.390
+You can also enable full network encryption using IPiece SEC where it'll actually set up IPSec tunnels
+
+12
+01:01.450 --> 01:04.220
+between all the different nodes of your swarm.
+
+13
+01:04.330 --> 01:07.520
+But it's off by default really just for performance reasons.
+
+14
+01:08.930 --> 01:15.920
+When you create your services, you can add them to no Overlay networks, or one or more Overlay networks.
+
+15
+01:15.920 --> 01:18.140
+It really depends on the design of your application.
+
+16
+01:18.140 --> 01:23.300
+You know, a lot of traditional designs would have the databases on a backend network and the Web servers
+
+17
+01:23.360 --> 01:28.340
+on a frontend network. Then maybe you would have an API between the two that would be on both networks,
+
+18
+01:28.340 --> 01:29.400
+or something like that.
+
+19
+01:29.570 --> 01:31.870
+And you can totally do that in Swarm.
+
+20
+01:32.000 --> 01:36.800
+Let's see this in action. What I want to do is I want to show you what it would be like if we deployed
+
+21
+01:36.800 --> 01:43.820
+the Drupal example from a previous assignment with the Postgres Database, as services, and then created
+
+22
+01:43.880 --> 01:46.340
+an Overlay network for them to talk to each other.
+
+23
+01:46.340 --> 01:53.570
+First we need to create a network, so docker network create, and this hasn't changed for Swarm
+
+24
+01:53.690 --> 01:58.080
+other than the fact that we're going to use a new driver.
+
+25
+01:58.080 --> 02:00.280
+I'm just going to call it mydrupal.
+
+26
+02:01.190 --> 02:01.600
+OK.
+
+27
+02:01.610 --> 02:09.140
+So, I'm going to do a docker network ls, and you'll see I've got a new overlay. The ingress one is there by default.
+
+28
+02:09.290 --> 02:14.720
+You'll also see a new one because a swarm, which is actually an outgoing network that we won't need to mess
+
+29
+02:14.720 --> 02:15.360
+with.
+
+30
+02:15.730 --> 02:26.360
+So, let's create our Postgres service...docker service create name...let's call it psql network.
+
+31
+02:26.360 --> 02:28.750
+We're going to connect it to mydrupal network.
+
+32
+02:28.760 --> 02:31.550
+There's actually tab completion on the network names.
+
+33
+02:31.730 --> 02:35.900
+Then remember I need to add in that environment variable for the Postgres password.
+
+34
+02:39.920 --> 02:42.330
+So we can connect to it later.
+
+35
+02:43.880 --> 02:48.830
+Then we're going to use the Postgres image. Looks good.
+
+36
+02:48.920 --> 02:53.720
+You'll notice here that we don't get the whole image downloading and all that, because services can't be
+
+37
+02:53.720 --> 02:58.850
+run in the foreground, because they have to go through the orchestrator and scheduler. So, we can do a
+
+38
+02:58.850 --> 03:03.880
+docker service ls, and we can see that one of one of them is running.
+
+39
+03:04.220 --> 03:11.760
+If we do a docker service ps psql, we can see that this is actually running on Node 1.
+
+40
+03:12.200 --> 03:20.680
+So I can do a docker container logs psql, and then I can see the logs of that.
+
+41
+03:20.700 --> 03:21.890
+Yep. Looks like it's running.
+
+42
+03:21.950 --> 03:22.240
+All right.
+
+43
+03:22.260 --> 03:26.480
+Let's create our other service so
+
+44
+03:30.240 --> 03:32.700
+I'll go ahead and just call it drupal.
+
+45
+03:33.940 --> 03:41.920
+We also need to attach to that same network. Then we want to publish the port 80:80 like we did with
+
+46
+03:41.920 --> 03:48.840
+a docker run command. And we'll use the Drupal image.
+
+47
+03:51.280 --> 03:51.760
+OK.
+
+48
+03:52.000 --> 03:53.860
+We can see that it's starting there.
+
+49
+03:53.890 --> 03:59.490
+There's a trick. You can actually use the watch command in Linux to watch. It'll
+
+50
+03:59.490 --> 04:04.150
+basically...what it does is it's rerunning a command over and over again. It's installed by default on
+
+51
+04:04.150 --> 04:04.990
+Ubuntu.
+
+52
+04:04.990 --> 04:10.570
+If you just put watch in front of the docker service ls, it will keep running it every two seconds
+
+53
+04:10.570 --> 04:12.190
+by default until...ah, see?
+
+54
+04:12.190 --> 04:13.800
+Now we have one by one.
+
+55
+04:13.840 --> 04:18.970
+All right, and then I'll just Control c out of that. We can do a docker service
+
+56
+04:18.970 --> 04:24.910
+ps drupal and see that drupal is actually running on Node 2.
+
+57
+04:25.180 --> 04:27.590
+We have the database running on Node 1.
+
+58
+04:27.700 --> 04:30.040
+We have the Drupal website running on Node 2.
+
+59
+04:30.280 --> 04:33.040
+So, how do they know how to talk to each other?
+
+60
+04:33.250 --> 04:36.560
+Well, using the service names.
+
+61
+04:36.560 --> 04:46.240
+If I paste in one of the IP addresses, it should come up on the Drupal install. And if I tell it the database
+
+62
+04:46.240 --> 04:50.670
+here, database name, we're just going to do the postgres again,
+
+63
+04:51.070 --> 04:53.620
+postgres, my password.
+
+64
+04:57.000 --> 05:01.920
+For the host, just like when we were with Compose, we made the service names in the Compose file,
+
+65
+05:01.920 --> 05:07.570
+here, we're going to use the service name that we created for the database server. So, that was
+
+66
+05:07.590 --> 05:08.200
+psql.
+
+67
+05:09.860 --> 05:15.230
+This screen is basically telling us that it's able to talk to the database across the nodes and
+
+68
+05:15.320 --> 05:16.770
+set up the system.
+
+69
+05:17.060 --> 05:22.480
+That's the great thing about Overlay is it really just acts like everything's on the same subnet.
+
+70
+05:23.960 --> 05:24.170
+All right.
+
+71
+05:24.200 --> 05:25.540
+So we don't need this anymore.
+
+72
+05:26.780 --> 05:33.850
+I'm going to finish up this example real quick just to show you the next cool thing about Swarm. OK.
+
+73
+05:34.010 --> 05:40.240
+Now, this site is running. But I have three nodes, so how do I know which node it's going to be on and
+
+74
+05:40.240 --> 05:44.890
+which port I need to make sure that my DNS points to when I create this website name?
+
+75
+05:44.890 --> 05:52.960
+In my case, I have three IP addresses, and I can copy all three of them and put all three of those
+
+76
+05:52.960 --> 05:54.090
+IP addresses in
+
+77
+05:59.150 --> 06:02.690
+and...oops...I got the wrong one there.
+
+78
+06:03.810 --> 06:12.840
+So, if you see, it appears like the website is running on all three nodes because I'm looking at
+
+79
+06:12.840 --> 06:14.750
+all three IP addresses.
+
+80
+06:15.120 --> 06:21.490
+But if I go over here and do this service ps drupal, I know it's only running node 2.
+
+81
+06:21.630 --> 06:33.180
+I can even do a docker service inspect, and see that indeed it's only got one IP address on that
+
+82
+06:33.200 --> 06:36.370
+overlay network...right here.
+
+83
+06:36.450 --> 06:39.120
+So, why is it responding on all three hosts?
+
+84
+06:39.120 --> 06:41.070
+That leads us to our next, new feature.

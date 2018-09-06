@@ -1,0 +1,188 @@
+1
+00:00:05,010 --> 00:00:10,770
+Docker Registry. We've previously discussed how it can be a registry that you store privately on your
+
+2
+00:00:10,770 --> 00:00:12,280
+network.
+
+3
+00:00:12,370 --> 00:00:16,330
+It's actually part of the docker slash distribution GitHub repo.
+
+4
+00:00:16,630 --> 00:00:22,180
+If you went looking for Registry, just so you know, there's an old version of Registry in GitHub
+
+5
+00:00:22,510 --> 00:00:29,180
+that is legacy. It'll clearly say that. The current V2 Registry that we're all using was rewritten in
+
+6
+00:00:29,230 --> 00:00:35,830
+Go and can be found in the Distribution code repository but you probably won't use it from GitHub,
+
+7
+00:00:35,840 --> 00:00:41,430
+you'll probably use it from Docker Hub. Docker has a pre-built official image for Registry,
+
+8
+00:00:41,440 --> 00:00:48,790
+so it's as simple as docker pull registry. I would say that it's pretty much the defacto back end
+
+9
+00:00:48,790 --> 00:00:52,330
+registry for storing your containers privately.
+
+10
+00:00:53,780 --> 00:00:56,180
+It is pretty bare bones.
+
+11
+00:00:56,180 --> 00:00:57,150
+There's no web GUI.
+
+12
+00:00:57,150 --> 00:01:03,030
+It's definitely not like a Docker Hub or other third party service. Out of the box,
+
+13
+00:01:03,050 --> 00:01:09,530
+it does support certificates and basic authentication, but they're not enabled by default and the authentication
+
+14
+00:01:09,530 --> 00:01:12,020
+is actually everything or none.
+
+15
+00:01:12,020 --> 00:01:16,300
+It's not RBAC or role-based access control.
+
+16
+00:01:16,340 --> 00:01:23,060
+It's more like an Apache htaccess where, if you have a username and password that you get through, you
+
+17
+00:01:23,060 --> 00:01:25,180
+have read/write access to everything.
+
+18
+00:01:25,220 --> 00:01:32,300
+It's probably only useful in small teams without some sort of tool on top of it to make it more enterprise-y
+
+19
+00:01:32,550 --> 00:01:34,630
+and scalable.
+
+20
+00:01:34,810 --> 00:01:41,280
+But at its core, it's really just a web API and a storage system to handle all of these large images
+
+21
+00:01:41,290 --> 00:01:42,310
+we're going to be dealing with.
+
+22
+00:01:43,060 --> 00:01:47,200
+The nice thing is it actually comes with a lot of built in storage drivers that allow you to put
+
+23
+00:01:47,200 --> 00:01:53,850
+the back end storage of it on S3 or Azure or Alibaba or Google Cloud. It's even got an OpenStack
+
+24
+00:01:53,950 --> 00:01:57,930
+Swift driver but we're just going to use the local which is default.
+
+25
+00:01:57,940 --> 00:02:03,580
+Basically, that just means using in the local file system in the image or on your host using volumes.
+
+26
+00:02:03,580 --> 00:02:08,710
+Real quick, before we get to installing the registry, I wanted to bring your attention to a few of
+
+27
+00:02:08,710 --> 00:02:11,770
+the resource links in this section that you should check out.
+
+28
+00:02:12,710 --> 00:02:19,040
+The first one is a basic set up with TLS so that you won't have to enable the insecure registry
+
+29
+00:02:19,040 --> 00:02:21,990
+option because, obviously, TLS is a good thing.
+
+30
+00:02:22,010 --> 00:02:26,420
+The second is a reference article from Docker around a garbage collection.
+
+31
+00:02:26,420 --> 00:02:31,670
+The thing about a registry is when you start using it in the real world, it really starts to take
+
+32
+00:02:31,670 --> 00:02:36,500
+up a lot of data and, especially if you're pushing images over and over, it can really start to eat up
+
+33
+00:02:36,500 --> 00:02:37,500
+disk space.
+
+34
+00:02:37,640 --> 00:02:42,530
+So you need to pay a little bit of attention to your decision around your storage driver and, as
+
+35
+00:02:42,530 --> 00:02:43,460
+well,
+
+36
+00:02:43,460 --> 00:02:49,770
+this article on garbage collection which will try to clean up old things and keep your storage in check.
+
+37
+00:02:49,790 --> 00:02:53,580
+Lastly, a really cool option is the registry mirror.
+
+38
+00:02:53,780 --> 00:02:58,760
+If you're deploying to production and one of your concerns is that you don't want to depend on the
+
+39
+00:02:58,760 --> 00:03:06,740
+Hub for a lot of your base images, then what you can do as a feature in Registry is to enable a proxy
+
+40
+00:03:06,740 --> 00:03:14,960
+mode and then you tell your Doctor daemons to use the proxy and what it will do is it will cache any
+
+41
+00:03:14,960 --> 00:03:21,140
+Hub images inside that registry. Which is pretty great if you're wanting to make sure that you can optimize
+
+42
+00:03:21,140 --> 00:03:25,310
+your bandwidth in case you've maybe got dozens or hundreds of servers, you definitely don't want to be
+
+43
+00:03:25,310 --> 00:03:29,690
+downloading the Ubuntu image on every single machine from the Hub.
+
+44
+00:03:29,690 --> 00:03:30,050
+Right?
+
+45
+00:03:30,050 --> 00:03:36,560
+So you could have this proxy much more closer to your metal, and then it also would provide some failover
+
+46
+00:03:36,560 --> 00:03:38,960
+in case the Hub would have issues.
+
+47
+00:03:38,960 --> 00:03:42,370
+You can still get your copies of the images locally.
+

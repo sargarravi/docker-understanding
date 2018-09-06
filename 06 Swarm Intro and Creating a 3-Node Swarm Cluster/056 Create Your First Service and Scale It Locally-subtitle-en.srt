@@ -1,0 +1,603 @@
+0
+00:05.940 --> 00:06.210
+All right.
+
+1
+00:06.210 --> 00:13.020
+Wherever you're running your Docker from, we can actually create a single node swarm for our own testing
+
+2
+00:13.020 --> 00:13.830
+purposes.
+
+3
+00:13.940 --> 00:21.720
+The way I can tell whether Swarm is on or not, I can just do a docker info and you'll notice Swarm 
+
+4
+00:21.720 --> 00:22.460
+inactive.
+
+5
+00:22.500 --> 00:28.740
+So we know that Swarm hasn't been enabled here. Again, by default, Docker does not enable any of the Swarm
+
+6
+00:28.740 --> 00:30.650
+features.
+
+7
+00:30.660 --> 00:40.450
+I can run a docker swarm init for initialize. That took about a half a second and we're done.
+
+8
+00:40.450 --> 00:45.370
+What we have now is a single node swarm with all the features and functionality that we get out of the
+
+9
+00:45.370 --> 00:46.060
+box.
+
+10
+00:48.740 --> 00:52.850
+So that was probably the shortest demo of this entire course.
+
+11
+00:53.060 --> 00:58.680
+I mean, what just happened? We typed one command and magic. Wasn't actually any magic.
+
+12
+00:58.730 --> 01:04.790
+It was a lot of very quick and efficient things in the Go programming of Docker, but essentially, right
+
+13
+01:04.800 --> 01:05.440
+out of the box,
+
+14
+01:05.450 --> 01:10.700
+it does a bunch of PKI and security stuff. It creates a root certificate for the swarm that it
+
+15
+01:10.700 --> 01:17.180
+will use to establish trust and sign certificates for all nodes and all managers. It will create
+
+16
+01:17.180 --> 01:22.280
+a special certificate for this first manager node because it's a manager versus a worker.
+
+17
+01:22.280 --> 01:29.210
+Then it creates these tokens that we can actually use on other nodes to join this swarm.
+
+18
+01:29.340 --> 01:35.640
+Then a bunch of other things in the background where it enables the swarm API and creates something
+
+19
+01:35.820 --> 01:41.270
+called the Raft Consensus Database, which we'll talk about later in a production part of the course.
+
+20
+01:41.280 --> 01:48.660
+Just so you know, Raft is a protocol that actually ensures consistency across multiple nodes, and it's
+
+21
+01:48.660 --> 01:54.600
+ideal for using in the Cloud where we can't guarantee that any one thing will be available for any moment
+
+22
+01:54.600 --> 01:55.530
+in time.
+
+23
+01:55.620 --> 01:59.970
+It creates that database on disk. It stores the configuration of the swarm,
+
+24
+02:00.000 --> 02:02.740
+and that first manager, and it actually encrypts it.
+
+25
+02:02.760 --> 02:08.340
+Assuming you're on Version 1.13 or newer. Then it will wait for any other nodes before it starts actually
+
+26
+02:08.340 --> 02:10.460
+replicating the database over to them.
+
+27
+02:10.530 --> 02:15.500
+Again, all of this traffic that it would be doing once we create other nodes is all going to be encrypted.
+
+28
+02:15.690 --> 02:20.190
+One of the key components of Swarm that differentiated it when it first came out was that we didn't
+
+29
+02:20.190 --> 02:26.700
+need an additional key value storage system or some database architecture to be the backend configuration
+
+30
+02:26.700 --> 02:28.720
+management of our swarm.
+
+31
+02:28.800 --> 02:33.960
+If you've been around the industry for years or decades even, there is this concept typically of
+
+32
+02:33.960 --> 02:39.870
+the config db, which is this separate database system that you usually need to make redundant that will
+
+33
+02:39.870 --> 02:45.390
+store all the information about your orchestration and automation system. Swarm has actually built that
+
+34
+02:45.390 --> 02:50.140
+straight into Docker right into the daemon and handles it for us.
+
+35
+02:50.280 --> 02:54.990
+We never really need to do anything. There's no passwords to worry about. There's no special services
+
+36
+02:54.990 --> 02:56.620
+to start up or anything like that.
+
+37
+02:58.550 --> 03:00.070
+So, back to the command line.
+
+38
+03:00.140 --> 03:03.960
+You'll notice here that it talks about...if I want to add a worker to the swarm,
+
+39
+03:03.980 --> 03:07.830
+I just really need to cut and paste this onto the other servers I would add.
+
+40
+03:07.850 --> 03:12.080
+Later, we're actually going to build a multi node swarm, but for now, we're just going to keep this
+
+41
+03:12.080 --> 03:15.340
+at a single node. Let's take a look at a couple of the commands will get out of it.
+
+42
+03:15.470 --> 03:22.400
+First thing is we can do docker node ls. In this case, we're just seeing the one manager node
+
+43
+03:22.400 --> 03:23.210
+that we've created.
+
+44
+03:23.210 --> 03:28.550
+You'll notice it's marked as leader, and there can only be one leader at a time amongst all managers.
+
+45
+03:28.550 --> 03:34.520
+Again, since we only got one, then obviously it's the leader. We can look at help see what other
+
+46
+03:34.550 --> 03:41.090
+options we have here. Really, the nodes commands used for bringing your servers in and out of the
+
+47
+03:41.090 --> 03:47.080
+swarm, or promoting them from workers to managers, or demoting them from managers back down to workers.
+
+48
+03:47.150 --> 03:54.060
+If you go back the dockers swarm command for a little bit, we'll notice that it actually is a very narrow
+
+49
+03:54.060 --> 03:55.050
+scope to command.
+
+50
+03:55.050 --> 03:59.050
+It really is just to initialize, either join or leave.
+
+51
+03:59.400 --> 04:04.200
+The new unlock command, which we can talk about in a later lecture.
+
+52
+04:04.200 --> 04:08.950
+For now, let's focus on the exciting new Docker service command.
+
+53
+04:09.570 --> 04:14.430
+Again, service in a swarm replaces the Docker run.
+
+54
+04:14.550 --> 04:19.530
+I don't know for a fact, but I really think that this was centered around the idea that we didn't
+
+55
+04:19.530 --> 04:26.010
+want to break existing Docker run functionality, but Docker run was always built from the ground up
+
+56
+04:26.070 --> 04:27.720
+as a single host solution.
+
+57
+04:27.720 --> 04:33.090
+It's whole idea was to focus on local containers on the system that it's talking to. Whereas, when we
+
+58
+04:33.090 --> 04:37.900
+start talking about a cluster, we don't care so much about individual nodes.
+
+59
+04:37.920 --> 04:42.510
+We don't actually probably name them. We treat them like cattle, if you've ever heard of the pets
+
+60
+04:42.510 --> 04:45.750
+versus cattle analogy where they're just a number.
+
+61
+04:45.750 --> 04:50.260
+We don't really individually go to each node and start up an individual container.
+
+62
+04:50.280 --> 04:56.340
+We really just throw requirements at the swarm in the form of services and then it will orchestrate
+
+63
+04:56.370 --> 04:59.580
+how it needs to lay all that out, on which nodes they need to be,
+
+64
+04:59.640 --> 05:03.300
+and we just know that it's got our back. docker service create
+
+65
+05:06.310 --> 05:10.380
+is how we give it some new orders. Let's do something really simple.
+
+66
+05:10.640 --> 05:17.870
+Let's just actually have it start the Alpine image. Then we're going to have the Alpine image just
+
+67
+05:17.870 --> 05:24.920
+use ping to hit 8.8.8.8, which is actually a Google DNS server, but we really just want to give it something
+
+68
+05:24.920 --> 05:26.960
+to do while we investigate what happens.
+
+69
+05:28.210 --> 05:34.360
+Then you'll see like docker run, it spits back an ID, only that's not the container ID. That's actually
+
+70
+05:34.360 --> 05:36.400
+the service ID.
+
+71
+05:37.060 --> 05:42.100
+You'll see that we now have one service listed. Just like with our docker run command, since we didn't
+
+72
+05:42.100 --> 05:42.780
+name it,
+
+73
+05:42.790 --> 05:47.410
+it gave it a random name. We can see that it's actually already spun up.
+
+74
+05:47.410 --> 05:52.810
+The one of one. When you're looking at services, you're always going to see this number with a /
+
+75
+05:52.810 --> 05:57.260
+in the middle. That represents the one on the left is how many are actually running.
+
+76
+05:57.340 --> 06:00.970
+And the one on the right is how many you've specified for it to run.
+
+77
+06:00.970 --> 06:05.630
+The goal of the orchestrator is to make these numbers match, whatever that takes.
+
+78
+06:05.860 --> 06:08.530
+But this again doesn't actually show us the real container.
+
+79
+06:08.530 --> 06:14.240
+This is really just showing us a list of our services, so we can drill down a little farther.
+
+80
+06:14.800 --> 06:21.580
+We do a docker service ps, and then we give it the name or the ID of the service, and that will
+
+81
+06:21.580 --> 06:27.700
+actually show us the tasks or containers for this service. You'll see that it's similar to the docker
+
+82
+06:27.730 --> 06:33.040
+container ls command, but it actually has now this node component because when you're dealing with multi servers
+
+83
+06:33.210 --> 06:38.560
+scenarios, we might need to know which server it's actually running on. You'll notice that it actually gave
+
+84
+06:38.560 --> 06:42.430
+it a name of an increment on the service name.
+
+85
+06:42.430 --> 06:47.290
+If we went back to the docker container ls command, that still works.
+
+86
+06:47.530 --> 06:55.060
+In this case, the orchestration of Swarm is actually adding some information to the names and to the
+
+87
+06:55.060 --> 07:00.150
+actual images that are running. We'll cover some of those subtle differences later as well.
+
+88
+07:00.150 --> 07:07.050
+For now, let's actually take that service and let's scale it up. For that, we use the docker service update,
+
+89
+07:07.200 --> 07:14.700
+and then the name of our service, or the ID in this case, I'll do the ID. And I want to change an attribute
+
+90
+07:14.760 --> 07:16.140
+about the service.
+
+91
+07:16.170 --> 07:20.730
+In this case, I want to change the number of replicas.
+
+92
+07:21.000 --> 07:30.120
+So if we do a docker service ls again, we now see three of three. If we do a docker service ps,
+
+93
+07:31.520 --> 07:36.810
+we actually now see three tasks. You'll notice that two were just created seconds ago.
+
+94
+07:36.830 --> 07:42.510
+If we were fast enough, and if we were deploying something big enough, we could actually run the service
+
+95
+07:42.560 --> 07:46.740
+ls and actually see it show us zero of three. One of three.
+
+96
+07:46.770 --> 07:51.860
+It'll actually increment as things start up. It just so happens that Alpine was already on this machine,
+
+97
+07:51.860 --> 07:55.250
+in terms of its image, and it didn't take very long to start up a ping command.
+
+98
+07:55.250 --> 07:57.620
+We just couldn't be that fast.
+
+99
+07:57.620 --> 08:02.350
+What's interesting about that update command is that you can imagine the difference between the
+
+100
+08:02.360 --> 08:07.460
+Docker run command that you might use on a single dev or test server or on your local machine, and the
+
+101
+08:07.460 --> 08:10.400
+production concerns of always keeping something available
+
+102
+08:10.430 --> 08:11.540
+as much as possible.
+
+103
+08:11.600 --> 08:16.690
+That's one of the design goals of Swarm. That command that we actually haven't used yet is the Docker
+
+104
+08:16.700 --> 08:22.520
+update command. That was a command for the Docker run containers that allowed us to update certain
+
+105
+08:22.520 --> 08:26.660
+variables on our running container without having to kill it and restart it.
+
+106
+08:26.840 --> 08:33.650
+Almost all of those options are related to limiting and controlling resource usage for that container.
+
+107
+08:33.770 --> 08:38.480
+Because that's one of the typical things that you see when you're running a long term application is
+
+108
+08:38.480 --> 08:44.730
+that you need to change its resources maybe because the databases have gotten bigger and need more RAM.
+
+109
+08:44.750 --> 08:49.720
+Or maybe you have an out of control process that's eating up too much CPU and you need to limit it.
+
+110
+08:49.790 --> 08:58.700
+If we do a help on the docker service update command, you'll see that we have a lot more options.
+
+111
+08:59.300 --> 09:06.710
+Because the goal of a Swarm service is that it's able to replace containers and update changes in the
+
+112
+09:06.710 --> 09:09.890
+service without taking the entire thing down.
+
+113
+09:09.890 --> 09:16.760
+If you had a service with three containers in it, you could technically take down one at a time to
+
+114
+09:16.760 --> 09:22.610
+make a change and do sort of a rolling update, which is the blue green pattern we talked about. That's
+
+115
+09:22.610 --> 09:28.150
+why we see a lot more options here is because we can change these options that may require a container
+
+116
+09:28.160 --> 09:34.370
+restart, but the swarm will intelligently make sure that the way we update them is in a pattern that
+
+117
+09:34.370 --> 09:36.530
+ensures consistent availability.
+
+118
+09:39.590 --> 09:47.270
+So back to our docker container list real quick. You'll notice that we have these three now, and what if
+
+119
+09:47.360 --> 09:57.560
+I went in and, sort of as a rogue, did a docker container rm, and I specified one of these containers, and
+
+120
+09:57.560 --> 10:04.030
+I forced it...let's say I beat the first one and just take it out.
+
+121
+10:04.250 --> 10:04.880
+All right.
+
+122
+10:04.910 --> 10:10.160
+Now I do a docker service ls, and you see how it shows two of three?
+
+123
+10:10.370 --> 10:15.870
+Because I went in behind the back of Swarm and I actually took away a running container,
+
+124
+10:16.010 --> 10:21.470
+it's going to identify that and it's going to launch a new one within seconds to replace the one that
+
+125
+10:21.470 --> 10:22.180
+went down.
+
+126
+10:22.280 --> 10:32.630
+So if I did a docker service ps on frosty, you'll see that it actually shows the history of the
+
+127
+10:32.660 --> 10:39.130
+first task here in the list is that it had one that failed and it started a new one 24 seconds ago.
+
+128
+10:39.470 --> 10:45.170
+This is one of the responsibilities of a container orchestration system is to make sure that the
+
+129
+10:45.170 --> 10:48.130
+services you specified are always running,
+
+130
+10:48.140 --> 10:54.230
+and if they fail, it recovers from that failure. Which is way different than docker run, right? docker run would
+
+131
+10:54.230 --> 10:56.540
+never recreate a container.
+
+132
+10:56.540 --> 11:02.120
+So that's why whenever we do any of these Docker service commands, we're not actually speaking directly
+
+133
+11:02.120 --> 11:05.160
+to an action like create a container.
+
+134
+11:05.270 --> 11:09.970
+We're actually telling an orchestration system, hey put this job in your queue.
+
+135
+11:10.100 --> 11:16.610
+When you can get to it, please perform the actions on the swarm that I've asked here. That's a
+
+136
+11:16.610 --> 11:17.850
+big difference.
+
+137
+11:17.900 --> 11:22.580
+It's subtle in the command line, but it's a big difference because it means that there's rollback possibilities.
+
+138
+11:22.670 --> 11:27.230
+There's failure mitigation and a lot of intelligence built into that.
+
+139
+11:27.230 --> 11:29.990
+In this case, if I actually wanted to remove all these containers,
+
+140
+11:29.990 --> 11:34.020
+I'd have to remove the service. I'd have to do docker service rm.
+
+141
+11:34.130 --> 11:35.740
+And then the frosty.
+
+142
+11:35.790 --> 11:40.130
+If we do a docker service ls, we see nothing. If we do a docker container
+
+143
+11:40.130 --> 11:43.490
+ls, we see three containers.
+
+144
+11:43.860 --> 11:45.730
+Oh and there we go.
+
+145
+11:45.800 --> 11:49.750
+That shows right there the automation happening on the backend.
+
+146
+11:49.760 --> 11:55.370
+We were able to quickly show that we deleted the service, but the orchestration system hadn't gone through
+
+147
+11:55.430 --> 12:02.580
+all of its processes of cleaning up the service and the task behind it. These concepts should be pretty
+
+148
+12:02.580 --> 12:07.710
+easy to understand because they're just really expanding on the Docker run concepts that we've had earlier
+
+149
+12:07.710 --> 12:08.670
+in this course.
+
+150
+12:08.670 --> 12:15.030
+Next let's actually build a multi node swarm and start scaling our containers out.

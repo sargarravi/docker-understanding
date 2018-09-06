@@ -1,0 +1,215 @@
+0
+00:02.410 --> 00:05.020
+All right. Enough of the lectures.
+
+1
+00:05.210 --> 00:10.070
+Let's actually give you a little bit of an assignment. Now that you've had some chances to play around
+
+2
+00:10.070 --> 00:11.330
+the container commands
+
+3
+00:11.370 --> 00:18.080
+in Docker, I'd like to give you a little bit of homework to start up multiple containers. We're going
+
+4
+00:18.080 --> 00:23.600
+to go through some of the process of what it's like to set up multiple types of images in different
+
+5
+00:23.600 --> 00:25.050
+containers at the same time.
+
+6
+00:25.460 --> 00:28.050
+You're going to maybe need some documentation with this.
+
+7
+00:28.070 --> 00:30.590
+You know about the --help command.
+
+8
+00:30.590 --> 00:35.240
+With that in mind, there's also docs.docker.com.
+
+9
+00:35.240 --> 00:39.920
+If you haven't been there, definitely take a few minutes to check it out and just click around.
+
+10
+00:39.920 --> 00:45.260
+Even if it's not something you need to look at right away, just get an idea for the breadth of documentation
+
+11
+00:45.260 --> 00:45.480
+there.
+
+12
+00:45.500 --> 00:50.120
+The actual website is totally open source and you can actually use GitHub to add documentation or
+
+13
+00:50.120 --> 00:56.570
+recommend changes. It's rare that a day that goes by that I don't go to that website. There is constant
+
+14
+00:56.840 --> 00:58.620
+amount of new information there.
+
+15
+00:58.820 --> 01:01.360
+I highly recommend you check it out.
+
+16
+01:01.670 --> 01:06.200
+Most of the time when I'm actually searching Google, it ends up being one of the two or three top choices
+
+17
+01:06.200 --> 01:07.090
+anyway.
+
+18
+01:07.490 --> 01:13.700
+You're going to start up a three-container application. We're not actually going to set up these
+
+19
+01:13.700 --> 01:18.340
+three different containers with application data or our source files.
+
+20
+01:18.410 --> 01:23.900
+I just want you to get the ideas around how to start these and how they're different and managing
+
+21
+01:23.900 --> 01:24.700
+them together.
+
+22
+01:24.860 --> 01:27.770
+You definitely want to use the -d for detached.
+
+23
+01:27.830 --> 01:32.210
+Then I recommend you always use --name. That's just easier to deal with when you're working
+
+24
+01:32.210 --> 01:33.420
+on your local machine.
+
+25
+01:33.440 --> 01:39.260
+You can name them whatever you'd like. I need you to give each one of them their own port because
+
+26
+01:39.290 --> 01:43.270
+each container can't run in the same port as other containers
+
+27
+01:43.280 --> 01:45.250
+if you're exposing them at the host.
+
+28
+01:45.260 --> 01:45.830
+Right.
+
+29
+01:45.860 --> 01:51.320
+If we're going to allow the host to listen for each container and forward traffic, they all need to
+
+30
+01:51.320 --> 01:52.610
+run on different ports.
+
+31
+01:52.610 --> 01:58.290
+The nginx is going to act as our proxy in this case, and it's just going to sit on port 80. The
+
+32
+01:58.520 --> 02:02.500
+apache server or httpd is going to run on 8080.
+
+33
+02:02.600 --> 02:06.680
+Then the mysql server is running on its default port of 3306.
+
+34
+02:06.680 --> 02:10.850
+Again, these actually aren't going to be three containers that talk to each other in any way right
+
+35
+02:10.850 --> 02:11.440
+yet.
+
+36
+02:11.600 --> 02:15.530
+But we're just going to start them up and then tear them all down again.
+
+37
+02:15.580 --> 02:23.460
+Something that you haven't yet experienced is one of the options for the container run command is
+
+38
+02:23.640 --> 02:25.280
+an environment variable passing.
+
+39
+02:25.320 --> 02:33.330
+So, -e or --environment will pass any environment variable you want to pass into that container.
+
+40
+02:33.570 --> 02:41.200
+This is a very common way for us to pass environment based settings into our containers.
+
+41
+02:41.340 --> 02:47.790
+It's quite often to have different environment variables for test or dev, versus production and the
+
+42
+02:47.790 --> 02:49.710
+environment option is how we do that.
+
+43
+02:49.710 --> 02:52.080
+With the mysql image you'll be using,
+
+44
+02:52.080 --> 02:56.590
+it actually has an option for setting a random root password on bootup.
+
+45
+02:56.700 --> 03:01.690
+The way that you find that password is actually going to be using the logs command to see at startup
+
+46
+03:01.710 --> 03:06.300
+the first time and it will spit out to the logs what that random password is going to be.
+
+47
+03:06.480 --> 03:10.920
+Once you start up all the containers, and you think it's correct, you can tear it all down again
+
+48
+03:11.190 --> 03:13.170
+with the stop and the rm commands.
+
+49
+03:13.290 --> 03:18.600
+I'd like you to use the ls command to make sure that you have them all started and that they're
+
+50
+03:18.600 --> 03:19.560
+all cleaned up.
+
+51
+03:19.620 --> 03:25.200
+You might need to use the ls -a to actually make sure that you've removed all of them. I'm
+
+52
+03:25.200 --> 03:31.230
+going to leave a video after this that actually shows how I would do it in case you get stuck.
+
+53
+03:31.230 --> 03:33.180
+Good luck. We'll see you on the next section.

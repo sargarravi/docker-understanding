@@ -1,0 +1,288 @@
+1
+00:00:04,880 --> 00:00:05,160
+Okay.
+
+2
+00:00:05,160 --> 00:00:11,100
+Let's talk about Docker Cloud. Docker Cloud used to be called Tutum. Then, a few years back, Docker bought
+
+3
+00:00:11,100 --> 00:00:13,200
+them and converted it into Docker Cloud.
+
+4
+00:00:13,230 --> 00:00:18,780
+And they've been adding new features ever since. As a high level, Docker Cloud does two main things.
+
+5
+00:00:18,780 --> 00:00:20,920
+It is not a cloud hoster.
+
+6
+00:00:20,940 --> 00:00:23,030
+It is simply, on one side of it,
+
+7
+00:00:23,070 --> 00:00:30,090
+a web based orchestration system for your swarms and your Docker clusters. For those that already have
+
+8
+00:00:30,090 --> 00:00:36,600
+an Amazon, or an AWS, or Digital Ocean account and maybe don't want to use the CLI to deploy apps
+
+9
+00:00:36,600 --> 00:00:38,070
+or manage their servers,
+
+10
+00:00:38,160 --> 00:00:39,900
+they can use Docker Cloud to do that.
+
+11
+00:00:40,050 --> 00:00:45,180
+You'll see on the left here where I can create stacks and services and containers like we've been talking
+
+12
+00:00:45,180 --> 00:00:45,640
+about.
+
+13
+00:00:45,720 --> 00:00:50,910
+And then I can actually go down to nodes and provision them, including a simple little form that allows
+
+14
+00:00:50,910 --> 00:00:56,400
+me to create new nodes, which are basically servers on cloud hosters. And you can see I've enabled Digital
+
+15
+00:00:56,400 --> 00:00:57,960
+Ocean and Azure.
+
+16
+00:00:57,960 --> 00:01:03,030
+This would basically save me a few steps if I was wanting to deploy some infrastructure. And then, once
+
+17
+00:01:03,030 --> 00:01:08,700
+my infrastructure is created into the clusters, I can just copy and paste stack files in, and away we
+
+18
+00:01:08,700 --> 00:01:09,470
+go.
+
+19
+00:01:09,510 --> 00:01:15,080
+There's a new beta feature that came out this spring that allows us to use the latest 113 Swarm Modes
+
+20
+00:01:15,090 --> 00:01:16,140
+in here as well.
+
+21
+00:01:16,170 --> 00:01:22,050
+And the bonus of that, if you're on Windows or Mac, is that if you add or create swarms in here they will
+
+22
+00:01:22,050 --> 00:01:27,330
+actually show up in the GUI on your Mac or your Windows machine. And you'll be able to launch the Docker
+
+23
+00:01:27,340 --> 00:01:29,790
+CLI against that swarm.
+
+24
+00:01:29,820 --> 00:01:31,230
+So that's one side of cloud.
+
+25
+00:01:31,260 --> 00:01:34,220
+The other side is the build area.
+
+26
+00:01:34,380 --> 00:01:40,050
+Earlier, we looked at Docker Hub and how you could do automated builds of your images with Ducker Hub
+
+27
+00:01:40,080 --> 00:01:46,650
+and include web hooks maybe from GitHub. But in Docker Cloud you can pay to have more of those features,
+
+28
+00:01:46,740 --> 00:01:53,100
+including running tests and doing more customization, such as having those images automatically deployed
+
+29
+00:01:53,100 --> 00:01:55,920
+to your servers that are linked to Docker Cloud.
+
+30
+00:01:56,130 --> 00:02:02,640
+This has become its own continuous integration platform where it's a one stop shop for building and
+
+31
+00:02:02,640 --> 00:02:05,430
+testing your images and then deploying them to your servers.
+
+32
+00:02:05,850 --> 00:02:12,660
+If I opened up one of my own images, we see that under builds I can configure automated builds.
+
+33
+00:02:12,750 --> 00:02:18,000
+And, lastly, one of the coolest things that Docker Cloud can do for you, is if you had your own private
+
+34
+00:02:18,030 --> 00:02:24,350
+images that you actually wanted to security scan for any known vulnerabilities, you can do that here.
+
+35
+00:02:24,390 --> 00:02:29,400
+It's a paid service and I would go into one of these and set it up, and then pay for it through the Docker
+
+36
+00:02:29,400 --> 00:02:30,650
+Cloud subscription.
+
+37
+00:02:30,870 --> 00:02:36,110
+But you'll notice that that actually already is taking place on the official images.
+
+38
+00:02:36,480 --> 00:02:41,700
+If I went to an official image, like Nginx, and then over to its tags, youll notice that theres
+
+39
+00:02:41,700 --> 00:02:43,180
+there's this vulnerabilities
+
+40
+00:02:43,200 --> 00:02:45,300
+graphic on the right here.
+
+41
+00:02:45,390 --> 00:02:50,380
+And, as I scroll down, typically each version is different in the vulnerability section.
+
+42
+00:02:50,520 --> 00:02:57,960
+If you wanted, you can actually dive down into that image and find out exactly what layer the security
+
+43
+00:02:57,960 --> 00:02:59,880
+vulnerabilities appeared in.
+
+44
+00:02:59,880 --> 00:03:02,790
+And then, also what those actual vulnerabilities are.
+
+45
+00:03:02,820 --> 00:03:08,580
+The list of vulnerabilities you're seeing here are actually produced by the CVE, which stands for
+
+46
+00:03:08,580 --> 00:03:14,670
+common vulnerabilities and exposures, and is actually run by the U.S. Department of Homeland Security,
+
+47
+00:03:14,760 --> 00:03:16,830
+underneath the US-CERT program.
+
+48
+00:03:16,980 --> 00:03:19,610
+It's been around for years, if not decades.
+
+49
+00:03:19,680 --> 00:03:22,950
+It's how we publicly track vulnerabilities in software today.
+
+50
+00:03:22,950 --> 00:03:29,550
+It's not specific to Docker. It's just Docker linking their scanning engine that goes through each one
+
+51
+00:03:29,550 --> 00:03:35,670
+of these updates to these official public images, and comparing the binaries and libraries in those
+
+52
+00:03:35,670 --> 00:03:38,510
+images to the open CVE database.
+
+53
+00:03:38,520 --> 00:03:43,230
+What's nice here is you can go through the list and click on each one and actually find out what's going
+
+54
+00:03:43,230 --> 00:03:45,320
+on and the status of it.
+
+55
+00:03:45,330 --> 00:03:50,770
+Usually, when I show people this for the first time, they think, holy cow look at all those vulnerabilities!
+
+56
+00:03:51,090 --> 00:03:53,300
+Well, this is the state of software today.
+
+57
+00:03:53,310 --> 00:03:56,700
+Sometimes this red line is just one or two.
+
+58
+00:03:56,790 --> 00:04:03,300
+Sometimes this red line is a lot. But, I wouldn't necessarily say don't use software with this red line.
+
+59
+00:04:03,360 --> 00:04:08,640
+I would say that every piece of software I've ever seen in Docker Hub has something red or orange, and
+
+60
+00:04:08,640 --> 00:04:12,960
+that's not indicative of the quality of the software. That's just kind of the reality of the world that
+
+61
+00:04:12,960 --> 00:04:19,620
+we're living in today, where vulnerabilities are found every day. And all of the official repositories
+
+62
+00:04:19,620 --> 00:04:23,820
+here are kept up to date within days of any fixes found.
+
+63
+00:04:23,820 --> 00:04:29,250
+What you would see here, in this case, is if any of these vulnerabilities in this list were fixed upstream,
+
+64
+00:04:29,340 --> 00:04:33,030
+then this image would be updated and rebuilt.
+
+65
+00:04:33,060 --> 00:04:36,260
+And this little marker would go down a little bit.
+
+66
+00:04:36,300 --> 00:04:39,480
+I encourage you to poke around some of your own images that you might be using
+
+67
+00:04:39,480 --> 00:04:44,400
+and check out their security issues. Because I do find this stuff rather interesting to just understand
+
+68
+00:04:44,400 --> 00:04:47,220
+how complex software today has gotten.
+
+69
+00:04:47,550 --> 00:04:52,170
+That's it for my demos of Docker Cloud and I encourage you to go there and try it out.
+
+70
+00:04:52,170 --> 00:04:57,960
+You can actually create one node and deploy an app for free and it will give you credits under the cloud
+
+71
+00:04:57,960 --> 00:05:02,790
+settings for the different cloud providers so that you can actually play around and learn how to use
+
+72
+00:05:02,790 --> 00:05:06,830
+it without having to pay for anything for maybe the first few weeks or a month.
+

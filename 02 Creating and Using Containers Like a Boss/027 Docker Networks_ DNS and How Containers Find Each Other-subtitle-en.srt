@@ -1,0 +1,267 @@
+0
+00:02.440 --> 00:10.110
+Requirements for this lecture are that you've seen the previous network lectures and are understanding
+
+1
+00:10.140 --> 00:14.830
+of the key concepts for Docker networks and the commands that go with it.
+
+2
+00:14.850 --> 00:15.150
+All right.
+
+3
+00:15.150 --> 00:22.140
+And this lecture, you're going to learn and play with DNS and how it affects containers in custom networks
+
+4
+00:22.170 --> 00:23.970
+and default networks.
+
+5
+00:24.180 --> 00:25.350
+We're going to go over
+
+6
+00:25.350 --> 00:32.580
+quickly how important it is that we have good DNS because you can't rely on IP addresses inside containers
+
+7
+00:32.940 --> 00:38.490
+since things are so dynamic. We'll look at the differences between default and custom networks in
+
+8
+00:38.490 --> 00:40.890
+regards to how they deal with DNS.
+
+9
+00:41.160 --> 00:48.000
+And then we'll check out the --link option for container run for enabling DNS on the default
+
+10
+00:48.000 --> 00:48.860
+bridge network.
+
+11
+00:50.270 --> 00:55.640
+So there's one more thing that's crucial to all of these containers and virtual networks and them talking
+
+12
+00:55.640 --> 01:02.480
+to each other; and that's naming. Because in the world of containers constantly launching and disappearing
+
+13
+01:02.510 --> 01:08.030
+and moving and expanding and shrinking, and all the wonderfulness of these micro services that we're
+
+14
+01:08.030 --> 01:14.560
+seeing crop up everywhere, is that we no longer can easily rely on IP addresses as the way to talk
+
+15
+01:14.570 --> 01:18.710
+from one thing to the other. Because we can't assume from minute to minute that the IP addresses are even
+
+16
+01:18.710 --> 01:19.920
+going to be the same.
+
+17
+01:19.970 --> 01:24.650
+The container might go away or it might fail and then Docker brings it up somewhere else.
+
+18
+01:24.920 --> 01:29.400
+It's just too dynamic and too complicated to deal with that.
+
+19
+01:29.460 --> 01:37.650
+So it turns out that there is a built-in solution for this, and that is DNS naming. Docker uses the
+
+20
+01:37.650 --> 01:43.370
+container names as the equivalent of a host name for containers talking to each other.
+
+21
+01:43.380 --> 01:48.450
+Now if you remember we just had two containers running...
+
+22
+01:51.060 --> 01:57.690
+if you remember the Nginx was on a new network, called my_app_net.
+
+23
+01:57.690 --> 01:59.780
+Right.
+
+24
+01:59.940 --> 02:04.120
+And has the one container on it. Because I created this new network,
+
+25
+02:04.140 --> 02:06.060
+that's not the default bridge network,
+
+26
+02:06.060 --> 02:13.080
+it actually gets a special new feature, which is automatic DNS resolution for all the containers on that
+
+27
+02:13.080 --> 02:18.520
+virtual network from all the other containers on that virtual network using their container names.
+
+28
+02:18.540 --> 02:24.900
+If I were to create a second container on that virtual network, they'll be able to find each other, regardless
+
+29
+02:24.900 --> 02:28.280
+of what the IP address is, with their container names.
+
+30
+02:28.410 --> 02:38.340
+So let's try this: docker container run name ... and we'll call it my nginx...and we're going to specify the
+
+31
+02:38.340 --> 02:42.380
+network as my app net
+
+32
+02:42.420 --> 02:45.570
+from the nginx image.
+
+33
+02:45.570 --> 02:52.980
+Now, if we look at that network, we should see 2 containers; and, if I do a docker container exec,
+
+34
+02:54.270 --> 03:00.800
+from the new container I just created -- oops we also need the IT in there --
+
+35
+03:02.900 --> 03:08.150
+And we do a ping to the new nginx,
+
+36
+03:11.940 --> 03:19.170
+you notice that DNS resolution just works. This makes it super easy for you to have one container and
+
+37
+03:19.170 --> 03:24.660
+you need to set a configuration file in it to talk to, maybe let's say the PHP server will talk to
+
+38
+03:24.660 --> 03:30.810
+the MySQL backend. Ctrl-c out of that, and you'll see that it works the other way as well.
+
+39
+03:30.840 --> 03:42.180
+If I jump into the new nginx container and I try to ping the my ngnix, you see that the resolution
+
+40
+03:42.180 --> 03:43.440
+works both ways.
+
+41
+03:43.440 --> 03:49.320
+And this is what solves a huge problem when you're spinning up containers because you can't predict
+
+42
+03:49.770 --> 03:54.900
+how long they're going to last and where they might be a minute from now in a production design where
+
+43
+03:54.900 --> 03:57.900
+you've got a cluster of Docker Swarm servers.
+
+44
+03:57.900 --> 04:03.120
+So it may not change very much on your local machine, but if you stop 3 or 4 containers, and then
+
+45
+04:03.120 --> 04:06.730
+you start the same containers, and you start them in a different order,
+
+46
+04:06.780 --> 04:12.450
+they may not have the same IP address. But their host names, or their container names, will always be the
+
+47
+04:12.450 --> 04:13.320
+same.
+
+48
+04:13.320 --> 04:15.390
+And so you can rely on them.
+
+49
+04:15.410 --> 04:23.990
+Now I should note, if we do a docker network list, the default bridge network has one disadvantage here.
+
+50
+04:23.990 --> 04:28.140
+It does not have the DNS server built into it by default.
+
+51
+04:28.370 --> 04:31.360
+So you can use the --link.
+
+52
+04:31.460 --> 04:39.110
+So when you create a container, you'll notice there's a link option and you can actually specify manual
+
+53
+04:39.110 --> 04:42.740
+links between containers in that default bridge network.
+
+54
+04:42.740 --> 04:48.230
+But really, it's just much easier to create a new network for your apps so that you don't have to do
+
+55
+04:48.230 --> 04:49.570
+this every time.
+
+56
+04:49.820 --> 04:55.550
+And in a future section, when we talk about Docker Compose, you'll see how so much of this gets even easier
+
+57
+04:55.910 --> 05:02.240
+because Compose automatically will create new virtual networks whenever you spin up an app with it.
+
+58
+05:02.240 --> 05:05.320
+So communicating amongst your containers gets even easier.
+
+59
+05:06.760 --> 05:14.500
+As a quick recap, we covered in this lecture about how containers can't really, or shouldn't really,
+
+60
+05:14.650 --> 05:19.670
+rely on IP addresses for talking to each other because they just can't be relied on.
+
+61
+05:20.110 --> 05:25.600
+And that DNS is really the standard here for how we do intercommunication between containers on the
+
+62
+05:25.600 --> 05:28.320
+same host and across hosts.
+
+63
+05:28.450 --> 05:33.580
+And so I recommended you always create custom networks since it's just easier that way than doing a
+
+64
+05:33.580 --> 05:35.490
+--link all the time.
+
+65
+05:35.740 --> 05:39.550
+And then I gave you a teaser about Docker Compose and how it's going to make all this easier,
+
+66
+05:39.700 --> 05:40.900
+especially the networking.

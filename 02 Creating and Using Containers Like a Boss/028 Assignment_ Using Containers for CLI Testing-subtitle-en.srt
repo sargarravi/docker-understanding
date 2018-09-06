@@ -1,0 +1,127 @@
+0
+00:04.860 --> 00:10.260
+The requirements for this assignment, or the things you need to know before you should do this assignment,
+
+1
+00:11.130 --> 00:18.000
+is that you've gone through some of the lectures in the past around getting a command shell inside the
+
+2
+00:18.000 --> 00:23.420
+container, and also some of the basics around Linux distributions and how they might differ,
+
+3
+00:23.550 --> 00:28.840
+and of course running a container. OK here's another assignment for you and it's going to be a little
+
+4
+00:28.840 --> 00:33.030
+different than your traditional developer-meets-container scenario.
+
+5
+00:33.130 --> 00:36.000
+But it's just as valid and just as common in the real world.
+
+6
+00:37.240 --> 00:42.400
+In the past you might have set up a whole virtual machine just to simply test something like a different
+
+7
+00:42.400 --> 00:45.550
+command line version or different Linux distribution.
+
+8
+00:45.550 --> 00:48.140
+But with containers that gets WAY easier.
+
+9
+00:48.190 --> 00:55.830
+Imagine yourself being a support engineer for a server farm that runs both Ubuntu and CentOS, and a
+
+10
+00:55.860 --> 01:01.540
+ticket comes in that asks you to check on the different curl versions in those two distributions.
+
+11
+01:01.540 --> 01:08.200
+So in the old, pre-container world, you'd probably have to set up a virtual environment and wait for operating
+
+12
+01:08.200 --> 01:10.680
+systems to install unless you had them ready.
+
+13
+01:10.750 --> 01:14.040
+But in this world we can actually just run a few commands.
+
+14
+01:14.050 --> 01:21.790
+So really the goal here is just to run the curl version command inside two different Linux distributions
+
+15
+01:22.200 --> 01:23.670
+in just a few minutes.
+
+16
+01:23.770 --> 01:27.100
+So we'll be using the centos:7 version.
+
+17
+01:27.130 --> 01:33.410
+And then the ubuntu:14.04  version. You'll want to use the -it on your docker run command
+
+18
+01:33.650 --> 01:36.480
+and give it the bash command at the end.
+
+19
+01:37.280 --> 01:41.780
+Then there's a new option you should try, which is the --rm, which will save you some time
+
+20
+01:41.780 --> 01:46.610
+later. So I recommend looking that up through Help on the command line or through the Docker Support
+
+21
+01:46.610 --> 01:49.150
+site at docs.docker.com.
+
+22
+01:49.550 --> 01:51.690
+And really once you're in there,...
+
+23
+01:51.710 --> 01:56.480
+oh and by the way, you definitely want two different terminal windows so you can switch back and forth between
+
+24
+01:56.480 --> 01:57.210
+these two...
+
+25
+01:57.380 --> 02:04.010
+and in order to run the curl version command, you're going to need to update each one of the distributions
+
+26
+02:04.400 --> 02:07.190
+or check whether or not curl's installed.
+
+27
+02:07.370 --> 02:12.370
+I've given you some commands there that they're a little bit different between the two. Really
+
+28
+02:12.370 --> 02:15.760
+this exercise isn't going to give you an interesting output.
+
+29
+02:15.760 --> 02:22.300
+It's really just helping you understand how easy and quick you can jump into different software or Linux
+
+30
+02:22.300 --> 02:27.940
+distributions, run some tools, and then get out. In the end, I would expect you to have different curl
+
+31
+02:27.940 --> 02:29.590
+versions in those two distributions.

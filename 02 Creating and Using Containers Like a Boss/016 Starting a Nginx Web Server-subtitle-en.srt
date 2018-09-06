@@ -1,0 +1,416 @@
+1
+00:00:00,680 --> 00:00:07,540
+OK let's do some fun stuff. In this lecture,
+
+2
+00:00:07,690 --> 00:00:11,860
+we're going to quickly talk about the difference between images and containers. Then we're going
+
+3
+00:00:11,860 --> 00:00:14,760
+to jump right into playing around with a container. We're going to start it,
+
+4
+00:00:14,830 --> 00:00:20,890
+we're going to stop and remove it, and do some common administrative functions. Then we're going to
+
+5
+00:00:20,890 --> 00:00:24,080
+check out the container logs and the processes running in our container.
+
+6
+00:00:27,140 --> 00:00:32,560
+So before we jump in real quick, it's good to know the difference between an image and a container. An
+
+7
+00:00:32,570 --> 00:00:40,490
+image is the binaries and libraries and source code that all make up your application. The container
+
+8
+00:00:40,760 --> 00:00:42,960
+is a running instance of that image.
+
+9
+00:00:43,130 --> 00:00:48,350
+Now, you can have many containers all based off the same image. In this lecture,
+
+10
+00:00:48,350 --> 00:00:53,390
+we're going to be using the Open Source Nginx web server. So we'll be starting our containers
+
+11
+00:00:53,450 --> 00:01:01,220
+based off that Nginx image. We get all of our images from registries. Registries are kind of like
+
+12
+00:01:01,220 --> 00:01:08,330
+what GitHub is to source code. Image registries are for container images and the default one for Docker
+
+13
+00:01:08,330 --> 00:01:10,860
+is Docker Hub, which you can check out at
+
+14
+00:01:11,030 --> 00:01:12,040
+hub.docker.com.
+
+15
+00:01:12,140 --> 00:01:13,700
+We'll play more with that later.
+
+16
+00:01:14,030 --> 00:01:18,950
+But for now be aware that these two things are quite different, and in the next section we're going to
+
+17
+00:01:18,950 --> 00:01:20,130
+jump in to images.
+
+18
+00:01:20,150 --> 00:01:22,260
+But for now let's focus on containers.
+
+19
+00:01:23,940 --> 00:01:29,290
+OK now we're going to start a new container and use some Docker commands to manage that container.
+
+20
+00:01:30,230 --> 00:01:33,370
+docker container run
+
+21
+00:01:36,120 --> 00:01:40,390
+publish 80:80 nginx.
+
+22
+00:01:40,440 --> 00:01:44,260
+Don't worry if you don't know what all that means. We'll go through it all in a minute.
+
+23
+00:01:44,310 --> 00:01:44,970
+I'll hit enter...
+
+24
+00:01:49,340 --> 00:01:53,780
+switch over to my browser, and type in localhost.
+
+25
+00:01:53,790 --> 00:01:55,090
+There we go.
+
+26
+00:01:55,110 --> 00:02:01,560
+Our Nginx server is listening. I can hit refresh several times and you'll see the log entries
+
+27
+00:02:01,560 --> 00:02:03,970
+happening in our command line here.
+
+28
+00:02:04,020 --> 00:02:08,060
+Now what did we just do? In the background,
+
+29
+00:02:08,340 --> 00:02:16,320
+the Docker engine actually looked for an image called nginx, and it pulled down the latest image for
+
+30
+00:02:16,350 --> 00:02:24,120
+nginx from Docker Hub. Then it started it as a new process in a new container for us to use.
+
+31
+00:02:25,220 --> 00:02:31,460
+The published part of the command exposes my local port 80 on my local machine and sends all traffic
+
+32
+00:02:31,460 --> 00:02:37,270
+from it to the executable running inside that container on port 80.
+
+33
+00:02:37,370 --> 00:02:44,360
+And since Nginx is a web server it's going to default to port 80 and the traffic just forwards automatically
+
+34
+00:02:44,360 --> 00:02:48,430
+through my browser to my local host and into that container.
+
+35
+00:02:49,490 --> 00:02:53,330
+But we don't always want this thing running in the foreground inside of our command line.
+
+36
+00:02:53,330 --> 00:03:01,510
+So let's hit Control c and I'm going to hit the Up Arrow and I'm going to back up a little bit and type in
+
+37
+00:03:03,200 --> 00:03:03,860
+detach.
+
+38
+00:03:06,910 --> 00:03:11,130
+Now detach tells Docker to run it in the background.
+
+39
+00:03:12,360 --> 00:03:16,370
+And we get back the unique container ID of our container.
+
+40
+00:03:16,380 --> 00:03:21,810
+And every time you run a new container you get a new unique ID.
+
+41
+00:03:21,850 --> 00:03:27,180
+So if we go back over to our browser and hit refresh a couple of times you can see that it's still running.
+
+42
+00:03:27,310 --> 00:03:32,820
+So let's do a command to list our containers. docker container
+
+43
+00:03:32,830 --> 00:03:33,340
+ls
+
+44
+00:03:36,420 --> 00:03:38,460
+And you'll see the one that's still running here.
+
+45
+00:03:38,700 --> 00:03:45,320
+It's matching the container ID of the command we just ran. You'll see the container still running
+
+46
+00:03:45,320 --> 00:03:46,520
+that we just started.
+
+47
+00:03:46,730 --> 00:03:48,620
+So let's stop that container real quick.
+
+48
+00:03:48,620 --> 00:03:56,720
+docker container stop. Then the container ID. For the container ID I only have to type the first
+
+49
+00:03:56,720 --> 00:04:02,100
+few digits, enough for it to be unique, and I stopped it.
+
+50
+00:04:03,000 --> 00:04:06,600
+Now if I do a docker container ls, you'll notice nothing shows up.
+
+51
+00:04:06,600 --> 00:04:10,560
+So the ls command only shows by default running containers.
+
+52
+00:04:10,710 --> 00:04:19,440
+If I do an ls -a, I get back two. Now, why do I get two?
+
+53
+00:04:19,480 --> 00:04:27,070
+When we ran each time the docker container run command, it started a new container from that Nginx
+
+54
+00:04:27,090 --> 00:04:34,540
+image. You'll notice on the right here that there's these random names. We didn't use these.
+
+55
+00:04:34,560 --> 00:04:35,690
+How did we get these?
+
+56
+00:04:35,730 --> 00:04:38,790
+So the container ID is always created for us.
+
+57
+00:04:38,880 --> 00:04:43,890
+And the name is also required to be unique.
+
+58
+00:04:44,060 --> 00:04:50,110
+And if we don't specify it, it will be created for us. We can always name something ourselves,
+
+59
+00:04:50,210 --> 00:04:55,890
+but if we let it pick its own, it's actually an interesting little bit of history around Docker is that
+
+60
+00:04:55,890 --> 00:05:02,600
+they've had this for years now that that name will randomly be generated from an open source list
+
+61
+00:05:02,990 --> 00:05:08,270
+of adjectives and the surnames of notable hackers or scientists.
+
+62
+00:05:08,510 --> 00:05:12,630
+And it's pretty funny sometimes you'll get some really peculiar names in there.
+
+63
+00:05:12,710 --> 00:05:20,210
+So let's create a new one. docker container run.  Put in our publish
+
+64
+00:05:23,020 --> 00:05:27,920
+and our detach.
+
+65
+00:05:28,060 --> 00:05:37,080
+But this time we're going to specify a name. I'm going to call it webhost nginx.
+
+66
+00:05:37,160 --> 00:05:43,150
+And now if I do my docker container ls -a you'll see three containers.
+
+67
+00:05:43,370 --> 00:05:50,330
+The one we just started. It has a name of webhost and then the two that we previously started and
+
+68
+00:05:50,330 --> 00:05:52,500
+then stopped.
+
+69
+00:05:52,510 --> 00:05:56,920
+Since we're not running this in the foreground anymore, we can't see the logs.
+
+70
+00:05:56,920 --> 00:06:01,120
+So let's go back to our browser and I'm going to hit refresh a couple of times to generate some logs.
+
+71
+00:06:02,590 --> 00:06:15,480
+Then back to our terminal and I'll do docker container logs webhost. And it will spit out the latest
+
+72
+00:06:15,750 --> 00:06:16,550
+logs in the webhost.
+
+73
+00:06:16,560 --> 00:06:22,410
+There's a couple of options you want to play around with on the logs command to have it follow the
+
+74
+00:06:22,410 --> 00:06:28,710
+logs automatically or it can just capture the last few log events so that you don't end up with the
+
+75
+00:06:28,710 --> 00:06:30,960
+entire log file being dumped to your screen.
+
+76
+00:06:34,100 --> 00:06:41,150
+We can also use some other docker container commands to check on that running container. We can
+
+77
+00:06:41,150 --> 00:06:45,370
+try docker container top. You can see the help there.
+
+78
+00:06:45,440 --> 00:06:53,750
+That lets us know we need to specify container name webhost. You can see this is the process running
+
+79
+00:06:53,750 --> 00:06:55,010
+inside the container.
+
+80
+00:06:55,870 --> 00:07:00,670
+Now for Nginx we don't need to necessarily know all this but it's just interesting to note that with
+
+81
+00:07:00,670 --> 00:07:01,520
+Nginx,
+
+82
+00:07:01,630 --> 00:07:07,710
+there's actually a master process and then it spawns worker processes based on the configuration.
+
+83
+00:07:07,750 --> 00:07:16,570
+Again we can always type docker container and --help to get a list of all the commands we
+
+84
+00:07:16,570 --> 00:07:18,820
+could try on that container.
+
+85
+00:07:18,850 --> 00:07:20,720
+Now let's clean up what we just did.
+
+86
+00:07:20,800 --> 00:07:22,270
+So let's do a docker container.
+
+87
+00:07:22,300 --> 00:07:25,540
+ls -a, and that's going to list all three of my containers.
+
+88
+00:07:25,630 --> 00:07:29,150
+Now, I'm actually going to remove all three at the same time.
+
+89
+00:07:29,830 --> 00:07:35,570
+Sometimes subcommands of Docker can actually take multiple values.
+
+90
+00:07:35,680 --> 00:07:47,170
+So in this case I can do a docker container rm and then I can actually specify 63f 690 and ode.
+
+91
+00:07:48,490 --> 00:07:50,940
+whoops 0de.
+
+92
+00:07:51,010 --> 00:07:53,470
+So I got an error. What just happened here?
+
+93
+00:07:53,500 --> 00:07:56,130
+All right. The first two were safely deleted.
+
+94
+00:07:56,230 --> 00:08:01,540
+The third one it's telling me I can't remove a running container because it's a safety measure.
+
+95
+00:08:01,570 --> 00:08:06,520
+It makes sure that you don't accidentally remove the actual process that's still running. If you do
+
+96
+00:08:06,520 --> 00:08:09,750
+a docker container ls you'll see we still have one running.
+
+97
+00:08:09,970 --> 00:08:16,370
+Now I could actually do a docker container stop to stop it first and then remove it.
+
+98
+00:08:16,510 --> 00:08:29,650
+But I'm actually going to do a docker container rm -f for force and 63f. And there we go.
+
+99
+00:08:29,870 --> 00:08:35,360
+Now if I do a docker container ls -a you'll see that nothing's there.
+
+100
+00:08:35,360 --> 00:08:37,880
+So now we've cleaned up our mess.
+
+101
+00:08:38,030 --> 00:08:38,500
+OK.
+
+102
+00:08:38,540 --> 00:08:45,360
+So in just a matter of minutes we were able to use a single command to download and run an Nginx
+
+103
+00:08:45,380 --> 00:08:52,910
+web server with a default configuration listening on port 80 and then we were able to create several
+
+104
+00:08:52,910 --> 00:08:57,950
+of those, play with the logs and then remove the containers to clean up what we had done.
+

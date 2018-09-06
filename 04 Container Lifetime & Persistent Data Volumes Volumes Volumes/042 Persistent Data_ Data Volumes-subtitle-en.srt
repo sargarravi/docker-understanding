@@ -1,0 +1,464 @@
+1
+00:00:04,670 --> 00:00:09,710
+All right. Volumes seem pretty simple up front, but there's actually a lot to it.
+
+2
+00:00:09,710 --> 00:00:16,480
+The first way you can tell a container that it needs to worry about a volume is in a Dockerfile.
+
+3
+00:00:16,480 --> 00:00:18,540
+Let's go check some of those out.
+
+4
+00:00:18,590 --> 00:00:21,040
+I'm just going to do what I do a lot.
+
+5
+00:00:21,170 --> 00:00:24,110
+I'm going to search for MySQL.
+
+6
+00:00:24,320 --> 00:00:30,320
+This is how I learned so much about Dockerfiles, and how to use them correctly, is the official repositories
+
+7
+00:00:30,380 --> 00:00:34,040
+have really sound defaults and best practices built into them.
+
+8
+00:00:34,040 --> 00:00:40,250
+When I go over here to MySQL one, I'm just going to click on the latest Dockerfile here. I
+
+9
+00:00:40,250 --> 00:00:45,040
+I bet you because it's a database, it's probably got a volume command in it.
+
+10
+00:00:45,200 --> 00:00:45,950
+There we go.
+
+11
+00:00:45,950 --> 00:00:52,640
+This is the default location of the MySQL databases. This image is programmed in a way to tell
+
+12
+00:00:52,640 --> 00:00:58,670
+Docker that when we start a new container from it, to actually create a new volume location and assign
+
+13
+00:00:58,670 --> 00:01:05,450
+it to this directory in the container. Which means any files that we put in there, in the container, will
+
+14
+00:01:05,450 --> 00:01:08,600
+outlive the container until we manually delete the volume.
+
+15
+00:01:08,660 --> 00:01:13,250
+And that's something we should point out here is that volumes need manual deletion.
+
+16
+00:01:13,280 --> 00:01:15,900
+You can't clean them up just by removing a container.
+
+17
+00:01:15,930 --> 00:01:21,350
+They're an extra step. That's just for insurance really, because the whole point of a volume command
+
+18
+00:01:21,380 --> 00:01:26,990
+is to say that this data is particularly important, at least much more important than the container itself.
+
+19
+00:01:26,990 --> 00:01:29,930
+If we do a docker pull on MySQL,
+
+20
+00:01:33,500 --> 00:01:40,360
+and then I do a docker image inspect on MySQL, we don't get to see the Dockerfile because the Docker
+
+21
+00:01:40,370 --> 00:01:46,340
+file isn't actually part of the image metadata, which you'll notice in this config area, that it specified
+
+22
+00:01:46,340 --> 00:01:47,680
+that volume there.
+
+23
+00:01:47,810 --> 00:01:53,600
+I can always tell that the config, that came from the Dockerfile when it was built, assigned a volume
+
+24
+00:01:53,600 --> 00:01:54,460
+to that path.
+
+25
+00:01:54,470 --> 00:01:57,150
+Let's run a container from it.
+
+26
+00:02:00,990 --> 00:02:05,640
+So docker container run -d --name mysql.
+
+27
+00:02:05,730 --> 00:02:09,120
+If you remember from earlier, the MySQL one is little special.
+
+28
+00:02:09,230 --> 00:02:11,390
+It now requires an environment variable
+
+29
+00:02:11,400 --> 00:02:13,450
+before it will work.
+
+30
+00:02:13,530 --> 00:02:19,090
+It's MYSQL_ALLOW_EMPTY_PASSWORD.
+
+31
+00:02:19,180 --> 00:02:19,430
+OK.
+
+32
+00:02:22,810 --> 00:02:29,020
+What you see is MySQL running. If we do a docker container
+
+33
+00:02:29,170 --> 00:02:37,200
+inspect mysql, we should see the same thing where it tells us in the config that there's a volume.
+
+34
+00:02:38,360 --> 00:02:39,370
+Here.
+
+35
+00:02:39,450 --> 00:02:47,400
+We can also see it up here under mounts. What this is, is this is actually the running container getting
+
+36
+00:02:47,400 --> 00:02:55,770
+its own unique location on the host, to store that data, and then it's in the background, mapped or mounted,
+
+37
+00:02:55,770 --> 00:02:59,730
+to that location in the container, so that the location in the container actually just thinks it's writing
+
+38
+00:02:59,730 --> 00:03:02,040
+to /var/lib/mysql.
+
+39
+00:03:02,310 --> 00:03:08,570
+In this case, we can see that the data is actually living in that location on the host. So let's
+
+40
+00:03:08,570 --> 00:03:10,790
+do a docker volume
+
+41
+00:03:10,860 --> 00:03:16,760
+ls, and we can see we have now one volume. Now we notice this has got that unique ID that we'll never
+
+42
+00:03:16,760 --> 00:03:18,190
+know what the heck that goes to,
+
+43
+00:03:18,200 --> 00:03:18,560
+Right?
+
+44
+00:03:18,560 --> 00:03:21,090
+So, let's do an inspect on that.
+
+45
+00:03:21,150 --> 00:03:22,310
+You don't have to type the whole thing out.
+
+46
+00:03:22,310 --> 00:03:26,270
+You can just type the first couple of characters and hit Tab to complete it. You'll get that similar
+
+47
+00:03:26,270 --> 00:03:28,390
+information about the volume itself.
+
+48
+00:03:29,440 --> 00:03:35,050
+If you're actually doing this on a Linux machine, you could navigate to that location on your hard
+
+49
+00:03:35,050 --> 00:03:36,790
+drive and see the data.
+
+50
+00:03:37,090 --> 00:03:38,530
+There will actually be some databases there.
+
+51
+00:03:38,560 --> 00:03:43,870
+If you're on a Mac or Windows, remember that Docker for Windows and Docker for Mac are actually doing
+
+52
+00:03:43,870 --> 00:03:49,620
+a little bit in the background that's hidden from us where it's actually creating a Linux VM.
+
+53
+00:03:49,750 --> 00:03:55,420
+So this data is technically inside that Linux VM. You're not going to be able to go to that path
+
+54
+00:03:55,450 --> 00:03:59,530
+on your Windows or Mac machine and see the data. It's actually inside that VM.
+
+55
+00:03:59,530 --> 00:04:04,210
+We'll see in a little bit, with mounted volumes, how we can get around that limitation as well.
+
+56
+00:04:04,210 --> 00:04:10,810
+By looking at this, you notice that it's not very user friendly in terms of telling us what's in it
+
+57
+00:04:11,140 --> 00:04:14,250
+or what this volume is assigned to.
+
+58
+00:04:14,260 --> 00:04:20,260
+We can see from the container's perspective what volume it's using, but we can't see from the volume perspective
+
+59
+00:04:20,410 --> 00:04:22,150
+what it's connected to.
+
+60
+00:04:22,150 --> 00:04:22,910
+Right?
+
+61
+00:04:23,230 --> 00:04:28,910
+If I were just to hit the Up Arrow and, let's see, create a mysql2.
+
+62
+00:04:29,170 --> 00:04:32,190
+That's now created another MySQL server running in the background.
+
+63
+00:04:32,200 --> 00:04:36,430
+If I do another docker volume ls, you'll see two of them.
+
+64
+00:04:36,430 --> 00:04:37,770
+You start to see the problem, right?
+
+65
+00:04:37,790 --> 00:04:41,630
+There's no real easy way here to tell one from the other.
+
+66
+00:04:41,740 --> 00:04:53,500
+If we just, to prove a point, do a docker container stop mysql, and a docker a container stop
+
+67
+00:04:53,590 --> 00:04:54,930
+mysql2.
+
+68
+00:04:55,190 --> 00:05:01,180
+We do a docker container ls, we'll not see any containers running. If we do an ls
+
+69
+00:05:01,180 --> 00:05:06,900
+-a, we get to see them all. And notice that they're stopped. And then we do a docker volume
+
+70
+00:05:06,910 --> 00:05:08,580
+ls, you notice we still have the two volumes.
+
+71
+00:05:08,590 --> 00:05:16,390
+If I do a docker container rm mysql, and then mysql2, because I can actually do both
+
+72
+00:05:16,390 --> 00:05:23,590
+of those in one command, it will remove both of my containers. If I now do a docker volume ls, my volumes
+
+73
+00:05:23,590 --> 00:05:26,560
+are still there. My data is still safe.
+
+74
+00:05:26,560 --> 00:05:28,510
+So, we've solved one problem.
+
+75
+00:05:28,510 --> 00:05:31,660
+The databases outlive the executable.
+
+76
+00:05:31,660 --> 00:05:34,180
+How do we make this a little more user friendly?
+
+77
+00:05:35,090 --> 00:05:40,010
+That's where named volumes come in and the ability for us to specify things on the docker run
+
+78
+00:05:40,010 --> 00:05:40,850
+command.
+
+79
+00:05:41,120 --> 00:05:47,810
+If I hit the Up Arrow a couple of times til I get to the docker container run, it doesn't really
+
+80
+00:05:47,810 --> 00:05:49,600
+matter which one you're going to run again.
+
+81
+00:05:50,820 --> 00:05:59,340
+In this case, we're going to actually throw in a -v command. A -v allows us to specify either
+
+82
+00:05:59,370 --> 00:06:06,660
+a new volume that we want to create for this container that's about to run, or it allows us two other
+
+83
+00:06:06,660 --> 00:06:07,500
+options.
+
+84
+00:06:07,500 --> 00:06:10,320
+One of them here is to create a named volume.
+
+85
+00:06:10,320 --> 00:06:17,660
+If I just did -v, and then the var lib mysql, that would do the same thing is what our volume
+
+86
+00:06:17,670 --> 00:06:20,040
+command in the Dockerfile did.
+
+87
+00:06:20,040 --> 00:06:24,970
+We don't really need to do that here. But what we can do is I can put a name in front of it
+
+88
+00:06:26,810 --> 00:06:29,930
+with a colon. That's known as a "named volume."
+
+89
+00:06:30,080 --> 00:06:38,000
+When I do that, and then do a docker volume ls, you'll see that my new container is using a new volume
+
+90
+00:06:38,180 --> 00:06:39,300
+and it's using a friendly name.
+
+91
+00:06:39,320 --> 00:06:45,980
+If we do a docker volume inspect on that mysql, you'll see that this is easier to use here.
+
+92
+00:06:46,010 --> 00:06:49,550
+If I deleted my container again,
+
+93
+00:06:52,470 --> 00:06:59,040
+and we have to put in a -f because it's still running, and then I run another one. And this time, I'll
+
+94
+00:06:59,040 --> 00:07:04,280
+give it a different name. And then we do another docker volume
+
+95
+00:07:04,280 --> 00:07:09,420
+ls, you'll see that it looks like we haven't created a new volume. It's still using the same volume.
+
+96
+00:07:09,420 --> 00:07:17,680
+Let's do a docker container inspect on the mysql3. Then what we'll see up here
+
+97
+00:07:18,990 --> 00:07:22,860
+is, yes, this is what was configured but what are we running?
+
+98
+00:07:22,880 --> 00:07:24,300
+This is our mounts up here.
+
+99
+00:07:24,560 --> 00:07:29,510
+We'll see here that not only is the name friendlier, but it actually changed the source location to
+
+100
+00:07:29,510 --> 00:07:30,980
+be a little friendlier as well.
+
+101
+00:07:31,280 --> 00:07:38,480
+For me, a little tip here is that when I am running for days or weeks at a time, a particular database,
+
+102
+00:07:38,540 --> 00:07:43,460
+in a particular container that I need to keep using over and over and I don't want a blank database
+
+103
+00:07:43,460 --> 00:07:50,930
+server, I'll end up creating my containers this way and naming them for the project so that I know what
+
+104
+00:07:50,930 --> 00:07:52,250
+that volume's for,
+
+105
+00:07:52,370 --> 00:07:53,900
+and that it needs to stick around.
+
+106
+00:07:57,840 --> 00:07:59,200
+One last thing here.
+
+107
+00:08:00,130 --> 00:08:06,390
+Why would you want to do docker volume create?
+
+108
+00:08:06,550 --> 00:08:13,750
+If we can create them from a docker container run command at runtime, and we can create them by specifying
+
+109
+00:08:13,750 --> 00:08:18,670
+them in the Dockerfile, there's only a few cases where you'd want to create it ahead of time. And you can
+
+110
+00:08:18,670 --> 00:08:21,320
+actually figure that out pretty quickly by using the help command.
+
+111
+00:08:22,210 --> 00:08:26,580
+Because here's the only way that we can actually specify a different driver.
+
+112
+00:08:26,590 --> 00:08:28,890
+Remember that plug-in stuff I'm going to talk about later?
+
+113
+00:08:29,020 --> 00:08:33,370
+Then any driver options that we want to use the -o on.
+
+114
+00:08:33,370 --> 00:08:37,090
+Then if we want to put labels on it, which we'll also talk about later in the production section.
+
+115
+00:08:37,090 --> 00:08:42,530
+Sometimes, in special cases, you do need to create the Docker volume ahead of time, but usually for
+
+116
+00:08:42,540 --> 00:08:46,610
+your local development purposes, just specifying it in a Dockerfile or at the run command is fine.
+

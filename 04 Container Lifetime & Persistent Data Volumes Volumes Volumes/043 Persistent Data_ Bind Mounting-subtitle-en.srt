@@ -1,0 +1,372 @@
+1
+00:00:02,530 --> 00:00:10,610
+In this lecture, we're going to talk about bind mounting and persistent data in those mounts. The
+
+2
+00:00:10,610 --> 00:00:15,300
+requirements are really that you just know about container management and how to run containers.
+
+3
+00:00:15,320 --> 00:00:20,230
+Let's jump in. Let's talk about bind mounts. They're actually pretty cool.
+
+4
+00:00:20,240 --> 00:00:25,550
+When I first learned about them, it sort of gave me an aha of how I could use Docker easily for local
+
+5
+00:00:25,550 --> 00:00:26,180
+development.
+
+6
+00:00:26,180 --> 00:00:33,380
+Really, a bind mount is just a mapping of the host files, or directories, into a container file or
+
+7
+00:00:33,380 --> 00:00:35,330
+directory. You can do just that.
+
+8
+00:00:35,330 --> 00:00:39,040
+You can either specify a directory or just a single file. In the background,
+
+9
+00:00:39,050 --> 00:00:43,780
+it's basically just having the two locations point to the same physical locations on disk.
+
+10
+00:00:43,910 --> 00:00:49,730
+Again, this actually skips the UFS like the other volumes do so that it's not going to wipe out your
+
+11
+00:00:49,730 --> 00:00:52,620
+host location when you delete the container.
+
+12
+00:00:52,640 --> 00:00:58,550
+If there are any files in the container that you map the host files to, the host files win. It
+
+13
+00:00:58,550 --> 00:01:03,650
+doesn't actually delete the files in the container that it overwrote because it's not really overwriting
+
+14
+00:01:03,680 --> 00:01:04,770
+anything in the container.
+
+15
+00:01:04,910 --> 00:01:07,100
+It's just there while the bind mount exists.
+
+16
+00:01:07,100 --> 00:01:11,570
+The minute you don't need the bind mount any more and you re-run the container without it, you would
+
+17
+00:01:11,570 --> 00:01:17,650
+actually see the underlying data that was there before. Because bind mounts are usually host specific,
+
+18
+00:01:17,660 --> 00:01:21,870
+they need specific data to be on the hard drive of the host in order to work.
+
+19
+00:01:21,890 --> 00:01:23,500
+You can't specify them in a Dockerfile.
+
+20
+00:01:23,510 --> 00:01:28,490
+You have to use them at runtime when you use the docker container run command. You can see the format
+
+21
+00:01:28,490 --> 00:01:29,080
+here.
+
+22
+00:01:29,090 --> 00:01:33,980
+It's really the -v that we used before, only on the left side of the colon,
+
+23
+00:01:34,100 --> 00:01:38,360
+we're actually putting in a full path rather than just a name.
+
+24
+00:01:38,360 --> 00:01:42,260
+And the way the Docker actually can tell the difference between the named volume, like we did a while ago,
+
+25
+00:01:42,410 --> 00:01:46,490
+and the bind mount, is the bind mount starts with a forward slash.
+
+26
+00:01:46,490 --> 00:01:51,470
+On Windows, you'll notice that it's a two forward slashes and then the drive letter, and then your
+
+27
+00:01:51,470 --> 00:01:52,120
+path.
+
+28
+00:01:52,130 --> 00:01:57,620
+As long as you have the left colon and right sides, you can really map anything you want from the
+
+29
+00:01:57,620 --> 00:02:01,860
+host into the container, and you can also specify things like read-only.
+
+30
+00:02:01,880 --> 00:02:07,910
+Where this really comes to shine is with development and running services inside your container
+
+31
+00:02:07,910 --> 00:02:12,940
+that are accessing files you're using on your host or changing.
+
+32
+00:02:12,950 --> 00:02:14,720
+Let's do that with Nginx.
+
+33
+00:02:14,930 --> 00:02:22,370
+If you go to the root of our repository for this course, and then we go into the Dockerfile sample
+
+34
+00:02:22,370 --> 00:02:24,750
+2 directory. Now we were in here earlier.
+
+35
+00:02:24,770 --> 00:02:28,580
+If you remember, there's two files. This is for Nginx, right?
+
+36
+00:02:28,580 --> 00:02:36,530
+If we look at the Dockerfile real quick, it's pretty simple. It's just specifying a working directory
+
+37
+00:02:36,560 --> 00:02:39,050
+and then copying an index file into that directory.
+
+38
+00:02:39,050 --> 00:02:40,490
+There's no volumes here.
+
+39
+00:02:40,490 --> 00:02:45,290
+A bind mount doesn't require a volume to work, although one could certainly be there.
+
+40
+00:02:45,530 --> 00:02:52,590
+The host always wins, remember? So, when we're doing a docker container run, then we do a
+
+41
+00:02:52,630 --> 00:02:56,330
+-d...let's name it nginx.
+
+42
+00:02:56,390 --> 00:03:00,420
+Let's give it the port 8080 like before.
+
+43
+00:03:00,770 --> 00:03:06,470
+Then we're going to give it the volume this time. And I need to tell it my current working directory
+
+44
+00:03:06,650 --> 00:03:12,230
+is going to be actually mounted into that working directory in the container. Because my index file is
+
+45
+00:03:12,230 --> 00:03:13,390
+here in this folder,
+
+46
+00:03:13,430 --> 00:03:19,040
+I want it to be in the container so I can edit it here, and it is seen live in the container.
+
+47
+00:03:19,040 --> 00:03:20,320
+So it will make sense in a second.
+
+48
+00:03:20,540 --> 00:03:24,280
+Here's a quick little tip. Instead of me having to figure out my whole path and type the whole thing
+
+49
+00:03:24,290 --> 00:03:28,370
+in, you can use pwd here like so.
+
+50
+00:03:28,460 --> 00:03:35,570
+Which is a shell shortcut that says, 'print out the working directory and replace this command with that
+
+51
+00:03:35,570 --> 00:03:36,210
+path.'
+
+52
+00:03:36,380 --> 00:03:43,460
+Then we're just going to use the same working directory from the Dockerfile there, and then we're going to
+
+53
+00:03:43,460 --> 00:03:45,360
+specify the Nginx image.
+
+54
+00:03:47,590 --> 00:03:52,930
+What I'm going to do, real quick, is I'm actually going to open up another terminal window so we can
+
+55
+00:03:52,930 --> 00:03:54,480
+do two things at once.
+
+56
+00:03:54,590 --> 00:03:56,010
+You don't really need to do this.
+
+57
+00:03:56,050 --> 00:04:01,840
+Basically, we're just going to edit the file on our host, and then I'm going to be in the container and
+
+58
+00:04:01,840 --> 00:04:02,780
+see what's happening.
+
+59
+00:04:02,920 --> 00:04:04,730
+So just to make sure it's working,
+
+60
+00:04:04,780 --> 00:04:06,350
+let's go to localhost.
+
+61
+00:04:06,700 --> 00:04:10,000
+OK, so this isn't the default Nginx HTML file.
+
+62
+00:04:10,030 --> 00:04:13,080
+And we used the regular Nginx image.
+
+63
+00:04:13,090 --> 00:04:16,580
+We didn't actually use the custom one from this directory.
+
+64
+00:04:16,690 --> 00:04:24,270
+We just used a stock image. To prove that point, we can actually do that same, exact command again but
+
+65
+00:04:24,280 --> 00:04:37,390
+take out the -v, and I'll run it on port 8080 instead. And I'll call this one nginx2.
+
+66
+00:04:37,420 --> 00:04:46,990
+If I go over to my browser and go to localhost 8080, that's the default nginx index.html
+
+67
+00:04:46,990 --> 00:04:47,930
+file.
+
+68
+00:04:48,010 --> 00:04:52,130
+This one is the custom one that we have living in this directory.
+
+69
+00:04:52,780 --> 00:04:56,380
+So, already we can see that it mapped it correctly.
+
+70
+00:04:56,560 --> 00:05:03,010
+If I open up another tab here and get a command line in the container.
+
+71
+00:05:08,800 --> 00:05:10,130
+Then go to that directory.
+
+72
+00:05:17,710 --> 00:05:21,580
+You'll notice that we can actually see the Dockerfile because we map the whole directory.
+
+73
+00:05:21,620 --> 00:05:27,460
+If over on the left, if we actually made a new file and I can just use that Linux touch command here
+
+74
+00:05:30,440 --> 00:05:37,010
+to create a new file. Then over on the right...oops...just keep forgetting that...ls -al, and you'll
+
+75
+00:05:37,010 --> 00:05:37,900
+see that in your file.
+
+76
+00:05:37,970 --> 00:05:43,350
+Hopefully you understand what's going on here, that both these locations are the same location.
+
+77
+00:05:43,370 --> 00:05:47,350
+And if I echoed something into that testme file,
+
+78
+00:05:57,430 --> 00:05:58,420
+and then...
+
+79
+00:06:01,620 --> 00:06:02,410
+there you go.
+
+80
+00:06:02,410 --> 00:06:06,670
+Our nginx is able to see the changes because it's just a normal file path in the container,
+
+81
+00:06:06,670 --> 00:06:08,720
+and those files are on the host.
+
+82
+00:06:08,830 --> 00:06:12,670
+If I was to delete them in the container, they would be deleted on the host because it is the same
+
+83
+00:06:12,670 --> 00:06:13,210
+file.
+
+84
+00:06:13,210 --> 00:06:19,090
+This is when I usually get a developer to get mine thinking about all of their development environments
+
+85
+00:06:19,090 --> 00:06:24,670
+that they have that are this complicated setup. Maybe they're using Vagrant, or some other manual method
+
+86
+00:06:24,670 --> 00:06:30,880
+of setting up their perfect environment, and they can start to see how this could make that so much simpler.
+
+87
+00:06:31,330 --> 00:06:35,920
+Because I didn't have to do any complicated setup on my Mac, I just ran a container.
+
+88
+00:06:35,920 --> 00:06:43,670
+I used the -v command with the mount, and now my code, on my host, can be edited on my host.
+
+89
+00:06:43,840 --> 00:06:47,890
+And I really never need to go into the shell of the container.
+
+90
+00:06:47,890 --> 00:06:52,570
+Usually, you can just run the container and look at its logs to see if there's any errors while you're
+
+91
+00:06:52,570 --> 00:06:53,260
+coding.
+
+92
+00:06:53,500 --> 00:06:58,750
+Of course, this is a simple example with Nginx. Later on, we're actually going to have specific
+
+93
+00:06:58,750 --> 00:07:03,160
+examples of different development environments for local development and containers.
+

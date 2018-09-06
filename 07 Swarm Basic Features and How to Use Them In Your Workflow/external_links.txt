@@ -1,0 +1,8 @@
+- b'Features-Not-Supported-In-Stack-Deploy'
+- b'https://docs.docker.com/compose/compose-file/#not-supported-for-docker-stack-deploy'
+- b'Manage-sensitive-data-with-Docker-secrets-Docker-Docs-Lots-of-good-reading-and-examples-'
+- b'https://docs.docker.com/engine/swarm/secrets/'
+- b'Secrets-In-Compose-Files-Docker-Docs-'
+- b'https://docs.docker.com/compose/compose-file/#secrets-configuration-reference'
+- b'Use-swarm-mode-routing-mesh-Docker-Docs-'
+- b'https://docs.docker.com/engine/swarm/ingress/'

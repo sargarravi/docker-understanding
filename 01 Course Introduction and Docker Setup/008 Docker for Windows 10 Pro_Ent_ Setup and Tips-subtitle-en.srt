@@ -1,0 +1,812 @@
+1
+00:00:06,290 --> 00:00:10,820
+Now we're going to actually get into the real install. First we're going to download install doc
+
+2
+00:00:10,820 --> 00:00:14,840
+or we're going to tweak some of the settings of it or check them out at least and then we're going to
+
+3
+00:00:14,840 --> 00:00:16,760
+go clone my repo.
+
+4
+00:00:16,760 --> 00:00:18,170
+We're going to get an editor.
+
+5
+00:00:18,280 --> 00:00:19,550
+You don't have a code editor.
+
+6
+00:00:19,760 --> 00:00:24,680
+And then we are checking out a few options if you want to tweak your terminal and your shell set up
+
+7
+00:00:24,950 --> 00:00:29,600
+we can get to that to.
+
+8
+00:00:29,610 --> 00:00:32,590
+So here's my plain old windows Tim Pro machine.
+
+9
+00:00:32,730 --> 00:00:35,690
+And the first thing we're going to do is we're going to store it at Docker.com
+
+10
+00:00:39,530 --> 00:00:49,570
+and I'm going to click on Docker see here in the middle and then Docker Community Edition for Windows.
+
+11
+00:00:49,570 --> 00:00:54,610
+Now in here you'll notice that by default when I click to get Docker it's going to download the Docker
+
+12
+00:00:54,610 --> 00:00:55,520
+for Windows.
+
+13
+00:00:55,520 --> 00:00:59,650
+He says this requires when asked in professional if I had an older version of Windows that will show
+
+14
+00:00:59,650 --> 00:01:02,170
+in a few minutes I would click on the dock tool box.
+
+15
+00:01:02,260 --> 00:01:08,880
+But here I'm going to say get Docker and by the fall by the way this is installing the Stable condition
+
+16
+00:01:08,890 --> 00:01:15,640
+not the Edge for one Edge I guess scroll down a little farther and I could choose edge or if I was actually
+
+17
+00:01:15,640 --> 00:01:18,650
+on the server version I could actually do the Edge there as well.
+
+18
+00:01:19,770 --> 00:01:21,350
+Let's save this.
+
+19
+00:01:21,420 --> 00:01:25,260
+I personally save it before I run it because it seems to work better that way.
+
+20
+00:01:25,680 --> 00:01:30,110
+And then we're going to run the install and the install is pretty typical for Windows.
+
+21
+00:01:30,130 --> 00:01:37,600
+It's going to ask me if it's OK now it's installing.
+
+22
+00:01:37,600 --> 00:01:38,680
+You know it's not running.
+
+23
+00:01:38,680 --> 00:01:41,280
+I would see a little Moby icon down there.
+
+24
+00:01:41,290 --> 00:01:46,040
+So let me actually run it and it's going to ask me about Hyper-V.
+
+25
+00:01:46,060 --> 00:01:53,110
+So if you don't have Hyper-V installed on your machine then this will actually enable it and reboot.
+
+26
+00:01:53,140 --> 00:01:55,080
+Now that means you have to have local admin.
+
+27
+00:01:55,090 --> 00:01:59,800
+I mean you had to have local admin to install this thing and you don't have to have local admin for
+
+28
+00:01:59,800 --> 00:02:00,470
+Hyper-V.
+
+29
+00:02:00,610 --> 00:02:06,730
+If you're on a laptop or desktop that you've never done virtualization on there there's a rare case
+
+30
+00:02:06,730 --> 00:02:12,800
+that you may need to go in the BIOS and actually enable the virtualization features in the BIOS.
+
+31
+00:02:12,940 --> 00:02:14,750
+And that's well-documented on the internet.
+
+32
+00:02:14,770 --> 00:02:21,340
+If you have an error I recommend just looking at the error up on the Internet and you'll probably will
+
+33
+00:02:21,340 --> 00:02:27,640
+find that everyone saying oh yeah go in your bios and find the extensions and install the VTX extension
+
+34
+00:02:27,640 --> 00:02:29,320
+or whatever it is in the BIOS.
+
+35
+00:02:29,320 --> 00:02:32,640
+You're not actually installing it you're actually just enabling it.
+
+36
+00:02:32,770 --> 00:02:34,870
+But that's a rare case.
+
+37
+00:02:35,020 --> 00:02:41,350
+Most of the time people that have problems installing it's either because they're on a home edition
+
+38
+00:02:42,010 --> 00:02:46,880
+but they forgot to check and they thought they had pros so they try to install the pro version.
+
+39
+00:02:47,050 --> 00:02:53,750
+Or maybe they're running an older version of Windows 10 doesn't have the latest updates.
+
+40
+00:02:53,800 --> 00:02:58,780
+It is important that you keep your windows machine up to date for Docker because Windows is updating
+
+41
+00:02:58,780 --> 00:03:02,710
+their stuff as rapidly as Dockers updating theirs and they're both related.
+
+42
+00:03:02,710 --> 00:03:04,520
+So you definitely get to keep those.
+
+43
+00:03:04,540 --> 00:03:08,870
+You can actually now see on my machine I've rebooted and Docker is starting in this little icon down
+
+44
+00:03:08,870 --> 00:03:17,630
+at the bottom once it's booted then I'll see this little prompt and I can run my power show as me not
+
+45
+00:03:17,630 --> 00:03:23,900
+as admin but just as me and I can do a darker version and I should see it running.
+
+46
+00:03:23,900 --> 00:03:27,480
+And this is the version I have installed this is the latest stable version.
+
+47
+00:03:27,650 --> 00:03:33,710
+And in case you were so inclined in the background this is running Hyper-V so I can run the Hyper-V
+
+48
+00:03:33,710 --> 00:03:42,090
+desktop app and I can actually see on my desktop that this is running in something called a Moby Linux
+
+49
+00:03:42,090 --> 00:03:49,620
+VM and it's got 2GB of RAM installed and it's uptime is just a minute because it just started so real
+
+50
+00:03:49,620 --> 00:03:49,920
+quick.
+
+51
+00:03:49,920 --> 00:03:55,620
+Let's just go into the settings right click on that little icon down there and we'll go up here to settings
+
+52
+00:03:56,310 --> 00:04:03,240
+and as a couple that you need to care about if you store your code that you might use in this course
+
+53
+00:04:03,300 --> 00:04:06,930
+on a different drive you need to check that here.
+
+54
+00:04:06,950 --> 00:04:12,030
+I definitely going to check see because that's where I keep a lot of my code so I need to enable where
+
+55
+00:04:12,030 --> 00:04:16,140
+ever I'm going to have code running inside a container.
+
+56
+00:04:16,140 --> 00:04:17,290
+You'll see more about that later.
+
+57
+00:04:17,310 --> 00:04:18,520
+But you got to do that here.
+
+58
+00:04:18,810 --> 00:04:22,680
+And the other thing is you might if you want if you have enough resources you can always bump up the
+
+59
+00:04:22,680 --> 00:04:24,750
+memory or the C-p use.
+
+60
+00:04:25,050 --> 00:04:26,780
+I think it comes pretty cool out of the box.
+
+61
+00:04:26,790 --> 00:04:29,610
+I mean 2GB in two-CD uses a pretty good amount.
+
+62
+00:04:29,880 --> 00:04:34,800
+But if you start hitting it limits and starts to get slow you can always bump those up depending on
+
+63
+00:04:34,800 --> 00:04:35,600
+your hardware.
+
+64
+00:04:35,640 --> 00:04:36,150
+Right.
+
+65
+00:04:36,360 --> 00:04:40,200
+And the rest of these options you're kind of kind of leave the same probably you're not going to have
+
+66
+00:04:40,200 --> 00:04:42,480
+to mess with those too much in this course.
+
+67
+00:04:42,600 --> 00:04:51,030
+But when I apply these settings it will require restarting of ducker and while that's happening.
+
+68
+00:04:51,050 --> 00:04:53,140
+Let's go clone my repo.
+
+69
+00:04:53,490 --> 00:04:58,030
+And remember that this is in the resource lecture earlier in this section.
+
+70
+00:04:58,040 --> 00:05:02,170
+Now I'm going to clone this but I want to clone it in desktop.
+
+71
+00:05:02,300 --> 00:05:06,150
+If you've never use get up before then you can use a GUI.
+
+72
+00:05:06,170 --> 00:05:09,650
+And that's probably one of the easiest ways that you're not used to get up if you know get how you get
+
+73
+00:05:09,690 --> 00:05:10,770
+you've got your own way to do it.
+
+74
+00:05:10,940 --> 00:05:19,360
+But here what I can do is I can actually use the GitHub gooey to download and clone my repo.
+
+75
+00:05:19,460 --> 00:05:21,900
+So I'm going to install that.
+
+76
+00:05:22,100 --> 00:05:28,430
+All right and then I'm actually going to put all of my code in a directory called code.
+
+77
+00:05:28,460 --> 00:05:35,380
+So I'm going to make a directory so you'll see on my machine that I actually put all of my software
+
+78
+00:05:35,380 --> 00:05:38,800
+code inside a directory called code on underneath my user.
+
+79
+00:05:38,890 --> 00:05:41,840
+So that's where I'm going to clone this from GitHub at.
+
+80
+00:05:41,860 --> 00:05:47,800
+And if you remember earlier I just changed the settings so that the C-Drive could be where I store some
+
+81
+00:05:47,800 --> 00:05:49,370
+code that Docker can see.
+
+82
+00:05:49,570 --> 00:05:52,880
+So I'm just going to log in as me.
+
+83
+00:05:52,930 --> 00:05:53,160
+OK.
+
+84
+00:05:53,170 --> 00:06:00,850
+Now that I have GitHub installed one of the ways I can clone it is from the website I can copy to your
+
+85
+00:06:00,880 --> 00:06:05,350
+el and then go back over to desktop and say clone repository.
+
+86
+00:06:05,430 --> 00:06:08,280
+Copy that in and then member I wanted it.
+
+87
+00:06:08,310 --> 00:06:10,220
+This is not going to be under Documents.
+
+88
+00:06:10,230 --> 00:06:13,380
+It's going to be under code that's where I put my hands.
+
+89
+00:06:13,870 --> 00:06:20,370
+So clum Now the advantage of doing it this way instead of downloading the zit is that you can come in
+
+90
+00:06:20,370 --> 00:06:27,090
+here and update it because I do update this repo when there's fixes or changes in Docker which happens
+
+91
+00:06:27,090 --> 00:06:29,540
+pretty pretty much every month.
+
+92
+00:06:29,820 --> 00:06:36,210
+So now if I do it during Here you can see them in the doctor that to me Docker M.E. directory.
+
+93
+00:06:36,240 --> 00:06:38,260
+And there we go.
+
+94
+00:06:39,270 --> 00:06:43,520
+Now if you're not savvy on code editors a little tip here is the best one.
+
+95
+00:06:43,520 --> 00:06:47,310
+I like for editing is Visual Studio code.
+
+96
+00:06:47,440 --> 00:06:54,150
+I can you can just search vs code in the US code and you'll get the Web site coming right up.
+
+97
+00:06:54,330 --> 00:07:01,350
+And then you can download it and install it just like a regular Windows app and it works quite well.
+
+98
+00:07:01,350 --> 00:07:09,160
+One of the best parts about this editor is that it has a built in Docker syntax so it'll let me open
+
+99
+00:07:09,160 --> 00:07:12,040
+up Duck or compose files and Docker files.
+
+100
+00:07:12,040 --> 00:07:18,160
+As you'll learn in this course and it will highlight the code in them and give me actual little hints
+
+101
+00:07:18,520 --> 00:07:20,440
+about how to use it.
+
+102
+00:07:23,980 --> 00:07:28,720
+And the last little tip here is around a couple of options for your command line.
+
+103
+00:07:28,840 --> 00:07:32,950
+So if you want to add a Docker documentation you'll see that they have a whole section on setting
+
+104
+00:07:32,950 --> 00:07:38,880
+up tab completion in power show and tab completion and Power Shell is what we get.
+
+105
+00:07:38,880 --> 00:07:41,270
+And Linux and Mac out of the box.
+
+106
+00:07:41,350 --> 00:07:47,020
+So basically it means that when I type the dog or command I can actually hit tab and it will fill out
+
+107
+00:07:47,050 --> 00:07:50,710
+the information for that common command depending on what I've typed.
+
+108
+00:07:50,890 --> 00:07:55,180
+And you can see that I don't have it here it just kind of list directories which is not what I want.
+
+109
+00:07:55,180 --> 00:07:58,640
+I actually wanted to list things like duck or run or other commands.
+
+110
+00:07:58,660 --> 00:08:04,460
+Well the way you get that widget install this and it's a couple of steps you'll.
+
+111
+00:08:04,480 --> 00:08:08,860
+You can see both of these will actually give you full steps to get it started and running.
+
+112
+00:08:08,860 --> 00:08:11,830
+But I'll just show you the quickest way I know how.
+
+113
+00:08:11,860 --> 00:08:20,410
+So we're going to actually install the module per the instructions on the GitHub repo and you'll see
+
+114
+00:08:20,800 --> 00:08:22,350
+right here.
+
+115
+00:08:22,790 --> 00:08:32,440
+All I have to do is install module with a scope of current user posh Docker and when I do that it's
+
+116
+00:08:32,440 --> 00:08:41,160
+going to actually ask me to install a different option called New get and New get is fine.
+
+117
+00:08:41,160 --> 00:08:42,730
+It's actually from Microsoft.
+
+118
+00:08:42,760 --> 00:08:46,590
+It's partly how you install modules on your machine.
+
+119
+00:08:46,660 --> 00:08:50,760
+So just say yes there and say yes again.
+
+120
+00:08:51,160 --> 00:08:57,600
+And now that we've installed it we need to actually enable it and we do that with import module posh
+
+121
+00:08:57,760 --> 00:09:06,880
+Docker and if you get an error about your security scripts disabling thing that has what is actually
+
+122
+00:09:06,880 --> 00:09:12,580
+happening is partially secure by default and it's preventing you from running an Internet script.
+
+123
+00:09:12,580 --> 00:09:21,320
+So what we want to do is if we go over here to the Docker documentation they have a little more information
+
+124
+00:09:21,320 --> 00:09:27,650
+on how to get this going and what you can do here is you can set an execution policy.
+
+125
+00:09:27,650 --> 00:09:32,770
+But what that's going to mean is that you're going to have to it's not going actually let you do it
+
+126
+00:09:32,840 --> 00:09:34,610
+as a non admin.
+
+127
+00:09:34,610 --> 00:09:38,980
+So what you're gonna have to do is then start power shell as an admin.
+
+128
+00:09:38,990 --> 00:09:47,750
+If you just saw I right click there run that and then in that window I'm going to set my execution policy
+
+129
+00:09:47,750 --> 00:09:49,850
+to a little less secure.
+
+130
+00:09:50,600 --> 00:09:54,160
+But it should be fine for remote sign that's pretty reasonable.
+
+131
+00:09:54,440 --> 00:10:03,560
+And then now we should be able over here to try the import module again on this window and there we
+
+132
+00:10:03,560 --> 00:10:04,280
+go.
+
+133
+00:10:04,280 --> 00:10:11,900
+Now the way I know it works is when I type in Docker and then I hit tab it gives me Docker commands
+
+134
+00:10:11,900 --> 00:10:12,610
+here.
+
+135
+00:10:12,650 --> 00:10:18,070
+So for example if I just typed in Docker help I get a list of all the different command options.
+
+136
+00:10:18,230 --> 00:10:22,820
+But if I type in Docker and I hit tab it actually starts going through those.
+
+137
+00:10:22,930 --> 00:10:28,430
+However this module is a little bit limited and it's a little bit dated.
+
+138
+00:10:28,450 --> 00:10:34,120
+So unfortunately it's the best option we have on Windows for power show command depletion but if you'll
+
+139
+00:10:34,120 --> 00:10:36,410
+notice it's actually a little dated.
+
+140
+00:10:36,490 --> 00:10:38,850
+It hasn't had an update in over 6 months.
+
+141
+00:10:39,010 --> 00:10:44,450
+So with the current command line formats you may not find it extremely valuable.
+
+142
+00:10:44,860 --> 00:10:50,080
+I did find it better than nothing but there's a long way for it to go it's certainly not as good as
+
+143
+00:10:50,080 --> 00:10:51,260
+Mac or Linux.
+
+144
+00:10:51,340 --> 00:10:53,410
+But it is the good thing is it's open source.
+
+145
+00:10:53,440 --> 00:10:59,180
+So maybe when you have some time and you want to get savvy at power show command completion.
+
+146
+00:10:59,290 --> 00:11:00,920
+You can go here and help out.
+
+147
+00:11:03,220 --> 00:11:08,500
+Now I do want to point out that even though we've installed the module for the current user and enabled
+
+148
+00:11:08,500 --> 00:11:14,670
+it it's not going to automatically start every time unless we add it to our power show profile.
+
+149
+00:11:14,700 --> 00:11:20,270
+If you didn't know what that was it's actually very similar to a bash profile that profile of a file
+
+150
+00:11:20,920 --> 00:11:23,370
+or a bash RC file.
+
+151
+00:11:23,380 --> 00:11:28,930
+Maybe depending on which one you prefer and actually on the darker side it's really nice to give you
+
+152
+00:11:29,140 --> 00:11:37,000
+this little snippet which we'll check to see if you have an existing profile file and create it.
+
+153
+00:11:37,000 --> 00:11:37,600
+If you don't
+
+154
+00:11:40,460 --> 00:11:42,180
+and so I didn't have one.
+
+155
+00:11:42,200 --> 00:11:46,950
+So what it did is it automatically created that profile in my documents directory and then added this
+
+156
+00:11:46,970 --> 00:11:50,290
+import module posh Docker to it which is pretty cool.
+
+157
+00:11:50,330 --> 00:11:56,540
+If you start to get into power show you learn that that power profile is actually pretty powerful and
+
+158
+00:11:56,540 --> 00:12:01,550
+you can do some pretty cool stuff with it and make your power cells set up pretty advanced and fancy
+
+159
+00:12:03,240 --> 00:12:10,230
+The other option is if you want to replace this window right so this power show window is a terminal
+
+160
+00:12:10,230 --> 00:12:15,360
+emulator not the same as the shell that's inside it because we still have to use the power shell shell
+
+161
+00:12:15,780 --> 00:12:20,050
+but we can use is a different gooey for that show.
+
+162
+00:12:20,220 --> 00:12:32,120
+And that might be commander dot net and Commander is basically a console emulator that gives you a huge
+
+163
+00:12:32,120 --> 00:12:35,810
+amount of features for free open source out of the box.
+
+164
+00:12:35,810 --> 00:12:38,860
+And the way I install it is I just download it.
+
+165
+00:12:38,960 --> 00:12:48,260
+It's a zip file and I actually make sure that by the way when you do this you right click go to properties
+
+166
+00:12:48,950 --> 00:12:57,740
+and unblock so that you can actually unzip it and then it works doesn't complain to you.
+
+167
+00:12:57,770 --> 00:12:58,010
+All right.
+
+168
+00:12:58,010 --> 00:13:05,120
+Now that I've extracted the commander I'm going to hear and I'm going to drag the commander button down
+
+169
+00:13:05,120 --> 00:13:08,090
+here the commander you is actually what that is.
+
+170
+00:13:08,180 --> 00:13:14,270
+I'm just going to drag that down to my start menu or my task bar rather and that way I can launch it
+
+171
+00:13:14,270 --> 00:13:14,830
+from here.
+
+172
+00:13:14,870 --> 00:13:18,230
+And the first time it's going to do some stuff that's going to set up some things.
+
+173
+00:13:18,230 --> 00:13:25,530
+Notice that it's actually got a tab down here and I can create more tabs and I can do that over here.
+
+174
+00:13:25,640 --> 00:13:28,510
+A dropdown menu is actually several of them here.
+
+175
+00:13:28,550 --> 00:13:33,770
+This one allows me to decide what my next tab is going to run as is it going to run Bash is going to
+
+176
+00:13:33,770 --> 00:13:35,850
+run power shell or they're going to run the command prompt.
+
+177
+00:13:35,990 --> 00:13:45,330
+Well I remember I told you earlier we need to run this power show so we're going to be in here and then
+
+178
+00:13:45,330 --> 00:13:52,080
+we're going to type in Docker p.s. and that way we go talker info works and you'll learn about these
+
+179
+00:13:52,080 --> 00:13:53,010
+commands all in a minute.
+
+180
+00:13:53,070 --> 00:13:56,270
+But the point is a kind of just works out of the box.
+
+181
+00:13:56,460 --> 00:14:03,930
+If you wanted that posh to always work then what you will you might need to do the posh Docker thing
+
+182
+00:14:03,930 --> 00:14:12,570
+rather you might need to come over here and come up in two settings and then you know you look at this
+
+183
+00:14:12,570 --> 00:14:15,600
+you're like all the cow there's a whole lot of settings here.
+
+184
+00:14:15,600 --> 00:14:18,840
+So what you need to do is come down here to startup tasks.
+
+185
+00:14:18,840 --> 00:14:20,470
+Don't be distracted by everything else.
+
+186
+00:14:21,420 --> 00:14:28,230
+And over here under power shall power shall we need to take out this little option right here that says
+
+187
+00:14:28,230 --> 00:14:29,710
+no profile.
+
+188
+00:14:30,120 --> 00:14:30,830
+OK.
+
+189
+00:14:30,840 --> 00:14:34,690
+Because that will prevent it from loading the profile file we just created.
+
+190
+00:14:34,830 --> 00:14:41,940
+And you can say those settings and then you close the commander and then you started up again.
+
+191
+00:14:41,940 --> 00:14:43,910
+No set defaults the command by default.
+
+192
+00:14:43,920 --> 00:14:46,370
+So you can always go in the settings and change that.
+
+193
+00:14:46,440 --> 00:14:54,290
+If I go over here and say power show Power Shell then I get this nice little power shall prompt.
+
+194
+00:14:58,000 --> 00:15:03,880
+And see that I have power show completion then if I do Docker and I have completion here as well.
+
+195
+00:15:03,970 --> 00:15:04,740
+Look at that.
+
+196
+00:15:04,780 --> 00:15:05,100
+All right.
+
+197
+00:15:05,110 --> 00:15:07,470
+So we got everything working but this is a pretty neat show.
+
+198
+00:15:07,480 --> 00:15:09,710
+You do not have to use this for this course.
+
+199
+00:15:09,730 --> 00:15:15,460
+I do expect that everything works in here before it works in here.
+
+200
+00:15:15,460 --> 00:15:19,300
+So if you're having problems here don't come running to the Q&amp;A just yet.
+
+201
+00:15:19,300 --> 00:15:23,140
+Actually just try and get a partial window to see if it works because it might be something messed up
+
+202
+00:15:23,140 --> 00:15:25,510
+with Commander but it's a neat option.
+
+203
+00:15:25,510 --> 00:15:27,760
+And I tend to run it whenever I'm using Windows.
+

@@ -1,0 +1,543 @@
+0
+00:00.650 --> 00:07.960
+Alright, in this lecture we're going to talk about image layers.
+
+1
+00:07.960 --> 00:14.590
+So this is a fundamental concept of how Docker works. It uses something called the union file system
+
+2
+00:15.280 --> 00:21.550
+to present a series of file system changes as an actual file system.
+
+3
+00:21.550 --> 00:26.950
+We're going to dive into the history and inspect commands and see how we can use them to understand
+
+4
+00:26.980 --> 00:33.070
+what an image is actually made of. We're going to learn a little bit about the copy on write concept
+
+5
+00:33.430 --> 00:38.140
+of how a container runs as an additional layer on top of an image.
+
+6
+00:40.970 --> 00:43.020
+What do I mean by image layers?
+
+7
+00:43.100 --> 00:49.580
+It's actually transparent completely to you when you're using Docker, but when you start digging into
+
+8
+00:49.580 --> 00:55.430
+certain commands, like the history command, the inspect and commit, you start to get a sense that an image
+
+9
+00:55.460 --> 01:01.500
+isn't some big blob of data that comes and goes in one huge chunk.
+
+10
+01:01.580 --> 01:02.290
+Right?
+
+11
+01:02.330 --> 01:07.970
+If you notice when we actually did Docker pulls, certain times you might see words that indicate that
+
+12
+01:07.970 --> 01:13.580
+there's something that you already have, like you've cached some part of it already, and that all comes
+
+13
+01:13.580 --> 01:20.930
+down to the fact that images are designed using the union file system concept of making layers about
+
+14
+01:20.930 --> 01:22.890
+the changes.
+
+15
+01:22.950 --> 01:31.300
+If we could quickly just look at what we have in Docker...in Docker images actually...
+
+16
+01:32.370 --> 01:38.400
+A while ago, we were playing around with the tags with Nginx. Right? We remember that the Nginx
+
+17
+01:38.410 --> 01:43.980
+image ID is the same and we had different tags for the same image name.
+
+18
+01:44.100 --> 01:49.150
+So let's do a quick docker history on nginx latest.
+
+19
+01:49.420 --> 01:53.670
+What am I looking at here?
+
+20
+01:53.820 --> 02:01.320
+This is not a list of things that have actually happened in the container because this is about an image.
+
+21
+02:01.470 --> 02:05.170
+This is actually a history of the image layers.
+
+22
+02:05.460 --> 02:12.310
+Every image starts from the very beginning with a blank layer known as scratch.
+
+23
+02:12.660 --> 02:20.340
+Then every set of changes that happens after that on the file system, in the image, is another layer.
+
+24
+02:20.670 --> 02:27.390
+You might have one layer, you might have dozens of layers and some layers maybe no change in terms
+
+25
+02:27.390 --> 02:28.700
+of the file size.
+
+26
+02:28.710 --> 02:35.130
+You'll notice on here that we actually have a change here that was simply a metadata change about
+
+27
+02:35.130 --> 02:39.360
+which command we're actually going to run. We'll cover that in a little bit when we go over the
+
+28
+02:39.390 --> 02:39.920
+Dockerfile.
+
+29
+02:40.170 --> 02:46.690
+But, for now, you can actually see that this one added a huge amount of files that was 123MB.
+
+30
+02:46.830 --> 02:51.330
+Then we made a change here and a change here and I happen to know because of Dockerfiles that these
+
+31
+02:51.330 --> 02:54.830
+are really just Dockerfile metadata information.
+
+32
+02:54.990 --> 03:01.090
+As you go up, we have some more data changes.
+
+33
+03:01.990 --> 03:04.680
+You'll see that this is actually quite different in another image.
+
+34
+03:04.680 --> 03:14.650
+So if we go to docker history mysql, it has a completely different set of image layers.
+
+35
+03:16.140 --> 03:20.070
+Let me draw this a little bit for you and maybe this will help.
+
+36
+03:20.400 --> 03:24.440
+When we start an image, when we were creating a new image,
+
+37
+03:24.570 --> 03:33.030
+we're starting with one layer. Every layer gets its own unique SHA that helps the system identify
+
+38
+03:33.480 --> 03:36.110
+if that layer is indeed the same as another layer.
+
+39
+03:36.390 --> 03:42.630
+Let's just say that at the beginning of one of yours, you might have Ubuntu at the very bottom.
+
+40
+03:43.970 --> 03:46.920
+That's the first layer in your image.
+
+41
+03:46.920 --> 03:53.460
+Then you create a Dockerfile, which adds some more files and that's another layer on top of that
+
+42
+03:53.490 --> 03:56.550
+image. Maybe we use Apt for that.
+
+43
+03:58.020 --> 04:10.290
+Then in your Dockerfile, you make an environment variable change. That together is your image.
+
+44
+04:12.390 --> 04:13.390
+OK?
+
+45
+04:13.570 --> 04:24.630
+You might have a different image that starts from debian:jessie and then on that image you may also
+
+46
+04:24.630 --> 04:28.340
+use Apt to install some stuff,
+
+47
+04:28.340 --> 04:36.700
+let's say MySQL. You might copy some files over, you might open a port.
+
+48
+04:37.100 --> 04:42.110
+So each one of these changes that you usually make in the Dockerfile, but you can also make with the
+
+49
+04:42.110 --> 04:45.680
+commit docker command that we'll check out in a minute.
+
+50
+04:45.680 --> 04:50.500
+This is also another image and those are all bundled together.
+
+51
+04:52.300 --> 04:57.900
+What happens if I have another image that's also using the same version of jessie?
+
+52
+04:57.910 --> 05:01.720
+Well, that image can have its own changes
+
+53
+05:03.020 --> 05:09.530
+on top of the same layer that I have in my cache. This is where the fundamental concept of the cache
+
+54
+05:09.950 --> 05:16.430
+of image layers saves us a whole bunch of time and space. Because we don't need to download layers we
+
+55
+05:16.430 --> 05:22.040
+already have, and remember it uses a unique SHA for each layer so it's guaranteed to be the exact
+
+56
+05:22.040 --> 05:29.060
+layer it needs. It knows how to match them between Docker Hub and our local cache. As we make changes
+
+57
+05:29.600 --> 05:34.500
+to our images, they create more layers.
+
+58
+05:34.700 --> 05:42.890
+If we decide that we want to have the same image be the base image for more layers, then it's only
+
+59
+05:42.890 --> 05:45.990
+ever storing one copy of each layer.
+
+60
+05:46.160 --> 05:52.100
+In this system, really, one of the biggest benefits is that we're never storing the same image data
+
+61
+05:52.340 --> 05:54.500
+more than once on our file system.
+
+62
+05:54.500 --> 05:59.840
+It also means that when we're uploading and downloading we don't need to upload and download the same
+
+63
+05:59.840 --> 06:01.130
+layers that we already have
+
+64
+06:01.130 --> 06:11.210
+on the other side. If you were to have your own image and it was custom that you made yourself, and then
+
+65
+06:11.660 --> 06:22.800
+you added, let's say, an Apache server on top of that as another layer in your Dockerfile, and then you were
+
+66
+06:22.800 --> 06:34.830
+to open up port 80. Then, at the very end, you actually told it to copy in the source code but you
+
+67
+06:34.830 --> 06:40.730
+actually ended up having two different Dockerfiles for two different websites, and every line in the Dockerfiles
+
+68
+06:40.730 --> 06:48.280
+were the same except for that last little bit where you copied Website A into the image and
+
+69
+06:48.280 --> 06:57.090
+then Website B, you would end up with two images. We'll show that in a minute. This makes up one image
+
+70
+06:57.120 --> 07:04.940
+and this makes up one image, but the only files that are actually stored is this one,
+
+71
+07:05.130 --> 07:12.040
+this one, this layer and then this little layer and then this little layer.
+
+72
+07:12.360 --> 07:20.950
+So we're never storing the entire stack of image layers more than once if it's really the same layers.
+
+73
+07:20.990 --> 07:22.490
+How does this work with containers?
+
+74
+07:23.450 --> 07:32.680
+If you have your image, let's say we have our Apache image, and we decide to run a container off of
+
+75
+07:32.680 --> 07:40.890
+it, all Docker does is it creates a new read/write layer for that container
+
+76
+07:41.860 --> 07:48.190
+on top of that Apache image. When we're perusing the file system and these things, all the containers
+
+77
+07:48.190 --> 07:54.940
+and the images all just look like a regular file system, but underneath the storage driver that's used
+
+78
+07:54.940 --> 07:59.380
+by Docker is actually layering, like a stack of pancakes,
+
+79
+07:59.380 --> 08:01.440
+all these changes on top of each other.
+
+80
+08:01.450 --> 08:10.530
+So if I ran two containers at the same time off of the same Apache image, container 1 and container 2
+
+81
+08:10.950 --> 08:17.910
+would only be showing, in terms of the file space, they would only be the differencing between what's
+
+82
+08:17.910 --> 08:25.700
+happened on that live container running and what is happening in the base image, which is read-only.
+
+83
+08:25.980 --> 08:31.020
+When you're running Containers and you're changing files that were coming through the image, let's
+
+84
+08:31.020 --> 08:39.690
+say I started container 3, and I actually went in and changed a file that was in this image in the running
+
+85
+08:39.690 --> 08:41.010
+container...
+
+86
+08:41.010 --> 08:44.900
+this is known as copy-on-write.
+
+87
+08:45.050 --> 08:52.280
+What that does is the file system will take that file out of the image and copy it into this differencing...
+
+88
+08:53.060 --> 08:59.130
+up here... and store a copy of that file in the container layer.
+
+89
+08:59.150 --> 09:04.960
+So now the container is really only just the running process
+
+90
+09:05.090 --> 09:10.720
+and those files that are different than they were in the Apache image.
+
+91
+09:11.110 --> 09:17.920
+If we go back to our image list and we look at these commands again, and we look at the bottom one
+
+92
+09:18.160 --> 09:26.340
+and see how the dates are different? We can actually see as this image got changed in Docker Hub and was
+
+93
+09:26.400 --> 09:31.370
+updated over time, that these changes haven't been changed
+
+94
+09:31.380 --> 09:38.140
+at the very bottom layer in four weeks and then the latest changes have been happening in the last
+
+95
+09:38.140 --> 09:39.180
+two weeks.
+
+96
+09:40.290 --> 09:43.570
+Oh by the way, don't worry about the missing part.
+
+97
+09:43.700 --> 09:46.580
+That's actually just a misnomer inside the Docker interface.
+
+98
+09:46.580 --> 09:53.080
+It doesn't mean that something's wrong or it's misconfigured. What it means is that really, this mysql
+
+99
+09:53.150 --> 09:55.980
+image right here is this image ID.
+
+100
+09:56.030 --> 10:00.460
+The other layers in the image aren't actually images themselves.
+
+101
+10:00.640 --> 10:00.940
+...
+
+102
+10:00.950 --> 10:03.350
+They're just layers inside this image,
+
+103
+10:03.440 --> 10:07.030
+and so they wouldn't necessarily get their own image ID there.
+
+104
+10:07.040 --> 10:11.090
+Personally, I think it's a little misleading in the interface to say that, but that's how they wrote it.
+
+105
+10:12.310 --> 10:17.740
+So now that we've get a sense of the history command to show us what an image might be made of, let's
+
+106
+10:17.740 --> 10:23.200
+use the inspect command.
+
+107
+10:23.530 --> 10:27.970
+What this does is this gives us all the details about the image.
+
+108
+10:27.970 --> 10:32.280
+This is basically the metadata. Remember when we talked about that an image is made up of two parts,
+
+109
+10:32.290 --> 10:34.740
+the binaries and its dependencies,
+
+110
+10:34.840 --> 10:39.820
+and then the metadata about that image? Well, inspect gives you back the metadata.
+
+111
+10:39.970 --> 10:48.850
+Besides just the basic info, like the image ID and its tags, you get all sorts of detail around how
+
+112
+10:48.940 --> 10:51.130
+this image expects to be run.
+
+113
+10:51.130 --> 10:58.330
+It actually has the option to expose these two ports inside the image so that you know when you want
+
+114
+10:58.330 --> 11:04.790
+to start it, which ports you need to open up inside your Docker host if you want it to accept connections.
+
+115
+11:04.810 --> 11:09.550
+You can actually see that environment variables were passed in, including the version of Nginx that
+
+116
+11:09.550 --> 11:15.790
+it's running and the path. You can actually see the command it will run when you start up the image by
+
+117
+11:15.790 --> 11:16.790
+default.
+
+118
+11:16.870 --> 11:21.420
+Again, a lot of these things can actually be changed like we did earlier with the docker container
+
+119
+11:21.430 --> 11:22.330
+run command.
+
+120
+11:22.480 --> 11:28.600
+But these are showing us all the defaults and some other interesting information like the author,
+
+121
+11:28.720 --> 11:36.280
+and down here at the bottom, that it's an architecture of AMD64, which is pretty much what all normal
+
+122
+11:36.340 --> 11:38.500
+PCs and Macs run on nowadays.
+
+123
+11:38.530 --> 11:44.770
+We don't really have too many 32 bit machines around, so this is just a standard 64 bit Intel architecture
+
+124
+11:44.830 --> 11:49.990
+and it's designed to run on the Linux OS.
+
+125
+11:50.010 --> 11:51.710
+Ok, a quick review.
+
+126
+11:51.870 --> 11:56.010
+So we've learned a lot about images and how they're made up, and we find out that they're actually not
+
+127
+11:56.010 --> 12:01.410
+that complex. Really, they're just a series of changes on the file system and metadata about those changes.
+
+128
+12:02.450 --> 12:06.940
+You learned that each layer has its own unique identity as a SHA.
+
+129
+12:07.080 --> 12:14.400
+They're only stored once on each system, so on each Docker daemon, each layer is only represented once
+
+130
+12:14.400 --> 12:16.020
+in the file system.
+
+131
+12:16.020 --> 12:21.900
+That gives us a lot of savings in space, as well as transfer time in sending images back and forth
+
+132
+12:21.900 --> 12:26.430
+between registries, like Docker Hub. And, really, when you start a container,
+
+133
+12:26.430 --> 12:31.230
+it's just a single layer of changes on top of an existing image.
+
+134
+12:31.230 --> 12:37.140
+So it's actually usually very small. We learned about the history and inspect commands and how they
+
+135
+12:37.140 --> 12:40.480
+can teach us what's going on inside an image and how it was made.

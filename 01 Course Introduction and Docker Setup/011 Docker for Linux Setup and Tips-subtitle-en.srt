@@ -1,0 +1,1147 @@
+0
+00:05.580 --> 00:11.850
+Are you using Linux as your main operating system on your laptop or desktop?  Or maybe you just want
+
+1
+00:11.850 --> 00:16.460
+to install Docker and use it on a Linux server in the cloud or in a Linux VM?
+
+2
+00:16.530 --> 00:18.060
+Then this is the video for you.
+
+3
+00:18.210 --> 00:22.860
+We're going to go through all the Linux features that you need to make sure are set up correctly so
+
+4
+00:22.860 --> 00:27.700
+that you can get through this course. And do all of the examples and code stuff.
+
+5
+00:27.960 --> 00:31.980
+So first off, congratulations! If you're going to use Linux,
+
+6
+00:31.980 --> 00:36.200
+it's actually the easiest to get started with Docker. Docker was made for Linux.
+
+7
+00:36.210 --> 00:39.690
+It now actually has Docker Containers for Windows.
+
+8
+00:39.690 --> 00:41.480
+But we're going to get to that later in the course.
+
+9
+00:41.490 --> 00:44.920
+But most of this course is all about containers on Linux.
+
+10
+00:44.940 --> 00:51.030
+And so when you think of the Mac and the Windows stuff, it's mostly them actually running a tiny little
+
+11
+00:51.030 --> 00:56.340
+Linux VM in the background. For you, if you're going to be running natively on Linux, you're good
+
+12
+00:56.340 --> 00:56.790
+to go.
+
+13
+00:56.790 --> 01:01.260
+There is no emulation or little VM running in the background; it just runs straight on your operating
+
+14
+01:01.260 --> 01:01.950
+system.
+
+15
+01:02.190 --> 01:08.240
+So there's 3 main ways to get Docker on Linux and it might not be what you expect.
+
+16
+01:08.430 --> 01:12.990
+The first one is through a script that's actually using a cURL script.
+
+17
+01:12.990 --> 01:19.260
+It's actually my preferred way. Especially when I'm installing it from just for testing or playing around
+
+18
+01:19.260 --> 01:26.520
+with it, because it does use the Edge releases, which are not the Stable sort of production-y version.
+
+19
+01:26.730 --> 01:29.360
+They're more of the beta monthly releases.
+
+20
+01:29.430 --> 01:34.560
+So obviously you don't want to do that for maybe a production system where you want to automate over
+
+21
+01:34.560 --> 01:41.250
+and over again for creating servers in the cloud or your data center. But for installing locally, I highly
+
+22
+01:41.250 --> 01:42.840
+recommend just using Edge.
+
+23
+01:42.890 --> 01:44.540
+It's actually quite Stable for being beta.
+
+24
+01:44.540 --> 01:49.110
+I usually don't have any issues with it and but it allows you to test out features quicker because it
+
+25
+01:49.110 --> 01:50.430
+comes out monthly.
+
+26
+01:50.520 --> 01:52.430
+So that script would actually get you installed.
+
+27
+01:52.440 --> 01:54.150
+And we're going to be using that script today.
+
+28
+01:55.420 --> 02:02.050
+I'm also going to show you though about the store, which has specific instructions for each distribution.
+
+29
+02:02.050 --> 02:10.300
+So whether you're on Ubuntu or Debian or Red Hat or CentOS, or just like all of the different distributions
+
+30
+02:10.560 --> 02:10.890
+there.
+
+31
+02:11.050 --> 02:20.320
+They largely come down to Debian-based distributions or Fedora- and Red Hat-based distributions and the
+
+32
+02:20.320 --> 02:23.400
+YUM package manager and the APT Package Manager right.
+
+33
+02:23.410 --> 02:28.750
+So there are other variants and other things out there but, really in this course, for Linux, we're really
+
+34
+02:28.750 --> 02:36.070
+just mostly talking about those two because they cover 95% of the use cases in Linux. You
+
+35
+02:36.070 --> 02:42.160
+need to go to the store to get the specific instructions for your distribution. Because you'll learn
+
+36
+02:42.160 --> 02:47.610
+that you shouldn't be using the built-in default one that might come with your package manager.
+
+37
+02:47.620 --> 02:49.120
+We'll talk about that in a second.
+
+38
+02:49.360 --> 02:56.680
+I want to note real quick though, if you're on Red Hat Enterprise Linux -- or RHEL, as I'll call it from
+
+39
+02:56.680 --> 03:03.760
+now on -- that only really officially supports Docker Enterprise Edition, which is the paid version.
+
+40
+03:03.880 --> 03:11.510
+Docker's attitude really is, a paid operating system gets a paid version of Docker. A free operating system.
+
+41
+03:11.530 --> 03:13.750
+gets a free version of Docker.
+
+42
+03:13.840 --> 03:16.420
+Now we're talking about the native stuff like Linux, right.
+
+43
+03:16.430 --> 03:24.070
+In this case, if you're going to be on Red Hat, you can actually go to the store and look up the CentOS
+
+44
+03:24.100 --> 03:31.990
+version because it's also a YUM package manager version and you can do that Docker CE instead of having
+
+45
+03:31.990 --> 03:33.760
+to go pay for Docker EE.
+
+46
+03:33.970 --> 03:38.350
+But I just want to tell you that now because if you go to the store and then you go to click on Docker CE,
+
+47
+03:39.100 --> 03:42.190
+and then you go look for Red Hat Enterprise Linux,
+
+48
+03:42.190 --> 03:45.660
+it's not going to be there because it's over on the EE side.
+
+49
+03:45.700 --> 03:51.580
+Docker assumes if you're running the paid RHEL, that you would actually be paying for Docker support just
+
+50
+03:51.580 --> 03:53.330
+like you pay for your Linux support.
+
+51
+03:53.350 --> 04:00.710
+So next up you can install this on any Linux option, whether that's the native computer on your laptop
+
+52
+04:00.710 --> 04:03.860
+or desktop with a GUI or it's a server in the cloud.
+
+53
+04:03.860 --> 04:09.260
+All these processes are the same and we will, if there's ever an exception, I will mention at that time.
+
+54
+04:11.150 --> 04:16.790
+This is not going to work for all distributions. Remember how I said 95 is really 95% is really what
+
+55
+04:16.790 --> 04:17.480
+we're going for.
+
+56
+04:17.480 --> 04:22.460
+So that's just an estimate of my experience with the people I work with, I have no scientific background
+
+57
+04:22.460 --> 04:24.010
+on that 95%.
+
+58
+04:24.020 --> 04:30.410
+But, there are distributions out there that may not work or will not work with Docker. Specifically
+
+59
+04:30.410 --> 04:38.240
+those are the less common or vendor-specific distributions like Amazon Linux or Linode Linux or
+
+60
+04:38.240 --> 04:44.510
+a few other ones out there maybe like Google Cloud Linux, which I know is still beta testing Docker
+
+61
+04:44.510 --> 04:45.250
+support.
+
+62
+04:45.350 --> 04:51.260
+So Docker is a leading-edge technology that uses the OS kernel and specific features in that kernel.
+
+63
+04:51.530 --> 04:57.980
+Those particular kernels, at least in the past, have not had all the features in them that Docker needs
+
+64
+04:57.980 --> 04:59.230
+to work properly.
+
+65
+04:59.240 --> 05:04.520
+So just for this course a lot of my stuff is going to be on my demonstrations and stuff are going to
+
+66
+05:04.520 --> 05:07.440
+be on a Ubuntu or Debian variant.
+
+67
+05:07.670 --> 05:10.290
+And actually in this one we're going to use Mint here in a minute.
+
+68
+05:10.700 --> 05:14.620
+And lastly don't use the pre-installed setups.
+
+69
+05:14.630 --> 05:20.330
+This is generally my recommendation because Docker moves really fast, and you want the latest version
+
+70
+05:20.330 --> 05:23.700
+of Docker, even if you're doing production you want the latest production version.
+
+71
+05:23.690 --> 05:24.870
+When you start out.
+
+72
+05:25.070 --> 05:32.750
+If you go to Digital Ocean or AWS or Linode, you might find a Linux install that's
+
+73
+05:32.900 --> 05:37.010
+maybe an easier built in package thing that just says hey we've already got Docker installed for
+
+74
+05:37.010 --> 05:37.700
+you.
+
+75
+05:37.700 --> 05:41.780
+Generally I don't recommend using those because you're usually going to get an old version. You're going to
+
+76
+05:41.940 --> 05:45.380
+get an old version of Docker, and then the first thing you're going to have to do is figure out how to
+
+77
+05:45.380 --> 05:46.170
+update it.
+
+78
+05:46.310 --> 05:51.290
+And depending on how they installed Docker, it may not be that easy to figure out how to update it to the
+
+79
+05:51.290 --> 05:52.240
+latest edition.
+
+80
+05:52.280 --> 05:58.940
+So I always recommend using like the official Ubuntu or the official Fedora or the official CentOS installs
+
+81
+05:59.330 --> 06:03.300
+then manually installing Docker as we will in a minute.
+
+82
+06:03.470 --> 06:07.330
+In general this is going to actually go through a couple of basic steps.
+
+83
+06:07.430 --> 06:13.550
+We're going to first update our package manager and install Docker. Then we're going to optionally add
+
+84
+06:13.550 --> 06:18.890
+your user account to the Docker group and that will prevent you from having to use Sudo every single
+
+85
+06:18.890 --> 06:23.870
+time you want to run a Docker command, because that can add a little bit of time and tediousness to
+
+86
+06:23.870 --> 06:24.370
+it.
+
+87
+06:24.380 --> 06:28.580
+So we're going to do that. Then we're going to go and we're going to clone my repo from GitHub onto
+
+88
+06:28.580 --> 06:33.840
+your Linux machine and then we can talk about getting a code editor if you don't have one.
+
+89
+06:34.100 --> 06:38.870
+And lastly we're going to tweak your terminal and shell set up.
+
+90
+06:38.900 --> 06:44.930
+This is a very optional approach but I get a lot of questions in the course from people saying "hey you're
+
+91
+06:44.930 --> 06:47.750
+terminal or your shell did this or looked like this."
+
+92
+06:47.750 --> 06:48.590
+"How do you do that?"
+
+93
+06:48.590 --> 06:55.310
+So I'm trying to give some information around paths you can go down to maybe tweak and set up your shell
+
+94
+06:55.310 --> 07:00.740
+differently so that it looks more like the one that I use which I use every day and I customize it constantly
+
+95
+07:00.740 --> 07:02.580
+because I'm trying to optimize it.
+
+96
+07:02.600 --> 07:06.290
+You don't have to do any of that if you don't want to but I want to give you some tips on that.
+
+97
+07:09.400 --> 07:19.030
+OK so what I have here is a Mint Linux stock, out-of-the-box machine. Mint Linux is a variant of Ubuntu.
+
+98
+07:19.030 --> 07:23.170
+So in case you're curious, it's actually a really great desktop version of Linux, but I'm sure at this
+
+99
+07:23.170 --> 07:27.550
+point you are using your own Linux and you have all the things you want on it.
+
+100
+07:27.550 --> 07:30.340
+And so I don't need to tell you about the one that I tend to like.
+
+101
+07:30.400 --> 07:38.080
+So if I just type Docker in this scenario it actually says hey it's not installed you can use APT to
+
+102
+07:38.080 --> 07:41.240
+install it and you install with docker.io.
+
+103
+07:41.260 --> 07:46.270
+The problem with that is you're going to get an old version maybe even a year old, which,
+
+104
+07:46.330 --> 07:51.090
+that's at least 4 major versions, if not 12 Edge,
+
+105
+07:51.250 --> 07:56.930
+minor versions old, so you don't want that you actually want to install it through the store.
+
+106
+07:57.280 --> 08:01.900
+We're going to actually use a script like I mentioned a while ago, but before we do that, I just
+
+107
+08:01.900 --> 08:05.560
+want to show you what it looks like if I go into Docker CE.
+
+108
+08:05.650 --> 08:12.190
+I know that basically my Mint is actually just a variant of Ubuntu so I can scroll down and find the
+
+109
+08:12.190 --> 08:13.080
+Ubuntu one.
+
+110
+08:16.250 --> 08:22.220
+It actually will step through instructions that tell you which additions and I know mine is based
+
+111
+08:22.220 --> 08:25.010
+on 16.04;
+
+112
+08:25.370 --> 08:31.580
+so I click on the Usage Instructions in the top right. And it actually walks me through it and actually
+
+113
+08:31.580 --> 08:39.210
+tells me hey you can use make sure these versions and go get the Docker for
+
+114
+08:39.240 --> 08:45.920
+Ubunto from the Docker documentation website; which, is a very detailed, stepping you through, making
+
+115
+08:45.920 --> 08:52.130
+sure that you don't have the old version installed from the default apt-get repository, and how to
+
+116
+08:52.130 --> 08:53.840
+go through each step by step.
+
+117
+08:53.840 --> 09:00.210
+However, there is sort of a cheat for this. In our case, we want to install the Edge release.
+
+118
+09:00.260 --> 09:09.120
+I'm just going to go to get.docker.com; and, it's actually going to show me a script, which I can use
+
+119
+09:09.120 --> 09:14.760
+with cURL over https, so that we're making sure that it's officially the script from Docker, because it's encrypted
+
+120
+09:14.760 --> 09:21.780
+on the connection. It will let me install through an automated way; it'll basically figure out what
+
+121
+09:21.780 --> 09:27.930
+is my operating system, what is my kernel, how do I do I use APT package or YUM package and it will
+
+122
+09:27.930 --> 09:30.940
+figure all that stuff out and basically install everything I need.
+
+123
+09:31.020 --> 09:36.450
+So I tend to use this because it works so well for local installs.
+
+124
+09:37.260 --> 09:43.800
+What I'm going to do is I'm going to copy this, and paste it into my terminal and it's going to download
+
+125
+09:43.800 --> 09:53.240
+the script. And it's telling me just to run the shell, so I put in my admin sudo password, and away we go.
+
+126
+09:53.700 --> 10:00.480
+And you notice while this is installing, that the actual package is docker-ce. Over the last few
+
+127
+10:00.480 --> 10:07.020
+years, as Docker has changed their branding and their versioning and also their packaging formats, the
+
+128
+10:07.050 --> 10:10.860
+name of the actual package that you would install has changed.
+
+129
+10:10.890 --> 10:14.420
+The one that it actually installed in the background is called docker-ce,
+
+130
+10:14.440 --> 10:15.890
+in case you're curious.
+
+131
+10:15.930 --> 10:16.260
+OK.
+
+132
+10:16.260 --> 10:20.970
+And it's actually telling us at the end of the install, that if we would like for our user account to
+
+133
+10:20.970 --> 10:28.980
+be able to just run Docker commands without having to type sudo or go in his actual root, then we can do
+
+134
+10:28.980 --> 10:36.880
+this particular command, where we're just adding our user account to the Docker group on our system.
+
+135
+10:36.880 --> 10:41.370
+Then I'm going to need to log out, and back in, in order for that change to take effect.
+
+136
+10:41.380 --> 10:47.980
+So instead of doing that, I just want to test to make sure that Docker's working and running, and I can
+
+137
+10:47.980 --> 10:54.430
+do sudo docker version. OK great. I'll actually log out and log back in in a minute.
+
+138
+10:54.460 --> 10:56.360
+So you don't have to do that part
+
+139
+10:56.410 --> 11:03.730
+if you're concerned about security. Here's why. Docker requires root in order to do the things it
+
+140
+11:03.730 --> 11:09.760
+needs to do with the core functionality of Linux. Those things are something around name spaces and
+
+141
+11:09.760 --> 11:15.340
+there's this thing called cgroups and other features of Linux that it needs to use. So it needs root
+
+142
+11:15.340 --> 11:15.970
+for that.
+
+143
+11:15.970 --> 11:16.720
+Right.
+
+144
+11:16.720 --> 11:21.260
+So when you, by default, when you do things it's going to need to use sudo.
+
+145
+11:21.280 --> 11:27.570
+But if you add your user to the Docker group, what you're effectively doing is giving that user,
+
+146
+11:27.640 --> 11:36.580
+in this case Bret, the ability to actually run a Docker container later that could then have root permissions
+
+147
+11:36.580 --> 11:37.250
+on the host.
+
+148
+11:37.270 --> 11:44.110
+Now this is a subtle little nuance of security that you don't necessarily have to worry about if it's
+
+149
+11:44.110 --> 11:45.490
+just your local machine.
+
+150
+11:45.730 --> 11:52.000
+But there are some variants of Linux that have taken a hard stance on this and that includes all the
+
+151
+11:52.000 --> 11:52.540
+Red Hat.
+
+152
+11:52.540 --> 11:59.770
+So the CentOS and the Red Hat Enterprise Linux and maybe the Fedora will not work with this Docker option.
+
+153
+11:59.780 --> 12:06.670
+You will have to either be root or used sudo for every command you use for Docker on those distributions
+
+154
+12:06.670 --> 12:07.060
+of Linux unfortunately.
+
+155
+12:07.060 --> 12:12.490
+Again, that's anything based on the Red Hat Enterprise Linux stuff and Fedora and that's
+
+156
+12:12.640 --> 12:15.820
+Fedora, RHEL, and CentOS.
+
+157
+12:15.820 --> 12:19.530
+There might be others but those are the ones I definitely know about that won't work with this.
+
+158
+12:19.540 --> 12:24.220
+So in those cases, even if you add yourself to the Docker group, it will do nothing and you'll still have
+
+159
+12:24.220 --> 12:29.590
+to type sudo. You'll know if it doesn't work, because if you just type Docker version it'll actually
+
+160
+12:29.590 --> 12:35.940
+say hey I can't talk to the Linux daemon can you help me out.
+
+161
+12:35.950 --> 12:39.380
+And that's because only root can talk to that socket.
+
+162
+12:39.390 --> 12:47.540
+That's a hint that you need to be either admin, root rather, or be in a group that works.
+
+163
+12:47.620 --> 12:51.410
+Notice if I do docker version again with the sudo it works.
+
+164
+12:51.770 --> 12:52.050
+All right.
+
+165
+12:52.050 --> 12:57.010
+Now that you have Docker installed, you're in need to other tools for this course from Docker.  But when
+
+166
+12:57.010 --> 13:02.620
+you're using Linux as your main operating system, they don't come bundled with the install. When you're
+
+167
+13:02.620 --> 13:04.630
+on Mac or Windows,
+
+168
+13:04.630 --> 13:09.220
+this is all managed for you, but on Linux we have to take things into our own hands a little bit.
+
+169
+13:09.220 --> 13:12.680
+And those two tools are Docker Machine and Docker Compose.
+
+170
+13:12.940 --> 13:19.300
+Each one is a single binary, and you can get them on Docker's website in the documentation area, not on
+
+171
+13:19.300 --> 13:20.040
+the store.
+
+172
+13:20.080 --> 13:27.430
+And so for the or machine part, I can find here instructions for Linux and I can just copy that and it
+
+173
+13:27.430 --> 13:29.360
+should work on my machine.
+
+174
+13:35.580 --> 13:40.680
+Ok and now I can type docker-machine version and make sure that I got the latest version and it works
+
+175
+13:41.160 --> 13:48.180
+and I can do the same thing for Docker Compose... and find that on the documentation website as well.
+
+176
+13:48.180 --> 13:50.560
+And scroll down to the Linux option.
+
+177
+13:50.640 --> 13:56.760
+Now, we could actually copy this and install it from here, but I want to show you an alternative way that
+
+178
+13:56.790 --> 14:01.500
+I actually prefer. The nice thing here is that the Docker website has lots of information about how
+
+179
+14:01.500 --> 14:02.160
+to install it.
+
+180
+14:02.160 --> 14:03.500
+What it does and what not.
+
+181
+14:03.630 --> 14:05.970
+But these are all available on GitHub.
+
+182
+14:06.000 --> 14:14.610
+I can go over to github.com/docker/compose and click on the Releases button, and
+
+183
+14:14.610 --> 14:19.180
+this is where the official release as you can see the latest is 1.15.0. 
+
+184
+14:19.410 --> 14:26.940
+In this case, the documentation website is a little outdated with 1.14.0, then the releases on the
+
+185
+14:26.940 --> 14:28.190
+compose an GitHub.
+
+186
+14:28.200 --> 14:35.070
+So I just always remember to go check github.com/docker/compose/releases and I can
+
+187
+14:35.070 --> 14:39.990
+do the same thing for machine. And right here, it gives me the information that I just need to cut and
+
+188
+14:39.990 --> 14:42.090
+paste into my terminal.
+
+189
+14:42.330 --> 14:47.310
+But you'll notice that I actually got a permission denied error. That's because, in this case I do
+
+190
+14:47.310 --> 14:48.340
+need to be root.
+
+191
+14:48.390 --> 14:55.100
+So I'm going to be sudo -i for interactive, and then I'm going to paste that same information
+
+192
+14:57.730 --> 15:04.750
+and then I should be able to back out of root and type docker-compose version.
+
+193
+15:05.050 --> 15:06.310
+And there we go.
+
+194
+15:06.310 --> 15:11.980
+In case you're curious back over on the GitHub, I can actually just replace that word compose with machine
+
+195
+15:14.640 --> 15:19.650
+and end up right over on the machine page and the releases for docker-machine.
+
+196
+15:19.650 --> 15:26.990
+Notice this is on v0.12.2. I can copy this stuff here as well and install it that way instead of the
+
+197
+15:26.990 --> 15:28.850
+documentation website way.
+
+198
+15:28.880 --> 15:30.220
+So the choice is up to you.
+
+199
+15:30.380 --> 15:33.840
+There's not really much information about installation on GitHub.
+
+200
+15:33.980 --> 15:41.090
+The much more information is over on the documentation site for Docker that is docs.docker.com.
+
+201
+15:41.120 --> 15:45.740
+And then one last piece information here is that because we manually installed these that also means
+
+202
+15:45.740 --> 15:48.850
+that Compose and Machine we have to manually update.
+
+203
+15:48.890 --> 15:54.740
+So you just need to make it a part of your sort of mental checklist every month or two, to probably go
+
+204
+15:54.740 --> 15:59.620
+check for new versions of Compose and Machine because they do update pretty frequently.
+
+205
+15:59.690 --> 16:05.000
+Hopefully in the future Docker will add packages to the package managers for these so that we can automatically
+
+206
+16:05.000 --> 16:12.570
+update them with the rest of our system just like we do for the Docker install.
+
+207
+16:12.720 --> 16:14.830
+OK so let's go get my repo.
+
+208
+16:14.860 --> 16:21.190
+Now there's several ways you can do this. One way on GitHub, is that you simply download their GUI
+
+209
+16:21.640 --> 16:26.740
+and use it, but they don't actually have an official one for Linux yet.
+
+210
+16:26.830 --> 16:29.270
+So you would need to go get a different third party one.
+
+211
+16:29.350 --> 16:31.290
+And we're not going to talk about that.
+
+212
+16:31.290 --> 16:35.220
+So we're just going to use the command line.
+
+213
+16:35.260 --> 16:41.260
+So if you're looking at my repo page under my GitHub account, you'll find that link in the Resource
+
+214
+16:41.260 --> 16:45.270
+section under Section 1, under the Getting Resources lecture.
+
+215
+16:45.460 --> 16:49.520
+And over here you can just copy this you URL and paste it in the command line.
+
+216
+16:49.780 --> 16:53.250
+But if you've never used Git before, you won't have that installed.
+
+217
+16:53.250 --> 16:56.830
+So if I tried to git, it would not be there so I do need to install
+
+218
+16:56.830 --> 16:58.040
+Git real quick.
+
+219
+16:59.730 --> 17:02.260
+OK so now I should have the version.
+
+220
+17:02.290 --> 17:02.580
+Yep.
+
+221
+17:02.610 --> 17:06.580
+OK I got Git installed, and now I'm just going to make a directory real quick,
+
+222
+17:08.310 --> 17:11.810
+To put this repo in.
+
+223
+17:11.940 --> 17:21.040
+And so I do git clone, and then I paste in that URL that I got from the web page. And that will pull
+
+224
+17:21.040 --> 17:22.030
+down my repo.
+
+225
+17:22.050 --> 17:30.510
+Now you could download a zip file of my repo but it does get updated as I fix things or make things
+
+226
+17:30.510 --> 17:31.180
+better.
+
+227
+17:31.320 --> 17:36.900
+And so it's easier when you're starting this course, maybe a month later if you're still doing the course,
+
+228
+17:37.230 --> 17:38.340
+that you just need to do
+
+229
+17:38.370 --> 17:40.870
+git inside the directory actually...
+
+230
+17:40.890 --> 17:47.560
+So inside the udemy-docker-mastery directory I could just do a git pull, and that would get the latest
+
+231
+17:47.620 --> 17:49.420
+updates for the course.
+
+232
+17:49.420 --> 17:49.720
+All right.
+
+233
+17:49.720 --> 17:51.960
+Next we want to talk about code editors.
+
+234
+17:52.000 --> 17:54.520
+I personally like Visual Studio Code.
+
+235
+17:54.610 --> 17:56.080
+It's very similar to GitHub's
+
+236
+17:56.080 --> 18:01.870
+Atom, if you've ever used that, or Sublime Text, if you've ever used that. Obviously if you're a Vim fan
+
+237
+18:01.870 --> 18:04.750
+or Emacs, or any of the other editors you can use all those.
+
+238
+18:04.870 --> 18:09.970
+But I will be showing off a little bit of Visual Studio Code in this course because it has a really great
+
+239
+18:09.970 --> 18:11.380
+Docker add on.
+
+240
+18:11.380 --> 18:18.100
+So I'm going to download the Debian version, and on my version of Linux it actually will automatically
+
+241
+18:18.100 --> 18:22.600
+open with the package installer; and, I can install it that way OK.
+
+242
+18:22.750 --> 18:31.510
+It's finished installing, now, I can run it. And once you get Visual Studio Code running or just "code" as we call
+
+243
+18:31.510 --> 18:34.690
+it or "vs code", (I guess has got lots of names there),
+
+244
+18:35.050 --> 18:44.170
+you might want to go into the Extensions and look for Docker. The one that's just called Docker, install
+
+245
+18:44.170 --> 18:51.410
+that, and that will allow syntax highlighting and little extra features whenever you're editing the Docker
+
+246
+18:51.410 --> 18:57.520
+files in this course. A a nice feature there, is if you're in a directory and you just type code
+
+247
+18:57.910 --> 19:02.380
+with a dot after it, it'll actually open a visual studio code in that directory.
+
+248
+19:02.380 --> 19:08.310
+So it's sort of a shortcut to get all the files from my course up in your visual studio code.
+
+249
+19:08.580 --> 19:08.850
+OK.
+
+250
+19:08.860 --> 19:13.450
+And the last little tip we're going to talk about real quick is customizing your terminal. The nice
+
+251
+19:13.450 --> 19:15.850
+thing is on Linux is everything is pretty great 
+
+252
+19:15.850 --> 19:20.850
+out of the box. You have a nice looking terminal usually that comes with Linux.
+
+253
+19:20.860 --> 19:27.300
+It works with all the features of Docker and one of the things you'll notice is the command line completion.
+
+254
+19:27.300 --> 19:32.890
+That's tab completion that you may have used for a long time where if you're typing a command in Linux
+
+255
+19:33.190 --> 19:38.680
+in your shell and you just hit the tab key it will auto finish that and actually show you features around
+
+256
+19:38.680 --> 19:40.390
+the options for that command.
+
+257
+19:40.390 --> 19:46.570
+So if I just type docker and then hit tab twice it'll actually show me all the different commands I
+
+258
+19:46.570 --> 19:47.460
+can use here.
+
+259
+19:47.590 --> 19:49.000
+So I could type Docker
+
+260
+19:51.370 --> 19:55.390
+image and then hit tab twice again it gives me another one.
+
+261
+19:55.390 --> 20:02.110
+And I could say ls, and then I get hit tab twice again and it would give me all the options that I
+
+262
+20:02.110 --> 20:03.930
+would have for that particular command.
+
+263
+20:04.210 --> 20:06.420
+And that all works out-of-the-box after installing.
+
+264
+20:06.430 --> 20:11.170
+You don't have to do anything to get that feature. With Mac and Windows, you have to go through extra steps
+
+265
+20:11.170 --> 20:13.120
+in you case you watch those videos.
+
+266
+20:13.120 --> 20:18.940
+But in case you're seeing stuff in my course, like the fact that I use the Zsh shell, and then maybe I have
+
+267
+20:18.940 --> 20:23.850
+different colors that you like or features, you just need to check out 
+
+268
+20:24.100 --> 20:32.940
+www.bretfisher.com/shell, and I list everything that I use in my custom shell in a Mac that will
+
+269
+20:32.940 --> 20:40.530
+actually work pretty easily inside Linux. So I customize my vim, for example, and other various things
+
+270
+20:40.530 --> 20:41.160
+of my shell.
+
+271
+20:41.280 --> 20:42.590
+So feel free to check that out.
+
+272
+20:42.600 --> 20:44.980
+But it's absolutely not required for this course.
+
+273
+20:45.030 --> 20:46.410
+I just get a lot of questions on it.
+
+274
+20:46.410 --> 20:49.350
+So I wanted to give you some more info before we get started.
+
+275
+20:50.540 --> 20:52.670
+OK so hopefully you have Docker working on your machine.
+
+276
+20:52.670 --> 20:57.420
+So let's just review the tips and tricks that we just talked about and all the things we got installed.
+
+277
+20:57.440 --> 21:02.870
+After installing Docker, make sure you also get Compose and Machine and you can get them from those
+
+278
+21:02.870 --> 21:08.450
+two links or from the GitHub page that I showed you. I didn't mention this earlier but later in the
+
+279
+21:08.480 --> 21:14.780
+course, when we get to the sections on swarm, you'll be using Docker Machine to create more VMs, whether
+
+280
+21:14.870 --> 21:20.600
+on your machine or in the cloud, that run Docker. So you can have multiple nodes running Docker. Docker
+
+281
+21:20.720 --> 21:26.750
+Machine is just one of the ways that you can actually set up another machine to run Docker. You can
+
+282
+21:26.750 --> 21:28.150
+check that out any time,
+
+283
+21:28.220 --> 21:30.780
+but you won't need it till near the end of the course.
+
+284
+21:31.490 --> 21:36.000
+And if you'll remember we talked about Visual Studio Code, so you can check that out.
+
+285
+21:36.080 --> 21:41.210
+And bonus! If you're on Linux then bash completion for the commands just works and you don't have to
+
+286
+21:41.210 --> 21:41.600
+worry about.

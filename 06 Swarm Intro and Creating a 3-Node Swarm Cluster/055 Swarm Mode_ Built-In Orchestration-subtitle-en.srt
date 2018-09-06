@@ -1,0 +1,444 @@
+1
+00:00:00,960 --> 00:00:10,270
+One of the big promises of containers is that we can easily deploy our apps like we were a platform
+
+2
+00:00:10,270 --> 00:00:15,550
+service, you know, like Heroku or something. We can do that on anyone's hardware, whether it's on our
+
+3
+00:00:15,550 --> 00:00:20,920
+hardware, it's a cloud provider, whether it's virtual or physical. With Docker, our apps can run
+
+4
+00:00:20,920 --> 00:00:28,240
+the same whether they're an Amazon, Azure, DigitalOcean, Linode, Rackspace, Google Cloud or whatever. Without
+
+5
+00:00:28,240 --> 00:00:34,900
+all those platform features, how do we easily deploy and maintain our dozens, or hundreds, or even thousands
+
+6
+00:00:34,900 --> 00:00:40,510
+of containers across many servers or instances? Or nodes or droplets or whatever.
+
+7
+00:00:40,570 --> 00:00:47,580
+That brings to bear some really new problems that weren't previously problems for small organizations.
+
+8
+00:00:47,590 --> 00:00:53,290
+We all know about Netflix and big organizations like that that scale to thousands and thousands
+
+9
+00:00:53,290 --> 00:00:56,620
+of nodes, and tens of thousands of nodes, and they've got lots of engineers.
+
+10
+00:00:56,620 --> 00:01:02,190
+But, if you have just a couple of people on your team, or if you're just a solo developer, how do you take
+
+11
+00:01:02,200 --> 00:01:08,410
+your containers and scale them and deal with their entire life cycle? From deploying them, to starting
+
+12
+00:01:08,410 --> 00:01:13,600
+them, to restarting them, to recreating them, to deleting them and updating them and all that.
+
+13
+00:01:13,600 --> 00:01:20,470
+We start to ask questions around how exactly does Docker do that or does it even do that at all?
+
+14
+00:01:20,530 --> 00:01:25,480
+Some of the questions we ask ourselves are things like, how do we scale out? How do we scale up? How do
+
+15
+00:01:25,480 --> 00:01:28,620
+we ensure that our containers restart if they fail?
+
+16
+00:01:28,630 --> 00:01:34,300
+How do we replace those containers when we actually have an update for them? Which is something called
+
+17
+00:01:34,300 --> 00:01:40,540
+blue green deploy nowadays, which means that you have zero downtime and you take servers out of the pool
+
+18
+00:01:40,600 --> 00:01:45,970
+in order to bring new ones in. You end up with always something available so that you're never really
+
+19
+00:01:45,970 --> 00:01:52,270
+down when you update. How do we know if we've got dozens of nodes or even just three nodes where we
+
+20
+00:01:52,270 --> 00:01:58,030
+started those containers? Which node is our container on? How do we talk across those different nodes
+
+21
+00:01:58,060 --> 00:02:01,930
+or servers with our networking inside the containers?
+
+22
+00:02:01,930 --> 00:02:07,210
+When it comes to security, how do we be sure that our containers are only running on the machines
+
+23
+00:02:07,210 --> 00:02:09,410
+that we intended for them to run on?
+
+24
+00:02:09,670 --> 00:02:15,070
+Now that we're moving things around and deploying them dynamically on the fly, how do we store the
+
+25
+00:02:15,070 --> 00:02:19,570
+private information we need for our containers, like secrets or passwords?
+
+26
+00:02:19,570 --> 00:02:25,310
+So this brings us to a major evolution in the scope of what Docker tries to solve.
+
+27
+00:02:25,360 --> 00:02:30,850
+When people talk to me and they think that Docker is just a container runtime, that's when I actually
+
+28
+00:02:30,850 --> 00:02:37,720
+just mention Swarm Mode, which is a brand new feature in 2016 that brings together years of understanding
+
+29
+00:02:37,810 --> 00:02:42,060
+the needs of containers and how to actually run them live in production.
+
+30
+00:02:42,070 --> 00:02:48,940
+So at its core, Swarm is actually a server clustering solution that brings together different operating
+
+31
+00:02:48,940 --> 00:02:50,590
+systems or hosts,
+
+32
+00:02:50,620 --> 00:02:57,670
+or nodes, or whatever you want to call them, into a single manageable unit that you can then orchestrate the lifecycle
+
+33
+00:02:57,700 --> 00:03:02,750
+of your containers in. Just to be clear, we're not actually talking about Swarm, which I'm going to
+
+34
+00:03:02,750 --> 00:03:12,250
+call Swarm Classic, which was an add-on component to Docker before 1.12 came out. It was really a container
+
+35
+00:03:12,340 --> 00:03:14,500
+that would run inside of Docker,
+
+36
+00:03:14,500 --> 00:03:19,250
+that really just took your Docker run commands and repeated them out to multiple servers.
+
+37
+00:03:19,270 --> 00:03:25,660
+It did solve a few problems, but it wasn't really at the scale that we needed to truly solve 80%
+
+38
+00:03:25,660 --> 00:03:28,060
+of the cases for how you're going to run your containers.
+
+39
+00:03:29,320 --> 00:03:30,780
+In the summer of 2016,
+
+40
+00:03:30,790 --> 00:03:37,930
+at dockercon 2016, actually Docker announced Swarm Kit, which was a set of libraries or a tool kit related
+
+41
+00:03:37,930 --> 00:03:39,820
+around a whole bunch of new Swarm features.
+
+42
+00:03:39,820 --> 00:03:45,760
+Then they stuck that right in the Docker server. All along in this course, you've actually had the
+
+43
+00:03:45,760 --> 00:03:49,090
+features available to you in the CLI and on your server.
+
+44
+00:03:49,150 --> 00:03:51,200
+Now we finally get to dive into them.
+
+45
+00:03:52,120 --> 00:03:57,240
+In January of 2017, 1.13 came out, and of course because Swarm Mode was new
+
+46
+00:03:57,240 --> 00:04:01,270
+in 2016, they're going to continue to make it better in the years to come.
+
+47
+00:04:01,270 --> 00:04:07,120
+In January, they added additional features called Stacks and Secrets, as well as other bonuses
+
+48
+00:04:07,120 --> 00:04:12,740
+we'll talk about later. It's important to note that Swarm is not actually enabled out of the box.
+
+49
+00:04:12,760 --> 00:04:17,680
+In fact, on your machine, you couldn't use these commands listed here right now. That would actually give
+
+50
+00:04:17,680 --> 00:04:20,480
+you an error because Swarm has to be enabled.
+
+51
+00:04:20,620 --> 00:04:25,660
+That was one of the design goals was that none of the Swarm code would affect the existing Docker
+
+52
+00:04:25,840 --> 00:04:31,510
+daemon, and that all the tools and systems out there that were already relying on Docker, or maybe they
+
+53
+00:04:31,510 --> 00:04:37,420
+had their own orchestration on top of Docker, would continue to function and not be interfered with by
+
+54
+00:04:37,450 --> 00:04:37,950
+Swarm
+
+55
+00:04:37,960 --> 00:04:44,230
+now being a part of Docker. Some really basic concepts before we start diving in, is that these blue
+
+56
+00:04:44,230 --> 00:04:49,240
+boxes you see over the top are what we call Manager Nodes, and they actually have a database locally
+
+57
+00:04:49,240 --> 00:04:52,120
+on them known as the Raft Database.
+
+58
+00:04:52,120 --> 00:04:57,520
+It stores their configuration and gives them all the information they need to have to be the authority
+
+59
+00:04:57,640 --> 00:04:58,920
+inside a swarm.
+
+60
+00:04:58,930 --> 00:05:03,760
+So what we have here is three different managers that have all been added to the swarm, and they
+
+61
+00:05:03,760 --> 00:05:10,720
+all keep a copy of that database and encrypt their traffic in order to ensure integrity and guarantee
+
+62
+00:05:10,720 --> 00:05:14,440
+the trust that they're able to manage this swarm securely.
+
+63
+00:05:14,830 --> 00:05:20,290
+Below in the green, we actually have worker notes. Now you can see in the concept of Swarm, we
+
+64
+00:05:20,290 --> 00:05:22,600
+have now managers and workers.
+
+65
+00:05:22,600 --> 00:05:28,660
+Each one of these would be a virtual machine, or a physical host, running some distribution of Linux or
+
+66
+00:05:28,660 --> 00:05:30,190
+Windows server.
+
+67
+00:05:30,220 --> 00:05:35,320
+This is showing how they're actually all communicating over what we call the Control Plane, which is
+
+68
+00:05:35,320 --> 00:05:42,710
+how orders get sent around the swarm, partaking actions. In a little bit more complicated view,
+
+69
+00:05:42,790 --> 00:05:48,290
+we have this Raft consensus database I mentioned, that is replicated again amongst all the nodes.
+
+70
+00:05:48,460 --> 00:05:50,540
+They issue orders down to the workers.
+
+71
+00:05:50,560 --> 00:05:56,170
+The managers themselves can also be workers. Of course, you can demote and promote workers and
+
+72
+00:05:56,170 --> 00:05:58,650
+managers into the two different roles.
+
+73
+00:05:58,660 --> 00:06:06,080
+When you think of a manager, typically think of a worker with permissions to control the swarm.
+
+74
+00:06:06,240 --> 00:06:11,550
+Again, the only requirements for each one of these servers is that they're running the same Docker
+
+75
+00:06:11,640 --> 00:06:19,750
+that you're already using now. With this concept of a swarm, and these managers, we now have new concepts
+
+76
+00:06:19,780 --> 00:06:21,670
+of what our containers look like.
+
+77
+00:06:21,730 --> 00:06:26,680
+So, with the Docker run command, we could only really deploy one container.
+
+78
+00:06:26,680 --> 00:06:28,180
+It would just create a container.
+
+79
+00:06:28,180 --> 00:06:32,920
+It was always on whatever machine the Docker CLI was talking to.
+
+80
+00:06:32,920 --> 00:06:38,170
+That's usually your local machine, or maybe a server they are logged into. That Docker run command didn't
+
+81
+00:06:38,170 --> 00:06:42,280
+have concepts around how to scale out or scale up.
+
+82
+00:06:42,340 --> 00:06:45,560
+So we needed new commands to deal with that.
+
+83
+00:06:45,610 --> 00:06:49,920
+That's where the Docker service command comes from. In a swarm,
+
+84
+00:06:49,920 --> 00:06:55,980
+it replaces the Docker run command, and allows us to add extra features to our container when we run
+
+85
+00:06:55,980 --> 00:06:59,930
+it, such as replicas to tell us how many of those it wants to run.
+
+86
+00:06:59,970 --> 00:07:02,020
+Those are known as tasks.
+
+87
+00:07:02,340 --> 00:07:08,190
+A single service can have multiple tasks, and each one of those tasks will launch a container.
+
+88
+00:07:08,190 --> 00:07:14,820
+In this example, we've created a service using docker service create to spin up an Nginx service
+
+89
+00:07:14,820 --> 00:07:17,600
+using the Nginx image like we've done several times before.
+
+90
+00:07:17,670 --> 00:07:20,010
+But we've told it that we'd like three replicas.
+
+91
+00:07:20,010 --> 00:07:28,350
+So it will use the manager nodes to decide where in the swarm to place those. By default, it tries
+
+92
+00:07:28,350 --> 00:07:29,470
+to spread them out.
+
+93
+00:07:29,520 --> 00:07:36,610
+Each node would get its own copy of the Nginx container up to the three replicas that we told
+
+94
+00:07:36,610 --> 00:07:38,220
+it we needed.
+
+95
+00:07:38,250 --> 00:07:44,170
+This is a quick and basic understanding of how the managers work and what they're doing in the background.
+
+96
+00:07:44,170 --> 00:07:46,410
+All these features are new.
+
+97
+00:07:46,410 --> 00:07:51,550
+It's not simply just taking your command and running it on an API like we would experience with a Docker
+
+98
+00:07:51,560 --> 00:07:52,650
+run command.
+
+99
+00:07:52,680 --> 00:08:01,350
+There's actually a totally new Swarm API here that has a bunch of background services, such as the scheduler,
+
+100
+00:08:01,380 --> 00:08:07,680
+and the dispatcher, and the allocator and orchestrator, that help make decisions around what the workers
+
+101
+00:08:07,770 --> 00:08:10,180
+should be executing at any given moment.
+
+102
+00:08:10,200 --> 00:08:14,460
+So the workers are constantly reporting in to the managers and asking for new work.
+
+103
+00:08:14,460 --> 00:08:20,520
+The managers are constantly doling out new work and evaluating what you've told them to do against what
+
+104
+00:08:20,520 --> 00:08:22,030
+they're actually doing.
+
+105
+00:08:22,050 --> 00:08:27,750
+Then if there's any reconciliation to happen, they will make those changes, such as maybe you told it
+
+106
+00:08:27,750 --> 00:08:31,600
+to spin up three more replicate tasks in that service.
+
+107
+00:08:31,620 --> 00:08:37,540
+So the orchestrator will realize that and then issue orders down to the workers and so on.
+
+108
+00:08:38,720 --> 00:08:46,160
+With this Swarm Mode, we actually get a feature-packed set of capabilities out of the box that allow
+
+109
+00:08:46,160 --> 00:08:51,740
+us to already use the existing Docker skills we have in order to deploy our containers to the Internet
+
+110
+00:08:51,830 --> 00:08:55,150
+in a reliable fashion, and solve a lot of problems that we would have
+
+111
+00:08:55,220 --> 00:08:56,090
+once we go production.
+

@@ -1,0 +1,240 @@
+1
+00:00:02,470 --> 00:00:07,630
+Is in this lecture, requirements are that you know how to start a container.
+
+2
+00:00:08,030 --> 00:00:13,430
+What we're going to be doing at the command line here is running Docker commands to understand what's
+
+3
+00:00:13,430 --> 00:00:19,960
+going on inside a running container. There's multiple ways that we can see what's going on in there.
+
+4
+00:00:20,090 --> 00:00:26,000
+We've covered the top command, which is a process list of what's happening inside the container, but there's
+
+5
+00:00:26,000 --> 00:00:31,220
+other stuff we can do as well. We can use the inspect command to actually see the details of how the
+
+6
+00:00:31,220 --> 00:00:33,540
+container started and how it's configured.
+
+7
+00:00:33,710 --> 00:00:39,830
+We can look at the stats command which actually gives us a view of all of our containers and the performance
+
+8
+00:00:39,830 --> 00:00:44,070
+statistics for each one of them in a real time stream.
+
+9
+00:00:44,090 --> 00:00:50,940
+Let's dive in. In order to look at some of these commands and how they act with containers, we're going
+
+10
+00:00:50,940 --> 00:00:53,070
+to need to actually start a few containers.
+
+11
+00:00:53,110 --> 00:00:57,250
+The first one we're going to start is an Nginx container like we've done before.
+
+12
+00:00:57,320 --> 00:01:07,630
+docker container run -d --name, lets call it nginx, and we're going to use the Nginx image.
+
+13
+00:01:08,400 --> 00:01:09,040
+OK.
+
+14
+00:01:09,250 --> 00:01:16,150
+Then the second one we'll use is another MySQL server so docker container run -d --name
+
+15
+00:01:16,180 --> 00:01:22,770
+mysql and we'll also need to specify the environment variable like we did before.
+
+16
+00:01:22,870 --> 00:01:28,200
+So, RANDOM_ROOT_PASSWORD=true
+
+17
+00:01:29,740 --> 00:01:32,130
+And then the mysql image.
+
+18
+00:01:32,200 --> 00:01:38,530
+Note that with the mysql image, as you can read on Docker Hub, it'll tell you that you have to specify one of
+
+19
+00:01:38,530 --> 00:01:40,020
+three options for the password.
+
+20
+00:01:40,030 --> 00:01:46,240
+Either you can specify a password in the command line, you can let it use no password, or you can do
+
+21
+00:01:46,240 --> 00:01:52,030
+what I've done here which will have it, on first boot, actually create a random password like we did in
+
+22
+00:01:52,030 --> 00:01:54,220
+the exercise a few minutes ago.
+
+23
+00:01:55,890 --> 00:01:56,150
+OK.
+
+24
+00:01:56,160 --> 00:01:57,860
+If we do a docker container ls,
+
+25
+00:01:57,880 --> 00:02:00,320
+we should see two running containers.
+
+26
+00:02:00,320 --> 00:02:01,940
+Great.
+
+27
+00:02:01,990 --> 00:02:05,040
+So we've used docker container top before.
+
+28
+00:02:06,400 --> 00:02:11,980
+If I just specify the mysql, you'll see that it actually lists the processes running inside that
+
+29
+00:02:11,980 --> 00:02:13,310
+container.
+
+30
+00:02:13,330 --> 00:02:20,290
+We can do the same thing, docker container top nginx, and that lists the processes running
+
+31
+00:02:20,290 --> 00:02:21,640
+in that container.
+
+32
+00:02:21,640 --> 00:02:27,070
+Another way to look at how this container is configured when it was started and all of its metadata
+
+33
+00:02:27,100 --> 00:02:34,990
+config, we can actually use the inspect command. docker container inspect. Then just say my mysql
+
+34
+00:02:36,130 --> 00:02:41,910
+and we get back a JSON array of all the data about how this container was started.
+
+35
+00:02:42,250 --> 00:02:47,080
+A lot of this will start to make sense as we go throughout this course.
+
+36
+00:02:47,200 --> 00:02:53,410
+As you can see, it is obviously a lot of data about this container. But as interesting as this config
+
+37
+00:02:53,410 --> 00:02:58,080
+data is, it doesn't tell us anything about the active container and what it's doing.
+
+38
+00:02:59,020 --> 00:03:03,810
+So let's use the docker container stats command.
+
+39
+00:03:03,810 --> 00:03:10,690
+If I give you a --help, you can see that it allows us to actually specify a container to only
+
+40
+00:03:10,690 --> 00:03:15,970
+show that. Or, if we just leave it empty and just type docker container stats,
+
+41
+00:03:16,240 --> 00:03:22,370
+we actually get back a streaming view of live performance data about our containers.
+
+42
+00:03:22,370 --> 00:03:28,630
+Unfortunately, it only shows the container ID, not the container name, but you can see by the CPU column
+
+43
+00:03:28,780 --> 00:03:32,000
+that every few seconds something is changing.
+
+44
+00:03:32,800 --> 00:03:37,840
+Obviously in a production environment, you're going to have a more complicated monitoring and performance
+
+45
+00:03:37,840 --> 00:03:39,870
+solution for tracking all this stuff.
+
+46
+00:03:40,000 --> 00:03:45,310
+It's really great for local machines where you need to make sure that you're not exhausting your
+
+47
+00:03:45,310 --> 00:03:50,740
+machine's RAM, because maybe you have too big of a database, or they're not filling up the hard drive
+
+48
+00:03:50,740 --> 00:03:53,110
+because of an out of control process.
+
+49
+00:03:53,110 --> 00:03:59,110
+This is a quick command to just make sure that everything is within its memory limits, and that it's not
+
+50
+00:03:59,110 --> 00:04:03,210
+using a ton of networking, and the block I/O is actually for your disk performance.
+
+51
+00:04:03,370 --> 00:04:06,880
+As you can see, these containers aren't really doing anything because we haven't asked them to do
+
+52
+00:04:06,880 --> 00:04:14,320
+anything. To get out of this, Control c. Let's do a quick docker container ls so that we
+
+53
+00:04:14,320 --> 00:04:17,880
+can match the container ID up with our stats command.
+
+54
+00:04:18,240 --> 00:04:25,380
+So you can see the mysql server was the one actually using almost 400MG on startup.
+
+55
+00:04:25,380 --> 00:04:30,000
+Just to recap what we did in this lecture, we actually first used the docker container
+
+56
+00:04:30,030 --> 00:04:35,210
+top command to list all the processes that will be running in a single container.
+
+57
+00:04:35,790 --> 00:04:39,450
+Then we got into container inspect. In container inspect,
+
+58
+00:04:39,450 --> 00:04:44,580
+we can actually see how the container was run, what was run with it, and what the environment and options
+
+59
+00:04:44,580 --> 00:04:52,560
+were when it started. Then container stats, which is sort of a live updating ability to see all containers
+
+60
+00:04:52,590 --> 00:04:55,320
+and what resources they're taking up as they're running.
+

@@ -1,0 +1,208 @@
+1
+00:00:06,970 --> 00:00:08,410
+So what do we do with this file?
+
+2
+00:00:08,740 --> 00:00:14,370
+Well, let's exit out. We're going to see in this directory that we just have this one file.
+
+3
+00:00:14,560 --> 00:00:16,420
+It's barely a k in size.
+
+4
+00:00:16,450 --> 00:00:21,580
+It obviously doesn't have anything in it other than the text, but it's the instructions on how to build
+
+5
+00:00:21,580 --> 00:00:22,460
+our image.
+
+6
+00:00:22,510 --> 00:00:29,890
+The from command, when I build this image, is going to actually pull that debian jessie image from
+
+7
+00:00:29,890 --> 00:00:34,440
+Docker Hub down to my local cache. And then it's going to execute line by line
+
+8
+00:00:34,450 --> 00:00:38,580
+each of those stanzas inside my docker engine and cache
+
+9
+00:00:38,590 --> 00:00:39,800
+each of those layers.
+
+10
+00:00:39,840 --> 00:00:44,630
+Lets type docker image build and we're going to tag it.
+
+11
+00:00:44,770 --> 00:00:47,310
+Remember, that's the name that we're going to give an image.
+
+12
+00:00:47,380 --> 00:00:53,530
+Since I'm going to only use this image locally I don't have to use my Docker Hub account name. I
+
+13
+00:00:53,530 --> 00:00:54,980
+can call it whatever I want.
+
+14
+00:00:55,030 --> 00:01:01,330
+I'm going to call it custom nginx, and I'm going to put a dot here, which basically says, build the
+
+15
+00:01:01,330 --> 00:01:05,400
+dockerfile in this directory. And you'll see as it that steps through this,
+
+16
+00:01:05,440 --> 00:01:12,100
+that each step is a line in the dockerfile that it's executing inside this image as it's building it.
+
+17
+00:01:12,100 --> 00:01:17,230
+And then there's a little hash at the end which is actually the hash
+
+18
+00:01:17,230 --> 00:01:22,870
+it keeps in the build cache so that next time we build this thing, if that line hasn't changed in the
+
+19
+00:01:22,880 --> 00:01:25,830
+dockerfile, it's not going to rerun it.
+
+20
+00:01:25,900 --> 00:01:32,830
+This is one of the magic pieces of why Docker makes deployment and software building so fast is
+
+21
+00:01:32,830 --> 00:01:36,820
+it actually is intelligent enough to cache the steps in the build.
+
+22
+00:01:36,820 --> 00:01:42,130
+So quite often, after youve built an image the first time, and you're really just there changing your custom
+
+23
+00:01:42,130 --> 00:01:46,150
+source code and not necessarily changing the application in itself,
+
+24
+00:01:46,150 --> 00:01:48,060
+all this installation stuff has already happened.
+
+25
+00:01:48,190 --> 00:01:50,670
+So you will have very short built times.
+
+26
+00:01:51,130 --> 00:01:53,780
+Okay, so now we're done building. That took about a minute.
+
+27
+00:01:54,190 --> 00:02:00,120
+But, what if I go back in that file? I'm going to add an additional exposed port.
+
+28
+00:02:00,250 --> 00:02:02,590
+For example, I'm just going to do 8080.
+
+29
+00:02:02,650 --> 00:02:06,990
+Now, that doesn't mean that nginx is smart enough to know that I'm opening this port, or that it's
+
+30
+00:02:07,000 --> 00:02:08,970
+in any way communicating with nginx.
+
+31
+00:02:08,980 --> 00:02:13,260
+It's just me allowing the container to receive packets on that port.
+
+32
+00:02:13,380 --> 00:02:20,030
+Just to be sure, let's do a docker image ls. We'll see right up at the top that it auto tagged
+
+33
+00:02:20,030 --> 00:02:20,740
+it as latest,
+
+34
+00:02:20,740 --> 00:02:21,030
+right?
+
+35
+00:02:21,040 --> 00:02:23,170
+Because we only called it the repository name.
+
+36
+00:02:23,170 --> 00:02:27,180
+We didn't actually give it a colon tag name when we tagged it.
+
+37
+00:02:27,220 --> 00:02:28,660
+So let's build it again.
+
+38
+00:02:31,430 --> 00:02:32,800
+Wow, that was fast, right?
+
+39
+00:02:32,820 --> 00:02:38,960
+That only took us a couple of seconds. And you'll notice that on each step it'll say using cache. Starting
+
+40
+00:02:38,960 --> 00:02:39,760
+with Step 2,
+
+41
+00:02:39,760 --> 00:02:46,730
+it'll say using cache, using cache on 3, using cache on 4. On 5, it recognizes on step 5, that that
+
+42
+00:02:46,730 --> 00:02:48,350
+line is different.
+
+43
+00:02:48,470 --> 00:02:55,310
+So it actually executes that into the container. And then, on Step 6, it has to rerun that line because
+
+44
+00:02:55,310 --> 00:03:00,860
+the minute a line changes, every line after that now has to be rebuilt as well.
+
+45
+00:03:00,890 --> 00:03:06,350
+This brings up the point about the ordering of your lines in your Dockerfile. Because, if you
+
+46
+00:03:06,350 --> 00:03:07,820
+get things out of order,
+
+47
+00:03:07,820 --> 00:03:12,800
+for instance, if you copied the code in...let's say you're building a website. If you're copying the software
+
+48
+00:03:12,800 --> 00:03:18,470
+code that you're creating at the very beginning of the file, then every time you change a source file
+
+49
+00:03:18,560 --> 00:03:22,640
+and you rebuild, it's going to have to build the entire Dockerfile again.
+
+50
+00:03:22,820 --> 00:03:29,120
+So it's critically important for your sanity and time that you usually keep the things at the top of
+
+51
+00:03:29,120 --> 00:03:34,520
+your Dockerfile that change the least and then the things that change the most at the bottom of your
+
+52
+00:03:34,520 --> 00:03:35,090
+Dockerfile.
+

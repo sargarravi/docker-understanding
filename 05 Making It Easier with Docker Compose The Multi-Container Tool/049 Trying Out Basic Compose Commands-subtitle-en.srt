@@ -1,0 +1,468 @@
+1
+00:00:05,170 --> 00:00:11,350
+We previously talked about the Docker Compose YAML file and in this lecture, we're going to be talking
+
+2
+00:00:11,350 --> 00:00:16,810
+about the compose command line. Requirements for this lecture are like the rest for this section where
+
+3
+00:00:16,810 --> 00:00:22,270
+you really need to know images and containers, and how to use them and the concepts around them from
+
+4
+00:00:22,270 --> 00:00:28,780
+previous sections, so that you can use all of those inside the compose command and the YAML file. The
+
+5
+00:00:28,800 --> 00:00:33,760
+Docker Compose command line tool is actually separate from the Docker tool.
+
+6
+00:00:33,760 --> 00:00:39,760
+It's actually a separate binary. If you're on Docker for Windows or Docker for Mac,
+
+7
+00:00:39,760 --> 00:00:41,750
+it actually comes bundled with that.
+
+8
+00:00:41,800 --> 00:00:45,600
+If you also use the toolbox on Windows 7, it bundles with that.
+
+9
+00:00:45,610 --> 00:00:50,770
+But if you're on Linux, you have to download it separately and you can get that at GitHub.com/
+
+10
+00:00:50,790 --> 00:00:56,200
+docker/compose, but you can also just search for it on Google, and there'll be a link in the references
+
+11
+00:00:56,260 --> 00:00:57,410
+for this section.
+
+12
+00:00:57,550 --> 00:01:01,610
+But I should state really quick that it's not designed to be a production-grade tool.
+
+13
+00:01:01,960 --> 00:01:08,320
+It's super ideal for local development and testing things really quickly that might otherwise be complex
+
+14
+00:01:08,320 --> 00:01:14,020
+to type in a bunch of commands from the command line. Two common commands that we use will be docker compose
+
+15
+00:01:14,020 --> 00:01:19,210
+up, which is by far probably what you're going to be typing 90% of the time.
+
+16
+00:01:19,300 --> 00:01:21,060
+It's a one stop shop.
+
+17
+00:01:21,070 --> 00:01:27,130
+It's basically a single command to do everything in the compose file, including creating volumes, creating
+
+18
+00:01:27,130 --> 00:01:32,440
+networks, starting all the containers with all their configuration options. Then to clean up when you're
+
+19
+00:01:32,440 --> 00:01:32,980
+done,
+
+20
+00:01:33,010 --> 00:01:38,170
+the docker compose down, which a lot of people actually forget to do, will actually clean up after
+
+21
+00:01:38,170 --> 00:01:42,510
+you. It'll get rid of the containers, remove the networks and volumes that aren't needed anymore.
+
+22
+00:01:42,610 --> 00:01:48,370
+It allows you, with these two commands, to quickly jump in and out of different environments for development.
+
+23
+00:01:48,370 --> 00:01:53,800
+This is where I really get the attention of developers that are used to using vagrant up and other
+
+24
+00:01:53,800 --> 00:01:58,650
+tools to customize complicated environments locally they need for development.
+
+25
+00:01:58,770 --> 00:02:04,140
+Once I show them Docker Compose and the compose file and how easy it is to use along with a Dockerfile,
+
+26
+00:02:04,150 --> 00:02:10,240
+it really starts to click for them that this could be a better way and a more reliable way to set
+
+27
+00:02:10,240 --> 00:02:11,020
+up their environments.
+
+28
+00:02:11,020 --> 00:02:14,670
+And it doesn't require the time to set up different VMs
+
+29
+00:02:14,860 --> 00:02:18,680
+or the complexity of managing a virtual machine environment.
+
+30
+00:02:18,760 --> 00:02:25,840
+Just to give you a little taste, if you had a project where you had the typical new developer onboarding
+
+31
+00:02:25,840 --> 00:02:31,300
+process that was all about learning how to get the right tools for their system, and the right virtual
+
+32
+00:02:31,300 --> 00:02:36,310
+machines downloaded, and the right add-ons, and all the things that normally they would just have to build
+
+33
+00:02:36,340 --> 00:02:39,230
+a replicated environment for, with Docker Compose,
+
+34
+00:02:39,230 --> 00:02:45,070
+it's as easy as cloning the environment that has your compose file from some repo somewhere and then
+
+35
+00:02:45,070 --> 00:02:46,760
+running the docker compose up command.
+
+36
+00:02:46,840 --> 00:02:48,610
+It can really be that easy.
+
+37
+00:02:48,640 --> 00:02:55,660
+Let's jump in and play around. I'm in the compose sample 2 directory. The compose sample 1 directory
+
+38
+00:02:55,660 --> 00:02:59,860
+was simply some visual examples that we showed in the last lecture.
+
+39
+00:02:59,980 --> 00:03:03,820
+But in this one, we'll be able to actually run this one and get a quick output.
+
+40
+00:03:03,820 --> 00:03:07,070
+I'm just going to do a docker compose up.
+
+41
+00:03:07,150 --> 00:03:10,340
+Well, actually before we do that, let me just show you what it is.
+
+42
+00:03:10,600 --> 00:03:18,010
+This has got two services, or two containers, and the first one is an Nginx server which is configured
+
+43
+00:03:18,040 --> 00:03:19,970
+as a proxy in this case.
+
+44
+00:03:20,080 --> 00:03:23,990
+And that's going to be listening on my port 80 on my local machine.
+
+45
+00:03:24,010 --> 00:03:30,550
+You'll notice there's a volume command there where I've actually done a bind mount to a file in this
+
+46
+00:03:30,550 --> 00:03:34,770
+directory called an nginx config file, and it's really a very simple little file.
+
+47
+00:03:34,780 --> 00:03:39,640
+It's not necessarily important that we know how that file works yet. It just shows how, in this case, I'm
+
+48
+00:03:39,640 --> 00:03:45,430
+actually taking a file on my local environment. Let's say that this directory is a Git repository that
+
+49
+00:03:45,430 --> 00:03:51,490
+stores these config files for me. It allows me to map that file in to the container and I actually, at
+
+50
+00:03:51,490 --> 00:03:56,040
+the end, you'll see it say, 'ro,' that means read only, meaning I can't change it in the container.
+
+51
+00:03:56,050 --> 00:03:59,880
+That's not necessarily required here. I just wanted to show you that that's how you would do that
+
+52
+00:03:59,890 --> 00:04:04,060
+in this case. That config file is actually telling Nginx,
+
+53
+00:04:04,090 --> 00:04:05,520
+'instead of being a web server,
+
+54
+00:04:05,530 --> 00:04:10,960
+I would like you to be a reverse proxy, and sit in front of another server,' which in this case we're calling
+
+55
+00:04:10,960 --> 00:04:18,040
+our web server, with its service name, and it's running the Apache 2 server, which is the image httpd from
+
+56
+00:04:18,040 --> 00:04:20,520
+the official image repository on Docker Hub.
+
+57
+00:04:20,740 --> 00:04:24,420
+You can also see, at the top, I've specified a version here. That's how I would do that.
+
+58
+00:04:24,420 --> 00:04:26,070
+Inside the image line.
+
+59
+00:04:26,170 --> 00:04:32,200
+So, what should happen is when I type this docker compose up, it should start up both containers. It
+
+60
+00:04:32,200 --> 00:04:34,680
+should create a private network for the two of them.
+
+61
+00:04:34,690 --> 00:04:36,910
+It will automatically bind mount that file.
+
+62
+00:04:36,910 --> 00:04:41,910
+It'll open up the port, and it will start dumping logs out to my screen.
+
+63
+00:04:45,880 --> 00:04:51,260
+You'll see how there, it said, 'creating these two containers.'
+
+64
+00:04:51,260 --> 00:04:53,480
+It's actually creating the network.
+
+65
+00:04:53,480 --> 00:04:58,910
+You'll notice in my file, I didn't specify a networks area, or a volumes area because they're not actually
+
+66
+00:04:58,910 --> 00:04:59,750
+required.
+
+67
+00:04:59,750 --> 00:05:06,170
+They're only necessary if I need to do some custom things in the network, like maybe change the default
+
+68
+00:05:06,200 --> 00:05:09,290
+IP addresses or change the network driver that's used.
+
+69
+00:05:09,290 --> 00:05:14,240
+Or in the volumes case, I can create named volumes, or use a different volume driver, and we'll get into
+
+70
+00:05:14,240 --> 00:05:16,330
+all of that later in advanced sections.
+
+71
+00:05:16,520 --> 00:05:19,220
+Just so you know, that's how simple these files can be.
+
+72
+00:05:19,220 --> 00:05:21,020
+You don't normally need all that stuff.
+
+73
+00:05:21,050 --> 00:05:25,130
+Those features are there if you need them, but usually these very simple, little commands like this will
+
+74
+00:05:25,130 --> 00:05:25,920
+get you going.
+
+75
+00:05:26,090 --> 00:05:30,690
+What have I done? This is now my Apache server and my Nginx server.
+
+76
+00:05:30,700 --> 00:05:32,880
+You'll notice the logs are actually colored here.
+
+77
+00:05:32,900 --> 00:05:36,670
+That's a neat feature of Compose that you don't necessarily get out-of-the-box with Docker
+
+78
+00:05:36,800 --> 00:05:41,200
+is that it will log all the containers that it's running on the screen in the foreground.
+
+79
+00:05:41,360 --> 00:05:46,820
+I can always do the same thing as I do with Docker and run docker compose up -d, which will run
+
+80
+00:05:46,820 --> 00:05:52,910
+it in the background. But it's nice to see when I'm developing or testing things locally, that I've got
+
+81
+00:05:52,910 --> 00:05:54,670
+my logs right on the screen.
+
+82
+00:05:55,550 --> 00:06:01,140
+If I jump over to my browser, and then go to localhost, you'll see that it says, 'It works.'
+
+83
+00:06:01,490 --> 00:06:06,410
+That's actually the Apache server replying, not the Nginx server.
+
+84
+00:06:06,560 --> 00:06:09,560
+The traffic is actually going through the Nginx reverse proxy.
+
+85
+00:06:09,560 --> 00:06:14,870
+It's repeating the traffic over to the Apache server. The Apache server is responding with its default
+
+86
+00:06:14,900 --> 00:06:17,850
+basic HTML file because we didn't change anything.
+
+87
+00:06:17,930 --> 00:06:20,010
+Then the Nginx is repeating it back to me.
+
+88
+00:06:20,000 --> 00:06:22,960
+So, it's your basic web server, web proxy configuration.
+
+89
+00:06:23,000 --> 00:06:27,920
+You can tell that the traffic hit both of them. They actually work through the proxy because
+
+90
+00:06:27,920 --> 00:06:29,250
+the proxy is actually a different color
+
+91
+00:06:29,250 --> 00:06:35,180
+here. The logs are pumping out here with a random color for each container in my setup so that I can
+
+92
+00:06:35,180 --> 00:06:36,750
+easily see what's going on.
+
+93
+00:06:36,980 --> 00:06:42,800
+If I hit refresh several times, you'd see the traffic showing up. Then it's hitting first the proxy and
+
+94
+00:06:42,800 --> 00:06:44,520
+then the backend web server.
+
+95
+00:06:44,570 --> 00:06:50,030
+If I wanted to stop this here, I'd hit Control c to stop the compose in my screen.
+
+96
+00:06:50,030 --> 00:06:53,800
+I could actually run it again with the -d to run it in the background.
+
+97
+00:06:54,020 --> 00:07:02,930
+You can see here that I can refresh it and it's still there. I can do a docker compose logs to see
+
+98
+00:07:02,930 --> 00:07:05,410
+the same output of logs that I saw a while ago.
+
+99
+00:07:05,510 --> 00:07:10,760
+A lot of the commands that you might be used to in Docker are also in Docker Compose. Really what
+
+100
+00:07:10,760 --> 00:07:15,460
+Compose is just doing is it's talking to the Docker API in the background
+
+101
+00:07:15,650 --> 00:07:22,400
+on behalf of the Docker CLI. It's kind of like a replacement for the Docker CLI still talking
+
+102
+00:07:22,460 --> 00:07:24,900
+to the Docker server API in the backend.
+
+103
+00:07:25,190 --> 00:07:32,180
+Of course, the great help here, docker compose help, shows me all the commands I can run.
+
+104
+00:07:35,780 --> 00:07:40,730
+You'll see a lot of these look really familiar because they're the equivalent of the docker command
+
+105
+00:07:41,030 --> 00:07:45,670
+just using the context of the configuration of the compose file.
+
+106
+00:07:45,680 --> 00:07:55,010
+I want to clean all this up because they're still running. I can do a docker compose ps here, which
+
+107
+00:07:55,010 --> 00:07:57,260
+will show me that both of my containers are running.
+
+108
+00:07:57,470 --> 00:08:02,420
+I can do a docker compose top to actually list all of the services running inside of them in a nice
+
+109
+00:08:02,420 --> 00:08:03,620
+formatted output.
+
+110
+00:08:03,620 --> 00:08:04,950
+That's pretty cool.
+
+111
+00:08:04,970 --> 00:08:11,050
+Then finally, I can do a docker compose down to stop and clean up my stuff that I just started.
+
+112
+00:08:11,880 --> 00:08:15,440
+You'll see that it's telling me what it's done there. Cleaned it all up.
+
+113
+00:08:15,460 --> 00:08:16,430
+So, great.
+
+114
+00:08:16,530 --> 00:08:17,980
+This is just a little taste.
+
+115
+00:08:18,000 --> 00:08:22,860
+We're going to be using Docker Compose a lot throughout the rest of this course for the local development
+
+116
+00:08:22,890 --> 00:08:28,590
+and testing stuff. Then we'll keep using the Docker Compose files as we transition into the production
+
+117
+00:08:28,590 --> 00:08:33,670
+concerns for how we deploy complex environments with a simple YAML file.
+

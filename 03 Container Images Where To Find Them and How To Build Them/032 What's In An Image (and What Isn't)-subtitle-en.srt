@@ -1,0 +1,103 @@
+0
+00:05.390 --> 00:10.270
+All right before we jump into images, let's talk about what this section is all about.
+
+1
+00:10.310 --> 00:14.510
+First, we're going to discuss the basics of images and the concepts that you're going to need
+
+2
+00:14.780 --> 00:19.780
+and what is actually in an image and, just as importantly, what isn't in one.
+
+3
+00:19.890 --> 00:25.280
+Then we're going to talk a little bit about how to find images on the Internet and we'll actually go and look
+
+4
+00:25.280 --> 00:31.790
+at some, dive into that whole process of finding good images and how to manage those images once we've
+
+5
+00:31.820 --> 00:36.860
+downloaded them or created them on our own machines. Then we'll jump into the fun part of actually
+
+6
+00:36.860 --> 00:39.240
+making our own images.
+
+7
+00:39.260 --> 00:44.660
+So before we start playing with images and learning how to use them for containers, we probably want
+
+8
+00:44.660 --> 00:51.050
+to step into what exactly is in an image and what isn't. The way I like to explain it is very simple.
+
+9
+00:51.140 --> 00:57.400
+It's the application binaries and dependencies for your app and the metadata on how to run it.
+
+10
+00:57.410 --> 01:02.120
+But if we went to the official definition, it would be "an image is an ordered collection of root filesystem
+
+11
+01:02.120 --> 01:07.070
+changes and the corresponding execution parameters for use within a container runtime."
+
+12
+01:07.370 --> 01:09.300
+But I like my version better.
+
+13
+01:09.320 --> 01:14.900
+Inside this image, there's not actually a complete OS. There's no kernel. There's no kernel modules
+
+14
+01:14.900 --> 01:16.160
+like drivers.
+
+15
+01:16.160 --> 01:22.460
+It's really just the binaries that your application needs because the host provides the kernel.
+
+16
+01:22.460 --> 01:26.960
+That's one of the distinct characteristics around containers that makes it different from a virtual
+
+17
+01:26.960 --> 01:30.500
+machine; it's not booting up a full operating system.
+
+18
+01:30.530 --> 01:35.530
+It's really just starting an application, and that image can be really small.
+
+19
+01:35.540 --> 01:37.200
+It can be a single file.
+
+20
+01:37.310 --> 01:43.700
+If you're, for instance, using Go, one of Go's features is that it can build a static binary and have
+
+21
+01:43.700 --> 01:46.310
+a single file as your application.
+
+22
+01:46.310 --> 01:51.230
+So you could do that. Or you could have a very big image that's actually using some distribution like
+
+23
+01:51.230 --> 01:57.560
+Ubuntu with its own package manager built in, and where you've installed Apache, and PHP, and your source
+
+24
+01:57.560 --> 01:59.890
+code, and all the added modules you need.
+
+25
+01:59.990 --> 02:01.460
+You can have it multiple gigabytes.

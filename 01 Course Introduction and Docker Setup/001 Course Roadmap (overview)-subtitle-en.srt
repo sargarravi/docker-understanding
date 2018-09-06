@@ -1,0 +1,167 @@
+0
+00:05.610 --> 00:10.900
+Hey Docker Fans! This course roadmap will talk about what you'll be learning and doing in the course sections.
+
+1
+00:11.420 --> 00:16.730
+If you're a beginner, each section builds on the last. Rather than going through the features, we do
+
+2
+00:16.730 --> 00:22.700
+a lot of scenario-based work where you'll have assignments to use Docker as maybe a developer would or an operator
+
+3
+00:22.820 --> 00:24.880
+or maybe a tech support troubleshooter.
+
+4
+00:24.890 --> 00:30.200
+So you can better understand the "Why" of specific Docker features. If you're beyond the basics,
+
+5
+00:30.890 --> 00:35.510
+I encourage you to look for lectures around the issues you're trying to solve right now; and, then
+
+6
+00:35.510 --> 00:40.730
+later, you should review topics you're familiar with that might teach you some tricks or best practices
+
+7
+00:40.730 --> 00:42.370
+that I sprinkle in along the way.
+
+8
+00:43.930 --> 00:49.810
+The first section is about getting Docker installed and what to do if you can't actually use Docker locally.
+
+9
+00:49.810 --> 00:54.810
+Then we go through other tools like text editors and terminal tools that make Docker easier to use.
+
+10
+00:55.060 --> 00:59.830
+We also talk about the GitHub repository for this course that you'll need to make sure you download
+
+11
+00:59.830 --> 01:05.320
+before you get started. The next section is where you get to start using the basics of
+
+12
+01:05.320 --> 01:06.430
+understanding containers.
+
+13
+01:06.430 --> 01:12.220
+We learn how to manage, create, destroy containers, how they're totally not like a VM.
+
+14
+01:12.220 --> 01:14.260
+They're actually more like a process.
+
+15
+01:14.380 --> 01:19.450
+You'll get to create a shell connection into containers and understand what's going on inside them and
+
+16
+01:19.450 --> 01:22.720
+then you'll learn the basics of Docker networking on your local machine.
+
+17
+01:24.830 --> 01:30.530
+After that, in the next section, you'll learn the ins and outs of images and how to download and use them
+
+18
+01:30.530 --> 01:36.500
+from Docker Hub. How to create Docker file recipes, You'll customize and upload images back to
+
+19
+01:36.500 --> 01:37.050
+Docker Hub.
+
+20
+01:37.220 --> 01:45.470
+You'll practice running Docker builds and you'll extend official images with your own tweaks. The section
+
+21
+01:45.470 --> 01:50.150
+after that is where you get to learn some of the options for dealing with persistent data, which is that
+
+22
+01:50.180 --> 01:53.590
+kind of data you need to keep around and protect like databases.
+
+23
+01:53.840 --> 01:58.310
+You'll need to understand the lifetime of a container so we'll go through that and how best to design
+
+24
+01:58.310 --> 02:01.050
+your container solution for easier data management.
+
+25
+02:01.310 --> 02:04.580
+What Docker volumes are and how you should use them, is in there.
+
+26
+02:04.580 --> 02:10.310
+And then we talk about bind mounting and how to use Docker for local development.
+
+27
+02:10.400 --> 02:15.110
+Then I have a section where I go beyond dealing with a single container and you learn Docker Compose
+
+28
+02:15.110 --> 02:17.270
+for multi-container automation.
+
+29
+02:17.270 --> 02:23.660
+You'll learn when and when not to use Compose, how to design Compose files, and how to build images and
+
+30
+02:23.660 --> 02:31.230
+edit code easily with Compose. The next section is a big one where you put your ops hat on and you build
+
+31
+02:31.260 --> 02:32.730
+a Docker Swarm.
+
+32
+02:32.730 --> 02:38.940
+You'll see how easy it is to build a three node swarm cluster and you'll learn about networking overlay
+
+33
+02:39.040 --> 02:45.150
+multi-host networking, and how the routing mesh works for routing packets coming into your network; and,
+
+34
+02:45.150 --> 02:49.160
+then you'll create some Swarm services for high availability containers.
+
+35
+02:49.440 --> 02:53.900
+Then you'll create Stacks or production grade compose files deploys. Next,
+
+36
+02:54.120 --> 02:59.940
+you'll actually improve security by moving your config values into Secrets and how to deploy those Secrets
+
+37
+02:59.970 --> 03:01.230
+into your Swarm.
+
+38
+03:01.380 --> 03:07.410
+And finally you'll get to see an example of how to use Compose files for a full app lifecycle including
+
+39
+03:07.410 --> 03:15.340
+local development, C.I. testing, and deployment to a production Swarm, all with one set of Compose.
+
+40
+03:15.370 --> 03:21.340
+I'm excited for you to get started and remember to reach out anytime in the Q & A via the Udemy messages
+
+41
+03:21.580 --> 03:24.190
+or via the private Slack Team that the course comes with.

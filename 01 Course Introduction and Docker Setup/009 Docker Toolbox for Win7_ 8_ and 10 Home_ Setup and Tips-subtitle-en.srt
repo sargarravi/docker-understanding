@@ -1,0 +1,735 @@
+0
+00:06.160 --> 00:09.700
+OK so this lecture is for getting the tool box installed.
+
+1
+00:09.700 --> 00:16.780
+That means you're using Windows 10 Home, or one of the older versions of Windows like 7, 8, or 8.1.
+
+2
+00:16.840 --> 00:20.160
+Even though the Toolbox is legacy, it's still got some pretty cool features.
+
+3
+00:20.320 --> 00:25.520
+In this lecture, we're going to actually download and install it, then we're going to clone my GitHub
+
+4
+00:25.540 --> 00:32.530
+repo, then we're going to start the QuickStart Terminal and that is actually the command line interface
+
+5
+00:32.540 --> 00:35.070
+that Docker gives you for the Toolbox.
+
+6
+00:35.240 --> 00:39.760
+Then we're going to maybe tweak some of the VM settings or at least show you how to do that.
+
+7
+00:39.860 --> 00:46.250
+And finally getting a code editor and seeing how we might change the shell out so maybe you can use
+
+8
+00:46.250 --> 00:51.480
+a different shell instead the default command prompt that comes with Windows.
+
+9
+00:51.610 --> 00:51.930
+All right.
+
+10
+00:51.930 --> 00:59.090
+As you can see I'm on a Windows 8 machine, actually 8.1, and I'm actually already on store.docker.com
+
+11
+00:59.090 --> 00:59.560
+...
+
+12
+00:59.610 --> 01:01.520
+And like all the other editions of Docker,
+
+13
+01:01.520 --> 01:02.810
+this is where you get it.
+
+14
+01:02.810 --> 01:08.910
+So for Windows we're under Docker CE. Then we scroll down until we find Windows.
+
+15
+01:09.070 --> 01:11.510
+Now for the Toolbox, it's not the default option.
+
+16
+01:11.510 --> 01:16.510
+So if you notice up here at the top, it talks about that it needs Windows Professional
+
+17
+01:16.520 --> 01:18.230
+10 or Enterprise.
+
+18
+01:18.290 --> 01:21.640
+And then there's "for previous versions get Docker Toolbox."
+
+19
+01:21.800 --> 01:29.210
+So let's click on that and that will take us to a previous site where you could actually get stuff from
+
+20
+01:29.210 --> 01:31.340
+Docker which was on the docker.com site.
+
+21
+01:31.340 --> 01:33.800
+This is where the ToolBox is living for now.
+
+22
+01:33.800 --> 01:38.200
+Eventually it may go and live in the store but you just download the one for Windows.
+
+23
+01:38.210 --> 01:40.660
+It's the same one for all versions of Windows.
+
+24
+01:42.560 --> 01:44.730
+And I happen to already have that downloaded.
+
+25
+01:44.750 --> 01:46.340
+So right here,
+
+26
+01:46.340 --> 01:50.580
+just run that install and it'll walk you through the set up.
+
+27
+01:50.580 --> 01:53.360
+Now I recommend you do a full install here.
+
+28
+01:53.360 --> 01:57.560
+So on all the options, you want checked.
+
+29
+01:57.720 --> 02:02.090
+And in my case I actually already have it installed so it didn't check them all by default, but for yours,
+
+30
+02:02.120 --> 02:03.830
+it should have them all checked.
+
+31
+02:03.860 --> 02:09.080
+You want VirtualBox because that's how it's going to run the Linux VM in the background it's actually
+
+32
+02:09.080 --> 02:17.030
+going to run Docker for us. The Git for Windows allows us to actually have a Bash prompt that will
+
+33
+02:17.090 --> 02:20.950
+make it seem a little bit more like Linux or Mac when we're using Docker.
+
+34
+02:21.140 --> 02:27.840
+So let's say now that I've finished my Docker install and I'm going to DoubleClick the Docker QuickStart.
+
+35
+02:27.950 --> 02:32.400
+And that will automatically kick off the initialization process.
+
+36
+02:32.480 --> 02:37.580
+What that looks like is you'll see it's running something called the pre-create checks
+
+37
+02:37.640 --> 02:44.210
+and it's actually creating a VirtualBox VM and it's using a boot2docker.iso to do that, which is
+
+38
+02:44.510 --> 02:47.410
+a very small version of Linux.
+
+39
+02:47.600 --> 02:51.890
+Then you see that it's provisioning from networking now is probably going to prompt you a couple of
+
+40
+02:51.890 --> 02:54.110
+times for permissions.
+
+41
+02:54.110 --> 02:56.420
+That's totally normal that's a VirtualBox thing.
+
+42
+02:56.630 --> 03:02.810
+Eventually it'll get down to where you see the Moby, in ASCII format.
+
+43
+03:02.810 --> 03:11.060
+And that's a signal that it's working and you'll see that it's giving me a default machine IP of
+
+44
+03:11.090 --> 03:19.550
+192.168.99.100. Remember that this is in the resource lecture earlier in the section.
+
+45
+03:19.560 --> 03:23.780
+Now I'm going to clone this, but I want to clone it in Desktop.
+
+46
+03:23.800 --> 03:27.630
+If you've never used GitHub before, then you can use a GUI.
+
+47
+03:27.690 --> 03:30.920
+And that's probably one of the easiest ways if you're not used to GitHub. If you know GitHub then
+
+48
+03:30.930 --> 03:32.370
+you've got your own way to do it.
+
+49
+03:32.430 --> 03:40.760
+But here what I can do is I can actually use the GitHub GUI to download and clone my repo.
+
+50
+03:40.950 --> 03:43.420
+So I'm going to install that.
+
+51
+03:43.610 --> 03:49.900
+Then I'm actually going to put all of my code in a directory called code.
+
+52
+03:49.940 --> 03:57.600
+So I'm going to make a directory. You'll see on my machine, that I actually put all of my software code inside
+
+53
+03:57.600 --> 04:00.270
+a directory called code on underneath my user.
+
+54
+04:00.390 --> 04:03.400
+So that's where I'm going to clone this from GitHub.
+
+55
+04:03.510 --> 04:11.410
+So I'm going to log in as me. Now that I have GitHub installed, one of the ways I can clone it is
+
+56
+04:12.400 --> 04:19.270
+from the website, I can copy the URL and go back over to desktop and say clone repository.
+
+57
+04:19.360 --> 04:22.190
+Copy that in. Remember I wanted...
+
+58
+04:22.240 --> 04:24.150
+This is not going to be under Documents.
+
+59
+04:24.160 --> 04:27.390
+It's going to be under code, that's where I put my stuff.
+
+60
+04:27.820 --> 04:34.190
+So clone. Now the advantage of doing it this way instead of downloading the zip, is that you can come
+
+61
+04:34.190 --> 04:41.030
+in here and update it because I do update this repo when there's fixes or changes in Docker which happens
+
+62
+04:41.030 --> 04:43.470
+pretty pretty much every month.
+
+63
+04:43.760 --> 04:50.870
+So now if I do a dir in here, you can see them in the udemy docker mastery directory, and there
+
+64
+04:50.870 --> 04:51.450
+we go.
+
+65
+04:53.740 --> 04:57.670
+The last thing I want to point out is you need a code editor of some sort.
+
+66
+04:57.670 --> 05:01.380
+It's not that great to use notepad even though it does work.
+
+67
+05:01.420 --> 05:04.090
+So I recommend Visual Studio Code.
+
+68
+05:07.270 --> 05:14.000
+It's a free editor from Microsoft and you can get it over just by googling visual studio code and it's
+
+69
+05:14.000 --> 05:18.900
+free to download, runs on Mac, Windows, and Linux.
+
+70
+05:19.040 --> 05:24.770
+And actually it's running on the atom platform if you've ever played with Atom which is another editor
+
+71
+05:24.770 --> 05:31.250
+from GitHub, But this one actually has a nice add-on for Docker and a lot of other nice features that
+
+72
+05:31.310 --> 05:33.120
+I think really are great out of the box.
+
+73
+05:33.320 --> 05:37.940
+So download that you might see me use a couple of times during the course.
+
+74
+05:37.940 --> 05:39.120
+And there you go.
+
+75
+05:42.720 --> 05:48.570
+What's happening in the background here is VirtualBox is actually running silently and you don't see
+
+76
+05:48.570 --> 05:52.950
+the GUI necessarily but it doesn't mean it's not running it's actually sitting here running what
+
+77
+05:52.950 --> 05:56.050
+was automatically created which was the default machine.
+
+78
+05:56.460 --> 06:01.830
+So this is actually just a regular VM running Linux. Even though it is a small and limited version of
+
+79
+06:01.830 --> 06:03.600
+Linux that Docker installed,
+
+80
+06:03.600 --> 06:06.790
+you can change the properties of it especially when it comes to the hardware.
+
+81
+06:06.900 --> 06:14.580
+So I can't change anything right now because it's running so I could do a shut down here and then once
+
+82
+06:14.580 --> 06:19.620
+it's shut down, I could actually go in and change settings like how many CPUs it has access to, or how
+
+83
+06:19.620 --> 06:21.400
+much ram it has access to.
+
+84
+06:21.450 --> 06:25.380
+And that's really just dependent upon your system and how many resources you have.
+
+85
+06:25.380 --> 06:30.060
+For example, by default it gives it a GB of RAM and a single processor.
+
+86
+06:30.060 --> 06:36.210
+Maybe I want to bump it up to two and maybe I want to give it 2GBs of RAM.
+
+87
+06:36.210 --> 06:39.350
+I can just put that up something like that.
+
+88
+06:39.480 --> 06:43.010
+And then click OK. I could start it from here,
+
+89
+06:43.170 --> 06:48.420
+but we also can control it from something called Docker Machine. There will be a later lecture
+
+90
+06:48.420 --> 06:50.040
+on what Docker Machine can do.
+
+91
+06:50.190 --> 06:57.540
+But fundamentally Docker Machine creates VMs either in the cloud or on your local machine that run
+
+92
+06:57.660 --> 07:00.490
+Docker. If I just do a docker machine ls here,
+
+93
+07:00.490 --> 07:05.400
+you'll see that it sees the machine that it's automatically created, and the first machine it
+
+94
+07:05.400 --> 07:13.720
+creates, it always creates as default, and I could actually start it with docker machine start.
+
+95
+07:13.720 --> 07:16.590
+You'll see that it actually kick it off here.
+
+96
+07:16.590 --> 07:21.030
+And so I don't ever really need to use Oracle VM virtual box manager.
+
+97
+07:21.040 --> 07:24.970
+I don't actually have to play with that at all unless I want to change the hardware settings.
+
+98
+07:24.970 --> 07:31.360
+So now while that's starting and getting its IP again so that we can mess with it, I want to talk a little bit
+
+99
+07:31.360 --> 07:33.990
+about this QuickStart terminal.
+
+100
+07:34.150 --> 07:38.410
+So this is actually the default way. You need to run this at least once because then it's going to
+
+101
+07:38.410 --> 07:43.450
+automatically create that default machine. It's automatically going to set it up and do the
+
+102
+07:43.450 --> 07:44.560
+networking for you.
+
+103
+07:44.560 --> 07:47.150
+But after that you don't have to use it.
+
+104
+07:47.170 --> 07:50.520
+As long as you can get the Docker Machine from somewhere,
+
+105
+07:50.680 --> 07:53.140
+you can run Docker Machine in the Docker command line.
+
+106
+07:56.320 --> 08:03.010
+if you're a little bit more savvy user and you want to do a custom command line or a custom shell and
+
+107
+08:03.010 --> 08:03.850
+terminal.
+
+108
+08:03.880 --> 08:04.570
+You can try.
+
+109
+08:04.570 --> 08:07.990
+Commander, cmder.net,
+
+110
+08:08.350 --> 08:13.720
+and it really just changes the GUI and the functionality around that GUI. It's still inside it
+
+111
+08:13.720 --> 08:19.880
+running a PowerShell or cmd prompt or Bash, but it does give you a lot of features around the GUI.
+
+112
+08:20.020 --> 08:23.290
+I recommend downloading and extracting the full version.
+
+113
+08:23.590 --> 08:31.510
+And when you do that, make sure that you right click on the zip file and go into properties and unblock it.
+
+114
+08:31.510 --> 08:36.820
+Because once you unzip it, it doesn't actually have an installer you just need to unzip it and once
+
+115
+08:36.820 --> 08:40.980
+you unzip it, it won't run without a bunch of warnings and problems
+
+116
+08:41.020 --> 08:46.150
+unless you unlock it first...because it considers that a security feature in Windows; you've probably run into
+
+117
+08:46.150 --> 08:47.000
+that before.
+
+118
+08:47.170 --> 08:50.200
+So extract all that. You can extract that right into your Downloads folder.
+
+119
+08:50.200 --> 08:51.260
+That's what I do.
+
+120
+08:51.490 --> 08:54.750
+And then inside cmder you'll see something called cmder.
+
+121
+08:54.750 --> 08:58.800
+And if you simply run that by default it'll give you a command prompt, a
+
+122
+08:58.810 --> 09:05.470
+cmd.exe, and you'll see that you have some cool options here where I can actually run a PowerShell
+
+123
+09:05.480 --> 09:12.610
+prompt if I want. I can run multiple tabs and a lot of other nice features where I can actually expand
+
+124
+09:12.610 --> 09:14.320
+it and shrink it at will.
+
+125
+09:14.680 --> 09:15.460
+And that's great.
+
+126
+09:15.520 --> 09:17.320
+But how do we get Docker running in that.
+
+127
+09:17.500 --> 09:18.990
+Well it's not that hard.
+
+128
+09:19.000 --> 09:20.920
+It just takes a few extra steps.
+
+129
+09:21.070 --> 09:23.920
+So you can see over here that I have docker machine ls
+
+130
+09:26.440 --> 09:32.880
+LS, and that shows me that I have one machine with Docker running and as you learn in future lectures
+
+131
+09:32.970 --> 09:40.290
+in the next section, I can do a Docker version that will tell me the Docker version of both my client
+
+132
+09:40.350 --> 09:42.470
+and the server running in the background.
+
+133
+09:42.840 --> 09:45.810
+But over here I can do docker-machine ls
+
+134
+09:48.620 --> 09:51.890
+and I can do Docker version.
+
+135
+09:52.430 --> 09:59.420
+But you'll notice that it says it can't connect to server and that's a common problem on Windows or
+
+136
+09:59.690 --> 10:01.450
+on the toolbox specifically.
+
+137
+10:01.550 --> 10:06.800
+What that means is that Docker isn't actually running in Windows it's running in the VM.
+
+138
+10:06.800 --> 10:13.400
+So my client, my little command line Docker right here, can't talk to that unless I tell it where to
+
+139
+10:13.400 --> 10:14.040
+go.
+
+140
+10:14.210 --> 10:19.700
+And that's one of the things this nice little GUI over here does, that I need to set up over here.
+
+141
+10:19.730 --> 10:22.010
+And the way we do that is with Docker Machine.
+
+142
+10:22.190 --> 10:27.860
+So if I just do a docker-machine ls again, you see that has the one machine there, If I do a
+
+143
+10:27.890 --> 10:31.530
+docker-machine help, I get lots of help.
+
+144
+10:31.610 --> 10:33.490
+Get lots of information.
+
+145
+10:33.680 --> 10:39.980
+And one of the things I can do here is I can type docker-machine env default, because remember that's
+
+146
+10:39.980 --> 10:42.430
+the name of the default machine.
+
+147
+10:43.460 --> 10:49.130
+And that will actually get me some variables that I can then copy and paste
+
+148
+10:52.420 --> 10:53.610
+into my host.
+
+149
+10:53.620 --> 11:01.780
+But it actually tells me down here at the bottom that if I just do this it should work.
+
+150
+11:01.780 --> 11:03.690
+So let me copy and paste that.
+
+151
+11:04.000 --> 11:11.470
+And now what should happen if I do a docker version, I get back both the client and the server.
+
+152
+11:11.680 --> 11:16.840
+Now if you're savvy enough with cmder, you can actually have it do that stuff automatically on startup.
+
+153
+11:16.840 --> 11:18.180
+I'll leave that to you.
+
+154
+11:18.310 --> 11:24.600
+Otherwise just know that you can use the docker-machine env default to get the commands you need in order
+
+155
+11:24.600 --> 11:30.910
+to tell Docker how to find the server. Then once it can find it you can do all the Docker commands
+
+156
+11:30.910 --> 11:32.860
+that come in to later lectures.
+
+157
+11:34.450 --> 11:40.270
+In this lecture you learned how to get the Docker ToolBox on older versions of Windows.
+
+158
+11:40.360 --> 11:44.560
+I just want to give you a couple extra tips and summarize some of the things we talked about real
+
+159
+11:44.560 --> 11:45.140
+quick.
+
+160
+11:45.250 --> 11:48.230
+The Docker QuickStart Terminal is how you start it.
+
+161
+11:48.250 --> 11:49.690
+Remember you need to run that once
+
+162
+11:49.690 --> 11:55.600
+in order for it to automatically create the default machine and get everything set up. You can still actually
+
+163
+11:55.600 --> 12:01.400
+use Docker Machine after that to manipulate that Docker machine in the background.
+
+164
+12:01.600 --> 12:05.680
+But that actually defaults to the Bash shell and creates everything for you.
+
+165
+12:05.740 --> 12:11.050
+Do note that during this course we're going to talk about something called a Bind Mount. That's where
+
+166
+12:11.290 --> 12:18.390
+it connects source files that you've downloaded on your Windows machine into the Docker Linux machine.
+
+167
+12:18.400 --> 12:18.860
+OK.
+
+168
+12:18.880 --> 12:23.440
+And that's known as a Bind Mount. That actually works with the ToolBox, but it's only going to work for
+
+169
+12:23.440 --> 12:26.470
+code that you stored inside the user's directory.
+
+170
+12:26.500 --> 12:33.400
+So make sure that whenever you get downloads of code, you actually make sure
+
+171
+12:33.400 --> 12:37.310
+they're in your user profile, and not somewhere else on a different drive letter.
+
+172
+12:37.360 --> 12:42.130
+Unfortunately different drive letters and different paths will not work with the ToolBox. They have
+
+173
+12:42.130 --> 12:44.340
+to be in your user profile.
+
+174
+12:44.350 --> 12:51.190
+This also is a good thing that you don't use for databases. So I don't recommend that you do a bind mount - 
+
+175
+12:51.190 --> 12:56.500
+and again we'll explain the details of that later - but that you do a bind mount for databases it's really
+
+176
+12:56.500 --> 13:02.350
+just for code. Because Windows file systems are quite different than Linux file systems and they don't
+
+177
+13:02.350 --> 13:07.110
+always work well together when they're sharing.
+
+178
+13:07.130 --> 13:12.290
+And again remember that you can always use docker-machine to actually recreate that Linux VM that it created
+
+179
+13:12.290 --> 13:12.710
+for you.
+
+180
+13:12.710 --> 13:14.170
+The default one.
+
+181
+13:14.270 --> 13:21.620
+Or additional ones. The great editor that I recommend is Visual Studio Code in this course. 
+
+182
+13:21.680 --> 13:26.990
+If you would like a shell replacement, you might want to consider cmder.net and you can get that at
+
+183
+13:26.990 --> 13:28.060
+cmder.net.

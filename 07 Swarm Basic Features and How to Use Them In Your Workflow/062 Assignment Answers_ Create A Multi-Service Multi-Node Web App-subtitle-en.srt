@@ -1,0 +1,467 @@
+0
+00:04.680 --> 00:05.050
+Okay,
+
+1
+00:05.070 --> 00:10.650
+so what I'm going to do is, I'm going to walk through each one of these services based on this architecture,
+
+2
+00:10.710 --> 00:17.370
+and I'm going to create this app on the fly. I'm actually going to type the commands in here in the readme,
+
+3
+00:17.370 --> 00:22.230
+because that seems like a logical place for me to do it. And then I'll cut and paste them into my
+
+4
+00:22.230 --> 00:22.920
+node.
+
+5
+00:22.950 --> 00:27.340
+If you remember, I have a 3-node Swarm over here. If I do a docker node ls,
+
+6
+00:27.360 --> 00:32.270
+you’ll see that I have three nodes here. They're all manager nodes.
+
+7
+00:32.370 --> 00:40.470
+I have no containers running, and no services, obviously. First thing, I know up at the top,
+
+8
+00:40.470 --> 00:46.620
+it talks about I need networks, and I need a volume.
+
+9
+00:46.780 --> 00:52.870
+So, probably can get the networks out of the way and I can probably wing that. I can type docker
+
+10
+00:53.380 --> 01:01.960
+network create d overlay. Remember that the overlay network is the only kind of network we can use
+
+11
+01:01.960 --> 01:08.920
+in a Swarm because overlay allows us to span across nodes, as if they're all on the local network.
+
+12
+01:09.800 --> 01:12.710
+And then I want to call it backend.
+
+13
+01:13.770 --> 01:18.510
+And then, I want to do the same exact thing, only call it frontend.
+
+14
+01:19.280 --> 01:22.890
+Now, there's nothing inherently special about these two networks.
+
+15
+01:22.970 --> 01:29.060
+We're just going to segment our different services into one or the other to help act like a little firewall
+
+16
+01:29.060 --> 01:32.080
+that gives separation for protection.
+
+17
+01:33.140 --> 01:34.170
+On this vote one,
+
+18
+01:34.210 --> 01:45.100
+I know I need to do a docker service create, and I’ve got to name it, so I might as well put name vote. And then
+
+19
+01:45.100 --> 01:53.380
+I’ve got to publish the port 80 to 80 in the container, and it's got to be on a specific network. So, network
+
+20
+01:55.420 --> 01:59.140
+frontend. I need two replicas.
+
+21
+01:59.200 --> 02:13.030
+So, replica two. And then, I might as well just copy and paste this name.
+
+22
+02:13.290 --> 02:18.970
+Now, I'm going to go ahead and create all of these before I actually deploy them.
+
+23
+02:19.100 --> 02:27.100
+I’m going to actually copy this one down here. This one is going to be called...it’s not going to be called vote,
+
+24
+02:27.100 --> 02:29.360
+it's going to be called redis.
+
+25
+02:29.470 --> 02:31.890
+You don't have to worry about publishing any ports on that.
+
+26
+02:31.880 --> 02:33.520
+It's going to be on the frontend network.
+
+27
+02:33.520 --> 02:42.740
+I want two replicas, and then, I’m going to call it redis three two is the image.
+
+28
+02:46.410 --> 02:55.380
+Down here, docker service create name worker, is going to be on two networks. I’ve got to do network
+
+29
+02:55.380 --> 02:59.060
+frontend and...whoops.
+
+30
+02:59.370 --> 03:07.370
+I’m typing what I'm saying...let’s see, network backend, and then only one replica.
+
+31
+03:07.380 --> 03:07.630
+…
+
+32
+03:07.640 --> 03:08.980
+Because one replica is default,
+
+33
+03:09.000 --> 03:12.210
+I don't actually have to specify replica and I don't specify any ports.
+
+34
+03:12.210 --> 03:18.450
+I think, that's all I need there. I just need to copy over the image.
+
+35
+03:21.290 --> 03:29.530
+Okay, docker service create name db network backend.
+
+36
+03:32.500 --> 03:34.050
+See, one replica.
+
+37
+03:34.510 --> 03:36.340
+Oh, I need to do this volume.
+
+38
+03:36.400 --> 03:44.050
+Here's the thing about the volume. The -v command is not compatible with docker services. Because, for various
+
+39
+03:44.050 --> 03:48.100
+reasons, services are going to be more complex than maybe your typical docker run.
+
+40
+03:48.100 --> 03:52.650
+And there were problems and limitations with the -v back in the day.
+
+41
+03:52.650 --> 03:59.040
+So, Docker has learned from that and improved the format. But it happens to be a little bit more verbose
+
+42
+04:00.750 --> 04:05.980
+and maybe a little bit more difficult to remember the format starting out.
+
+43
+04:06.060 --> 04:11.790
+It also happens to be not well documented yet in the Docker Documentation because it's less than
+
+44
+04:11.790 --> 04:18.640
+a year old as a command. So, we're going to just copy and paste this. If it doesn't make sense to you,
+
+45
+04:18.640 --> 04:26.160
+basically, it's this list of values that are all a part of a single mount command and the minimums are
+
+46
+04:26.160 --> 04:28.950
+a type, a source, and a target.
+
+47
+04:28.950 --> 04:34.580
+There's also other things you can add on, but these are the only three we need in this scenario.
+
+48
+04:34.920 --> 04:39.810
+And you can see my source is just a named volume because I don't have any slashes in it.
+
+49
+04:40.110 --> 04:44.430
+And if we had slashes it would have been a bind mount and we would have to had specified a different
+
+50
+04:44.430 --> 04:45.000
+type.
+
+51
+04:45.000 --> 04:52.560
+So down here, --mount type volume, source db data, target.
+
+52
+04:52.590 --> 04:53.660
+I think that's correct.
+
+53
+04:53.670 --> 04:59.900
+And then you can just, postgres 9.4.
+
+54
+05:02.880 --> 05:04.740
+And then the last one is the result app.
+
+55
+05:04.750 --> 05:13.710
+So, docker service create name result network backend.
+
+56
+05:16.930 --> 05:22.180
+Publish the port. We’re going to use 5001 to port 80 in the container.
+
+57
+05:24.790 --> 05:30.460
+I only can run one of them. By the way, the only reason we're running one of these is actually a little
+
+58
+05:30.460 --> 05:37.630
+known issue on this app, is that this is actually using WebSockets, and WebSockets are something that require
+
+59
+05:37.630 --> 05:39.120
+a persistent connection.
+
+60
+05:39.160 --> 05:39.540
+...
+
+61
+05:39.550 --> 05:44.680
+So, in the routing mesh, doesn't really do WebSockets well yet because it's going to keep switching you
+
+62
+05:44.740 --> 05:50.110
+back and forth between containers and that WebSocket needs to be to a specific container persistently.
+
+63
+05:50.110 --> 05:59.140
+So, with this app what we should have really, is a proxy in front of it but it's not in this app yet so
+
+64
+05:59.170 --> 06:03.430
+probably in a later version they'll update it and fix it so that we have a proxy.
+
+65
+06:03.610 --> 06:05.320
+That way it can be redundant
+
+66
+06:05.320 --> 06:09.180
+and sure you're getting to the right container. We’re going to
+
+67
+06:09.200 --> 06:18.260
+copy and paste this to the end. I just realized I'm missing the last value on these.
+
+68
+06:21.860 --> 06:28.580
+Okay, and then I’m going to start at the top and just copy and paste. It's already created the networks.
+
+69
+06:31.890 --> 06:36.970
+Yes, this needs to be replicas. Let me update that over here.
+
+70
+06:37.020 --> 06:46.180
+Replicas. Okay, we’re going to create the redis. There we go.
+
+71
+06:49.340 --> 06:56.880
+All right, created that one. Now, you'll notice, by the way, I get back a service ID but it doesn't mean that
+
+72
+06:56.880 --> 06:59.490
+the service is actually deployed correctly.
+
+73
+06:59.520 --> 07:00.820
+We'll look at that in a minute.
+
+74
+07:02.400 --> 07:03.950
+Let me get the rest of these in there.
+
+75
+07:12.700 --> 07:13.270
+All right.
+
+76
+07:13.480 --> 07:22.150
+Now that we have that, we should be able to do the rest of our commands over here. So, docker service ls shows
+
+77
+07:22.150 --> 07:26.040
+us all five of them. And you'll notice that the replica numbers match.
+
+78
+07:26.050 --> 07:27.420
+That's a good sign.
+
+79
+07:27.550 --> 07:31.350
+That means that one has been created successfully.
+
+80
+07:31.500 --> 07:38.820
+And if I wanted to dig in deeper, I could do a docker service ps on each one.
+
+81
+07:38.820 --> 07:41.890
+All right, so that one's been running 28 seconds.
+
+82
+07:45.090 --> 07:52.860
+redis has been running a minute. db is running 53 seconds. vote.
+
+83
+07:54.830 --> 07:55.580
+worker.
+
+84
+08:00.320 --> 08:10.220
+And you'll see here in the worker, that we have a failed task that shut down, and then one that's running.
+
+85
+08:10.290 --> 08:13.470
+That's been running for 47 seconds.
+
+86
+08:13.490 --> 08:21.220
+Okay, so, I actually know why this happened, but you may not know, so maybe we would have to do a logs.
+
+87
+08:21.230 --> 08:22.760
+Now this is on node2.
+
+88
+08:26.010 --> 08:32.540
+An experimental feature that you can enable through an optional config in Docker, is actually to
+
+89
+08:32.540 --> 08:39.700
+do the new experimental feature, docker service logs. Which actually pulls the logs from many different nodes.
+
+90
+08:39.890 --> 08:44.050
+Hopefully, it'll be released in the next version of Docker later this year.
+
+91
+08:44.070 --> 08:53.030
+But for now, it's experimental. So I had to enable it inside of the etc docker daemon log, or daemon.
+
+92
+08:53.360 --> 08:56.890
+json file. And, just so you know, this is how you would enable an experimental.
+
+93
+08:56.900 --> 08:57.830
+That's not a part of this.
+
+94
+08:57.830 --> 09:00.680
+That's just something I did, just so that I could show this off real quick.
+
+95
+09:00.680 --> 09:05.280
+You might be seeing this error and you’re thinking, I don't know why is that happening?
+
+96
+09:05.390 --> 09:16.370
+We can look at that log. So, we can do a docker service log worker...oops...logs worker.
+
+97
+09:16.570 --> 09:21.090
+And this is on, this particular, let’s see, these are two different...
+
+98
+09:21.580 --> 09:27.960
+You can see here this is one, and then the number changes. Actually, yeah.
+
+99
+09:28.060 --> 09:30.610
+This is all one right here.
+
+100
+09:30.700 --> 09:33.400
+It says no such device or address.
+
+101
+09:33.400 --> 09:39.040
+So, what this basically means is, I created a service that was looking for a DNS record that didn't
+
+102
+09:39.040 --> 09:43.480
+exist because I hadn't created the other service yet. And it did the thing it's supposed to do in
+
+103
+09:43.480 --> 09:49.330
+“Dockerland”, which is when it has an error like that, the app should crash because Docker can actually
+
+104
+09:49.330 --> 09:54.940
+restart and redeploy things properly until the apps don't crash. And as soon as I get all my services
+
+105
+09:54.940 --> 09:58.900
+launched, everything stopped crashing and everything now works.
+
+106
+09:58.900 --> 10:04.120
+And we can tell that by just going back and looking at the ps worker. We see that it's been running
+
+107
+10:04.120 --> 10:05.950
+successfully for three minutes.
+
+108
+10:06.580 --> 10:10.420
+So let's take a look at our app.
+
+109
+10:10.760 --> 10:19.400
+If I just pull up the IP address, I should get the dogs and cats.  I'm going to vote cats.
+
+110
+10:19.580 --> 10:26.190
+And then if I go to that same IP on port 5001, I should see the results app. That's
+
+111
+10:26.190 --> 10:26.680
+the app.
+
+112
+10:26.760 --> 10:31.140
+We now know that it's working because the only way that this can change is if this goes all the way
+
+113
+10:31.140 --> 10:35.590
+through when it gets caught up by the redis, and then processed by the worker, and then put in the database.
+
+114
+10:35.850 --> 10:41.090
+So we know that each of our app services are able to talk to each other. And we can look at the logs
+
+115
+10:41.100 --> 10:41.620
+if we wanted to.
+
+116
+10:41.640 --> 10:42.920
+But, that's the demo.

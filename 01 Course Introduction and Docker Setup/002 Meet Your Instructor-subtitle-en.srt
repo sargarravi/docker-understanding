@@ -1,0 +1,111 @@
+0
+00:05.130 --> 00:09.030
+Hey there. My name is Bret and I'll be your instructor for this course.
+
+1
+00:09.050 --> 00:11.950
+This is just a quick video about me.
+
+2
+00:11.960 --> 00:16.100
+I been in I.T. for 20 years and I've done lots of things.
+
+3
+00:16.100 --> 00:17.510
+I've worked in the Navy.
+
+4
+00:17.510 --> 00:21.710
+I've worked for the federal government, local government, big business, little business.
+
+5
+00:21.860 --> 00:25.700
+I've been a freelancer for 7 years now as a consultant.
+
+6
+00:25.700 --> 00:31.310
+I've worked for startups. I've actually been a startup...so I have quite a diverse background but
+
+7
+00:31.310 --> 00:37.890
+I've always been sort of an ops and sysadmin person with developer on the side sort of thing.
+
+8
+00:38.090 --> 00:42.820
+I don't pretend to be the amazing developer like a lot of you probably are.
+
+9
+00:42.830 --> 00:48.920
+I've been using Docker for over 3 years now and I've been teaching it almost as long.
+
+10
+00:48.930 --> 00:54.080
+I pretty quickly got excited about Docker and realized how awesome the container ecosystem
+
+11
+00:54.080 --> 00:59.660
+was going to become and saw that it was sort of the future of development and deployment and managing
+
+12
+00:59.660 --> 01:07.370
+servers. I started the local Meetup for Docker in early 2016 and I speak a lot there and talked a
+
+13
+01:07.370 --> 01:08.730
+lot with people there.
+
+14
+01:08.750 --> 01:13.940
+I've been teaching at workshops and at conferences a lot for over a year and a half now so I've taught
+
+15
+01:13.940 --> 01:19.370
+hundreds of people now how to use Docker and specifically orchestration and production concerns because
+
+16
+01:19.370 --> 01:23.240
+that's my focus and I run a couple of local Meetups.
+
+17
+01:23.240 --> 01:24.350
+I mentioned the Docker Meetup.
+
+18
+01:24.350 --> 01:27.980
+I also run a Code for America Meetup. I'm very excited about that.
+
+19
+01:27.980 --> 01:30.510
+You should totally check out Code for America.
+
+20
+01:30.950 --> 01:34.700
+And I'm a big believer in community and open source in particular.
+
+21
+01:34.700 --> 01:41.870
+So 3% of the profit for this course will actually be donated to a couple of charities that I
+
+22
+01:41.870 --> 01:47.060
+really believe in: the Electronic Frontier Foundation and the Free Software Foundation.
+
+23
+01:47.060 --> 01:49.370
+And you should definitely check those out as well.
+
+24
+01:49.550 --> 01:56.710
+When I'm not actually doing Docker in all of its forms I'm probably traveling with my wife or Crossfitting
+
+25
+01:56.780 --> 01:59.970
+or cooking or gaming.
+
+26
+01:59.990 --> 02:05.090
+So thanks so much for learning a little bit about me and I look forward to meeting you in the course
+
+27
+02:05.120 --> 02:06.860
+in the Q&A or in the Slack chat.

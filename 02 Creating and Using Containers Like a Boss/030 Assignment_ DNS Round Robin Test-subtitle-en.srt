@@ -1,0 +1,255 @@
+0
+00:05.770 --> 00:12.390
+The requirements for this assignment are very similar to the last assignment. You'll need to know how
+
+1
+00:12.390 --> 00:17.120
+to get into the shell of a container when you run it or after the fact.
+
+2
+00:19.170 --> 00:24.420
+And know some basics around Linux distributions and what's something like Ubuntu might be different
+
+3
+00:24.420 --> 00:33.280
+than Alpine or CentOS. And, of course, running a container. Then the basics of how DNS records might
+
+4
+00:33.280 --> 00:37.120
+work like what an alias record is or how to create one.
+
+5
+00:38.100 --> 00:44.170
+That would be handy because you're going to be doing some testing around DNS. For your next assignment,
+
+6
+00:44.530 --> 00:47.290
+we're going to do some DNS round robin testing.
+
+7
+00:47.410 --> 00:52.510
+And if you're not familiar with DNS round robin is the concept that you can have two different hosts
+
+8
+00:52.600 --> 00:57.760
+with DNS aliases that respond to the same DNS name.
+
+9
+00:57.790 --> 01:02.390
+When you think about something like google.com obviously they've got more than one server.
+
+10
+01:02.410 --> 01:09.400
+So, one of the techniques that big companies use to always make sure they're up 24/7 is to employ DNS
+
+11
+01:09.400 --> 01:15.490
+round robin as part of their strategy so that there's actually multiple IP addresses in DNS records
+
+12
+01:15.490 --> 01:18.260
+behind the name you're using on the Internet.
+
+13
+01:18.520 --> 01:20.500
+Now in containers it actually gets a lot simpler.
+
+14
+01:20.710 --> 01:26.800
+Here we've actually got this feature in Docker Engine 1.11 and newer.
+
+15
+01:26.800 --> 01:33.610
+We've had a feature where if we create a custom network, we can actually assign an alias so that multiple
+
+16
+01:33.610 --> 01:36.810
+containers can respond to the same DNS name.
+
+17
+01:36.820 --> 01:42.190
+So for this one you're going to first create a new virtual network, call it whatever you want, and you're
+
+18
+01:42.190 --> 01:48.190
+going to set up two containers using a new image called Elasticsearch; and, specifically the version
+
+19
+01:48.190 --> 01:49.840
+2 of Elasticsearch.
+
+20
+01:49.840 --> 01:57.460
+So Elasticsearch isn't really a part of this course, but it's becoming a popular data store for... well really
+
+21
+01:57.460 --> 01:58.210
+just for search.
+
+22
+01:58.210 --> 01:58.880
+Hence the name.
+
+23
+01:58.930 --> 01:59.230
+Right.
+
+24
+01:59.230 --> 02:04.810
+So it's actually in a JSON format when you hit it from curl. So what we're going to do is we're going
+
+25
+02:04.810 --> 02:08.800
+to actually use it as a quick test because it's really easy to use in this scenario.
+
+26
+02:08.800 --> 02:14.330
+You want to research and check out the --net-alias command.
+
+27
+02:14.380 --> 02:17.590
+That's actually an option for docker run.
+
+28
+02:17.590 --> 02:24.790
+And when you start a container, you're going to tell it, I want another DNS alias to call this container
+
+29
+02:24.790 --> 02:28.770
+by, not just its container name.
+
+30
+02:28.940 --> 02:34.710
+This gets around a little problem that if you've ever used Docker in production, and you've started
+
+31
+02:34.710 --> 02:40.050
+to add a lot of containers, you realize you can't add multiple containers with the same name...
+
+32
+02:40.130 --> 02:45.630
+but how can I resolve DNS on my networks and maybe have the same app installed twice.
+
+33
+02:45.630 --> 02:53.420
+Maybe I've got a dev and a test environment on the same server and I need to, in both of those, call something
+
+34
+02:53.480 --> 02:55.230
+search in the DNS.
+
+35
+02:55.640 --> 02:57.850
+Well this is how you get around that limitation.
+
+36
+02:57.890 --> 03:04.250
+You can just keep adding aliases to your containers when creating them and you'll find out that they
+
+37
+03:04.250 --> 03:08.550
+can actually respond just like a DNS round robin does.
+
+38
+03:08.570 --> 03:14.360
+So once you've started those up, you can use the alpine image to do an nslookup, and that will
+
+39
+03:14.360 --> 03:20.390
+simply return to you a list of the DNS addresses for the name search.
+
+40
+03:20.390 --> 03:24.710
+And remember on that one you're going to have to make sure that it's signed with the --net to
+
+41
+03:24.710 --> 03:28.860
+the same network that you assigned to the first two containers.
+
+42
+03:29.020 --> 03:35.530
+Then after you've got both of those containers resolving to the same search name, you can actually
+
+43
+03:35.530 --> 03:41.130
+use the curl command to get a quick output of the elasticsearch server.
+
+44
+03:41.470 --> 03:46.660
+And this is a little trick with elasticsearch and why it's good to use in this demo. The curl command
+
+45
+03:46.690 --> 03:48.710
+actually comes with a CentOS image.
+
+46
+03:48.850 --> 03:55.150
+So it's easy to just use CentOS in this case instead of Alpine or Ubuntu and also elasticsearch
+
+47
+03:55.720 --> 03:57.470
+runs on port 9200.
+
+48
+03:57.490 --> 04:03.600
+And since it returns an easy, short JSON result, it's quick and easy for this test.
+
+49
+04:03.610 --> 04:10.750
+And lastly elasticsearch actually gives random names to itself inside its configuration when it first
+
+50
+04:10.750 --> 04:11.400
+starts up.
+
+51
+04:11.410 --> 04:15.600
+It's kind of similar to how containers give themselves random names if you don't specify.
+
+52
+04:15.610 --> 04:21.370
+What we can do here is if you keep running that curl command over and over you'll actually notice
+
+53
+04:21.370 --> 04:28.420
+that the output...even though you're using the same search DNS name to do a curl on... you'll actually flip
+
+54
+04:28.420 --> 04:31.720
+back and forth between the two different elasticsearch containers.
+
+55
+04:31.930 --> 04:33.160
+It might not be even.
+
+56
+04:33.160 --> 04:37.330
+It's not going to exactly be one, then the other, then the first, then the second one. It's going to be a
+
+57
+04:37.330 --> 04:42.880
+little off, because that's kind of one of the downsides of DNS round robin, it's not a true load balancer.
+
+58
+04:42.890 --> 04:45.300
+I like to kind of call it the poor man's low balancer.
+
+59
+04:45.430 --> 04:53.860
+But in this case it'll give you a sense of how to use a virtual network with DNS built in to make it
+
+60
+04:53.860 --> 04:57.720
+easy to use multiple containers that have the same name.
+
+61
+04:57.840 --> 05:02.820
+And as always you can skip to the next lecture to watch me walk through it as I would do it.
+
+62
+05:02.820 --> 05:07.920
+But you might get to the same end result with typing slightly different commands or launching your containers a
+
+63
+05:07.920 --> 05:08.900
+slightly different way.

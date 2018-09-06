@@ -1,0 +1,563 @@
+0
+00:04.720 --> 00:09.910
+Requirements for this lecture are that you understand what an image is and that you've done a little
+
+1
+00:09.910 --> 00:12.510
+bit of work with containers.
+
+2
+00:13.150 --> 00:19.600
+In this lecture, we're going to take a quick tour around Docker Hub and get to know a few of its basic
+
+3
+00:19.600 --> 00:26.710
+features. Then we'll kind of discuss the difference between an official image and maybe other just
+
+4
+00:26.710 --> 00:30.850
+as good images, and how to tell the difference between a good image and a bad image.
+
+5
+00:31.900 --> 00:38.020
+Then I'll show a little bit around downloading images and how you can see the different tags that
+
+6
+00:38.020 --> 00:42.320
+they'll use and the difference between an Alpine image and other image options.
+
+7
+00:43.340 --> 00:44.030
+...
+
+8
+00:44.210 --> 00:50.330
+You should have signed into hub.docker.com. When you sign in your default home page is your
+
+9
+00:50.330 --> 00:54.800
+dashboard, which will show you all of your repositories, public and private.
+
+10
+00:54.800 --> 00:58.150
+You're not going to have any yet, but you can see I have some here.
+
+11
+00:58.150 --> 00:59.060
+They're all public.
+
+12
+00:59.090 --> 01:09.920
+I have one private. For now let's go to the top and search nginx. What we'll get back is the
+
+13
+01:09.920 --> 01:16.400
+search results of Docker Hub and you'll see that there's a lot. I could scroll for pages and pages.
+
+14
+01:17.000 --> 01:21.590
+One of the challenges is there's 15,000 images of Nginx.
+
+15
+01:21.740 --> 01:22.730
+That's a lot.
+
+16
+01:22.760 --> 01:27.170
+So I pretty much just use one or two.
+
+17
+01:27.350 --> 01:28.510
+The official one right here,
+
+18
+01:28.520 --> 01:33.360
+you'll see at the top, has 10 million-plus pulls.
+
+19
+01:33.410 --> 01:38.430
+There's several characteristics to figuring out what's the right image.
+
+20
+01:38.510 --> 01:44.470
+Like me, you're going to start using the images for your workflow that are related to what you do
+
+21
+01:44.750 --> 01:48.240
+and you're going to get used to specific ones. You're going to like specific ones.
+
+22
+01:48.260 --> 01:51.470
+Typically, we always start with the official.
+
+23
+01:51.470 --> 01:56.340
+The official is going to be the only one with the word 'official' actually below it.
+
+24
+01:56.360 --> 02:02.290
+It will also be the only one where its name doesn't have a forward slash in it.
+
+25
+02:02.300 --> 02:08.240
+When you and I create images on Docker Hub, we have to create them with our account name in front
+
+26
+02:08.240 --> 02:08.730
+of them.
+
+27
+02:08.870 --> 02:15.440
+So when you look at all these other ones, these are account names slash image repository names.
+
+28
+02:15.610 --> 02:20.350
+It might be actually an organization slash nginx or something like that.
+
+29
+02:20.450 --> 02:27.770
+But the only ones that get to have just the name of the repo are considered official. Official images
+
+30
+02:28.040 --> 02:34.430
+are ones that Docker, Inc. actually has a team of people that help take care of them, ensure that they
+
+31
+02:34.430 --> 02:39.950
+have quality documentation, that they're well tested and that they're put together properly with Dockerfiles
+
+32
+02:39.950 --> 02:46.970
+that are obeying best practice rules. They usually work with the official team of that software who
+
+33
+02:46.970 --> 02:51.800
+actually makes it to ensure that it's doing all the things that it should be doing.
+
+34
+02:52.130 --> 02:54.260
+So I'm going to click on this one.
+
+35
+02:54.710 --> 02:59.440
+Let's look at a couple of things about Official Repositories.
+
+36
+02:59.690 --> 03:06.080
+Like I said before, you're often going to be using officials to start with and then eventually you may
+
+37
+03:06.080 --> 03:11.780
+find that you want to change it slightly or add a few things to it and you'll make your own images.
+
+38
+03:11.780 --> 03:13.930
+Official images are a great way to start.
+
+39
+03:14.180 --> 03:17.730
+One of the best things about official images is their documentation.
+
+40
+03:17.840 --> 03:21.110
+They're always really great at documenting how to make them work,
+
+41
+03:21.320 --> 03:28.730
+what options there might be, what environment variables, what's the default port and so on.
+
+42
+03:29.210 --> 03:34.940
+So back up at the top, you'll notice these versions. Versions are a common feature of official repositories.
+
+43
+03:34.940 --> 03:39.720
+You don't have to have versions in every image but official ones do.
+
+44
+03:39.740 --> 03:45.770
+Because most open-source software there's always at least a few official versions out in the wild that
+
+45
+03:45.920 --> 03:48.650
+are officially maintained and supported.
+
+46
+03:48.650 --> 03:55.970
+That's what we have here. We have the mainline 1.11 for Nginx and then
+
+47
+03:55.970 --> 04:01.220
+we have what's considered the stable branch of Nginx, which is 1.10. We can see the little name
+
+48
+04:01.220 --> 04:04.050
+here says stable jessie Dockerfile.
+
+49
+04:04.070 --> 04:04.520
+All right.
+
+50
+04:04.640 --> 04:05.820
+So let's break this down.
+
+51
+04:05.990 --> 04:12.710
+1.11.9, mainline, 1, 1.11 and latest.
+
+52
+04:12.710 --> 04:15.650
+Those are all tags.
+
+53
+04:15.650 --> 04:23.870
+When we start talking about images, images aren't necessarily named. Images are tagged. A version
+
+54
+04:23.870 --> 04:26.480
+of an image can actually have more than one tag.
+
+55
+04:26.480 --> 04:30.290
+We're going to dive into this a little bit later when we start making our own images and we can
+
+56
+04:30.290 --> 04:32.240
+play around with tagging.
+
+57
+04:32.780 --> 04:39.170
+But for now, if I wanted to actually download that specific image, and you remember earlier that we actually
+
+58
+04:39.170 --> 04:40.190
+already downloaded it,
+
+59
+04:40.190 --> 04:46.920
+so if I do a docker image ls, you'll see the three images that we've worked with so far on my machine.
+
+60
+04:47.090 --> 04:51.740
+You see the tag that says latest. Now latest is a special tag.
+
+61
+04:52.010 --> 04:57.760
+It doesn't necessarily guarantee it's always the latest commit in the repository.
+
+62
+04:58.190 --> 05:06.440
+What it usually means is you're getting the latest version of this product. In the official
+
+63
+05:06.440 --> 05:07.530
+repositories,
+
+64
+05:07.580 --> 05:13.130
+it's very well-defined and consistent so that if you didn't really care right now exactly what version
+
+65
+05:13.130 --> 05:21.320
+you wanted, you just wanted the most current, then you could just say docker pull nginx. It would
+
+66
+05:21.320 --> 05:26.960
+download the latest. You'll notice that it already knew I had it, it checked the SHA to make sure it
+
+67
+05:26.960 --> 05:30.500
+matched the one from Docker Hub and said "Hey I've already got this image,
+
+68
+05:30.500 --> 05:41.130
+it's up to date." What if I wanted to download docker image version 1.11.9?
+
+69
+05:41.270 --> 05:45.640
+It's going to go check and see what it needs to do to download that image
+
+70
+05:45.650 --> 05:49.740
+and it turns out it doesn't need to do anything because it's the exact same version.
+
+71
+05:49.940 --> 05:51.610
+That's what this line means up here.
+
+72
+05:51.650 --> 05:58.740
+I can refer to this 'main, latest' version right here by any of these tags.
+
+73
+05:58.790 --> 06:05.210
+The reason is if I just wanted to stay on the latest version of 1.0, whatever that might be for
+
+74
+06:05.460 --> 06:10.730
+Nginx, I could just specify a 1. If I wanted to be more specific when I downloaded images and I wanted
+
+75
+06:10.730 --> 06:19.340
+the most latest version of 1.11, then I could just type 1.11 like this and just
+
+76
+06:19.340 --> 06:22.970
+leave out the .9 and it would download that one.
+
+77
+06:23.030 --> 06:29.150
+But in my case, I actually specified the most specific of all the 1.11.9 which shows
+
+78
+06:29.150 --> 06:34.670
+the point release and that was just to ensure that I got the exact version I wanted.
+
+79
+06:34.670 --> 06:40.820
+So in your software, a best practice is when you're going to production and you're actually testing software
+
+80
+06:40.820 --> 06:42.900
+that you're going to be using for others,
+
+81
+06:42.950 --> 06:45.440
+you always want to specify the exact version.
+
+82
+06:45.440 --> 06:49.460
+It's rare that you really want your software to update automatically.
+
+83
+06:49.520 --> 06:53.380
+You usually want to control that process with some other DevOps tool.
+
+84
+06:56.150 --> 07:01.130
+But when you're developing or just testing something locally, it's super easy with official images to
+
+85
+07:01.130 --> 07:03.900
+just type in the name and just assume you're going to get the latest.
+
+86
+07:04.130 --> 07:06.090
+So you'll notice here there's other ones.
+
+87
+07:06.110 --> 07:13.120
+There's 1.11.9-alpine and these all have very similar names to the first one
+
+88
+07:13.130 --> 07:15.040
+but they all have the word alpine in them.
+
+89
+07:15.050 --> 07:21.740
+We're going to get into base images and distributions later, but just for now, Alpine is actually
+
+90
+07:21.740 --> 07:24.210
+a distribution of Linux that's very very small.
+
+91
+07:24.230 --> 07:31.670
+It's actually less than 5MB in size I believe. This version will actually mean that it comes from
+
+92
+07:31.880 --> 07:39.710
+a base image of Alpine, keeping it very small and light, whereas the default one or the latest image actually
+
+93
+07:39.710 --> 07:45.380
+comes from jessie, which is a Debian distribution. It's a little larger in size probably a little
+
+94
+07:45.380 --> 07:47.640
+bit over 100MB.
+
+95
+07:47.760 --> 07:50.380
+In fact, we can actually go over here and we can look.
+
+96
+07:50.460 --> 07:54.720
+So nginx 182MB right here.
+
+97
+07:54.800 --> 08:06.730
+If I want to download that exact version of the Alpine, I can say 1.11.9-apline
+
+98
+08:09.370 --> 08:17.340
+and then do docker image ls and you'll see that the alpine version is actually only 54MB
+
+99
+08:17.590 --> 08:21.730
+and the latest version is 182MB.
+
+100
+08:21.730 --> 08:26.740
+You'll also notice that the three versions that I've downloaded all have the same image ID because
+
+101
+08:26.740 --> 08:34.830
+the image ID is based upon the cryptographic SHA of each image in Docker Hub.
+
+102
+08:34.870 --> 08:40.510
+So this isn't actually three different copies of 128MB images.
+
+103
+08:40.510 --> 08:41.950
+It's actually a little deceiving.
+
+104
+08:41.950 --> 08:48.430
+It's really just three tags of the exact same image ID and it's only total ticking up 182MB
+
+105
+08:48.430 --> 08:53.930
+and these are just two other lines showing the same image ID with different tags associated to it.
+
+106
+08:54.310 --> 08:56.550
+But enough about tags and versions for now.
+
+107
+08:56.710 --> 08:57.920
+Let's check a few more things out
+
+108
+08:57.920 --> 09:05.030
+in Docker Hub. If I go back up to nginx in the search bar and search for nginx again, you'll see
+
+109
+09:05.060 --> 09:09.100
+again that there's a lot of other options and these can be made by anyone.
+
+110
+09:09.290 --> 09:13.820
+You can create your own custom Nginx version and because it's open source software and free to
+
+111
+09:13.820 --> 09:18.080
+distribute, you can put it back up here and offer it up to the public.
+
+112
+09:18.080 --> 09:23.330
+This is very similar to the model of GitHub where they allow you to store open source software and
+
+113
+09:23.330 --> 09:27.510
+you can fork other people's software and also offer it up.
+
+114
+09:27.650 --> 09:29.180
+The same thing goes here.
+
+115
+09:29.240 --> 09:35.120
+You can use other people's images and download them, make them your own, re-upload them.
+
+116
+09:35.180 --> 09:41.840
+So if I ever want to consider not using an official repository, what I usually look for is a number
+
+117
+09:41.840 --> 09:49.150
+of stars and a number of polls because a popular repository, to me, tends to establish trust.
+
+118
+09:49.160 --> 09:53.960
+I always recommend you download and inspect the software before you use it. Look in their Dockerfile
+
+119
+09:53.960 --> 09:59.060
+and hopefully they'll have an open source repository that you can go look at exactly how they
+
+120
+09:59.060 --> 10:00.480
+made that image.
+
+121
+10:00.560 --> 10:08.090
+A good indication is when you see things that have five million pulls on them and 945 stars; clearly
+
+122
+10:08.090 --> 10:12.890
+there's something interesting about this package and why so many people are choosing it rather than
+
+123
+10:12.890 --> 10:14.220
+using the official image.
+
+124
+10:16.320 --> 10:20.370
+You can come in here and look at their repository.
+
+125
+10:20.430 --> 10:26.670
+You can actually see over on the right that he is linked to his GitHub repository where the actual
+
+126
+10:26.670 --> 10:33.300
+open source software is that builds this image so that you can go and inspect it; and, possibly download
+
+127
+10:33.390 --> 10:36.290
+the actual source code outside of an image.
+
+128
+10:36.330 --> 10:41.610
+But, he clearly has done something with this Nginx image that makes it better than the official
+
+129
+10:41.610 --> 10:43.520
+default.
+
+130
+10:43.530 --> 10:48.750
+A couple more things. On the top bar, you'll see Explore. Explore
+
+131
+10:48.760 --> 10:53.980
+just gives you a summary of all the official images and you can peruse through them and, trust
+
+132
+10:53.980 --> 10:58.750
+me, there's a lot. In fact, in the resources for this section,
+
+133
+10:58.840 --> 11:05.500
+you'll find a link to the actual list of official images and under 'library,'
+
+134
+11:05.500 --> 11:10.050
+this is where all the official images and their Dockerfiles live.
+
+135
+11:10.190 --> 11:18.200
+You can see there's a lot. As a quick recap, in this lecture we talked about Docker Hub and how it's
+
+136
+11:18.200 --> 11:22.400
+similar to being the apt package manager for Containers,
+
+137
+11:22.400 --> 11:26.650
+Then how to recognize official images and how to use them.
+
+138
+11:27.080 --> 11:33.090
+Then I helped you figure out how to determine a good public image from maybe a not-so-good one.
+
+139
+11:33.620 --> 11:40.080
+Then a few tips about base images and how Alpine ones are typically smaller than their Debian counterparts.
+
+140
+11:40.190 --> 11:43.590
+So we're going to use these skills in the rest of this section.

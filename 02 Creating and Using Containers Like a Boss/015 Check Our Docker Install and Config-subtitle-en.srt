@@ -1,0 +1,363 @@
+0
+00:08.680 --> 00:13.480
+Alright, since this is the first lecture in this section, I'm going to cover real quick what this whole
+
+1
+00:13.480 --> 00:16.130
+section is about and that's containers.
+
+2
+00:16.240 --> 00:21.850
+Containers are the fundamental building block of the Docker toolkit and that's one of the first things
+
+3
+00:21.850 --> 00:22.780
+we're going to learn.
+
+4
+00:22.810 --> 00:27.760
+We're not going to build images or do any advanced stuff until once we've learned what containers are,
+
+5
+00:28.060 --> 00:35.180
+how to run them, a little bit of how they're different from a VM, and other basic functionality of a container.
+
+6
+00:35.440 --> 00:40.730
+So the first thing we want to do is make sure that we have the latest version of Docker and it's working.
+
+7
+00:40.780 --> 00:46.450
+Once we get through that and this lecture, other lectures will talk about how to start containers, how
+
+8
+00:46.450 --> 00:50.230
+to manage different aspects of a container: start it,
+
+9
+00:50.230 --> 00:51.650
+stop it,
+
+10
+00:51.670 --> 00:52.420
+delete it,
+
+11
+00:52.420 --> 00:53.020
+create it...
+
+12
+00:53.020 --> 00:54.120
+that sort of stuff.
+
+13
+00:54.190 --> 00:59.740
+And we're going to use Nginx for all that. Nginx is a really basic web server that is going
+
+14
+00:59.740 --> 01:06.070
+to be easy for us to use just to learn the Docker commands and how to do Docker container stuff.
+
+15
+01:06.070 --> 01:11.860
+After that, we're going to jump in some networking basics. You'll learn Docker networking and how the
+
+16
+01:11.860 --> 01:13.330
+containers talk to each other.
+
+17
+01:13.840 --> 01:18.310
+And for this whole section, the only real requirement is that you have the latest version of Docker
+
+18
+01:18.310 --> 01:20.740
+installed and that it's working properly.
+
+19
+01:20.740 --> 01:25.610
+So in this lecture we're going to make sure real quick that that's set up correctly.
+
+20
+01:25.700 --> 01:31.070
+In order for the Docker command line to work properly, you need to make sure you're in the proper
+
+21
+01:31.100 --> 01:33.640
+terminal for your operating system.
+
+22
+01:33.650 --> 01:39.770
+I'm going to be using Mac, so I can use either Terminal or iTerm2; the two popular choices on the Mac.
+
+23
+01:39.860 --> 01:44.720
+Then on Windows, if you're on Docker for Windows you'll use PowerShell.
+
+24
+01:44.720 --> 01:50.150
+If you're on the Docker ToolBox, you'll use the QuickStart Terminal that comes with Docker ToolBox.
+
+25
+01:50.390 --> 01:54.020
+And if you're on Linux you'll just use a Linux shell of your choosing.
+
+26
+01:54.020 --> 01:58.700
+These are all things that I talk about in the previous section for your set-up of your own operating
+
+27
+01:58.700 --> 01:59.390
+system.
+
+28
+01:59.390 --> 02:01.850
+So if you have more questions just look at those videos.
+
+29
+02:02.060 --> 02:03.220
+But let's get started.
+
+30
+02:03.230 --> 02:10.180
+The first command is docker version. This command simply returns the version of your client -- 
+
+31
+02:10.190 --> 02:17.240
+that's the CLI that we just used -- and the server, also called the engine; and, the engine is running
+
+32
+02:17.410 --> 02:19.820
+in the background on your machine.
+
+33
+02:19.820 --> 02:23.530
+On Windows it's usually called a service on Mac and Linux,
+
+34
+02:23.600 --> 02:24.910
+ot's usually called a daemon.
+
+35
+02:25.100 --> 02:31.670
+And what is happening here is our docker command line is actually talking to the server on my machine and
+
+36
+02:31.670 --> 02:35.550
+then returning its values, as well as the client values themselves.
+
+37
+02:35.750 --> 02:39.390
+Ideally they should be the same but they don't have to be the same versions.
+
+38
+02:39.650 --> 02:46.920
+And you want them to be the latest version as possible. If you have an older version like 1.12 or 1.13,
+
+39
+02:47.000 --> 02:51.880
+you definitely want to make sure that you go to the previous section and get the proper versions installed
+
+40
+02:51.890 --> 02:56.160
+because we'll be using a lot of new features that are only in the latest versions.
+
+41
+02:56.390 --> 03:02.260
+The fact that I did get returned information from the server, validates that I can talk to the server
+
+42
+03:02.330 --> 03:03.800
+and that it's working properly.
+
+43
+03:03.800 --> 03:08.480
+If you do get an error there, that means maybe you need to do a sudo docker version.
+
+44
+03:08.480 --> 03:14.180
+If you're maybe on Linux, or possibly your Docker isn't actually running and you maybe need to go to the
+
+45
+03:14.180 --> 03:18.800
+previous section setup videos to make sure that Docker's running properly.
+
+46
+03:18.800 --> 03:21.890
+Now let's get a little more information out of our Docker engine.
+
+47
+03:21.890 --> 03:29.930
+If we do a docker info, it'll return a lot more stuff than just the version. It'll actually give us a
+
+48
+03:29.930 --> 03:34.280
+lot of details about our configuration and setup for our engine.
+
+49
+03:34.280 --> 03:39.410
+Some of these are obvious, like the number of containers you have running or possibly the number of images
+
+50
+03:39.410 --> 03:41.330
+you have stored in Docker.
+
+51
+03:41.480 --> 03:44.920
+But a lot of this other stuff may not make sense now and that's fine.
+
+52
+03:44.930 --> 03:48.080
+We're going to go through a lot of it throughout this course.
+
+53
+03:48.080 --> 03:51.660
+Now you might be wondering what are all the commands you can use in Docker.
+
+54
+03:51.830 --> 03:57.430
+And you can get a list of those by simply just typing docker and hitting return.
+
+55
+03:57.490 --> 04:00.230
+You'll see a long list down here at the bottom.
+
+56
+04:00.490 --> 04:05.760
+This is not actually the full list, because if you notice up here at the top,
+
+57
+04:05.950 --> 04:08.310
+we now have this management command.
+
+58
+04:08.380 --> 04:16.030
+So starting in early 2017, Docker realized that we're getting so many commands down here in this list --
+
+59
+04:16.620 --> 04:22.360
+where I would just type docker space and the command -- that there were so many of them that they needed
+
+60
+04:22.360 --> 04:26.850
+to create an easier way to organize all these commands.
+
+61
+04:26.980 --> 04:33.510
+That's when they created the management commands and that creates a format where you have docker
+
+62
+04:33.540 --> 04:41.090
+space the management command and then the subcommand. So you will see throughout this course that we're
+
+63
+04:41.090 --> 04:43.460
+trying to use a little bit of both.
+
+64
+04:43.520 --> 04:46.900
+We mostly will use the new model of Docker.
+
+65
+04:47.300 --> 04:53.730
+Let's use an example here of container run -- and that's the new format of that command.
+
+66
+04:53.840 --> 04:58.910
+But since the beginning of the Docker project, docker run has usually been the way that we type that
+
+67
+04:58.910 --> 04:59.650
+command.
+
+68
+04:59.660 --> 05:04.820
+It's just recently that the docker container run has become the new way to run that command.
+
+69
+05:04.820 --> 05:08.960
+Now the cool thing about Docker, is that it's really focused on backwards compatibility.
+
+70
+05:08.960 --> 05:15.410
+So the docker run will probably work forever; but, new commands that we get are not going to be using
+
+71
+05:15.440 --> 05:17.960
+this docker command value.
+
+72
+05:17.960 --> 05:25.460
+It will be using docker space command space subcommand value. So, each time I use these commands,
+
+73
+05:25.460 --> 05:29.810
+we will explain what they are and I will show you possibly the old way of doing it and the new way of
+
+74
+05:29.810 --> 05:32.690
+doing it depending on whether the command has that option.
+
+75
+05:32.750 --> 05:35.190
+So it'll start to make sense as we go through this course.
+
+76
+05:37.280 --> 05:42.140
+OK even though we had a very short lecture, and it was pretty simple, let's just review real quick those
+
+77
+05:42.140 --> 05:42.980
+commands.
+
+78
+05:42.980 --> 05:48.380
+The docker version command is the one I always use first on a new Docker system; just to make sure that
+
+79
+05:48.380 --> 05:52.780
+my client can talk to the engine and that I'm running the version that I would expect.
+
+80
+05:52.820 --> 05:59.360
+Secondly docker info gives me a lot of the configuration values out of the engine just to make sure that
+
+81
+05:59.360 --> 06:01.840
+it's set up that way that I expect.
+
+82
+06:01.890 --> 06:06.840
+And lastly, we talked about the command line structure. The old way still works.
+
+83
+06:06.870 --> 06:12.540
+So for older commands that have been around for the last 4+ years, they still work with docker
+
+84
+06:12.570 --> 06:14.400
+command and then the options.
+
+85
+06:14.400 --> 06:21.030
+But for new commands going forward, Docker is creating a new model of the management commands with docker
+
+86
+06:21.240 --> 06:25.550
+space command space subcommand. The example we use was docker run, 
+
+87
+06:25.560 --> 06:31.350
+one of the most common commands you use in Docker where the old way was docker run but the new way of
+
+88
+06:31.350 --> 06:33.370
+docker container run also works.
+
+89
+06:33.540 --> 06:37.860
+And you can decide how you want to use those commands whether you want to use the old way or the new
+
+90
+06:37.860 --> 06:39.580
+way because they both will still work.

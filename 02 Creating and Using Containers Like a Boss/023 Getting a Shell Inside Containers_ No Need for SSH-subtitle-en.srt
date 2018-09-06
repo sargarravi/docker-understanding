@@ -1,0 +1,540 @@
+1
+00:00:01,660 --> 00:00:08,850
+Requirements for this lecture are that you know how to start a container from previous lectures.
+
+2
+00:00:09,520 --> 00:00:15,190
+We just finished the last lecture talking about seeing what's going on in a container from the outside.
+
+3
+00:00:15,220 --> 00:00:20,710
+This is all about getting into a container to mess around with the inside. There's a few commands
+
+4
+00:00:20,800 --> 00:00:21,710
+that we can use.
+
+5
+00:00:21,730 --> 00:00:25,510
+The first one is container run with a -it.
+
+6
+00:00:25,540 --> 00:00:31,600
+We'll talk about how the -it works to actually get a shell inside the container.
+
+7
+00:00:32,050 --> 00:00:37,320
+Then for running containers that you want to run a second process, you can also use the container
+
+8
+00:00:37,360 --> 00:00:40,390
+exec, and we'll show several examples of that.
+
+9
+00:00:40,720 --> 00:00:46,600
+Then along the way we're going to actually mention a few differences between a regular Linux distribution,
+
+10
+00:00:46,600 --> 00:00:50,600
+like Ubuntu, for installing on a virtual machine or on hardware.
+
+11
+00:00:50,710 --> 00:00:54,660
+And then what those Linux distros are like inside of a container.
+
+12
+00:00:54,760 --> 00:00:55,960
+Let's get started.
+
+13
+00:00:56,230 --> 00:00:59,940
+Looking into a container from the outside is very handy at times.
+
+14
+00:01:00,010 --> 00:01:04,750
+But one of the first questions that people often ask me is how do I get into the container and actually
+
+15
+00:01:04,750 --> 00:01:07,230
+do things in it live from the command line.
+
+16
+00:01:07,720 --> 00:01:13,480
+Sometimes people confuse this with wanting an SSH Server inside their container so they can ssh
+
+17
+00:01:13,480 --> 00:01:14,160
+into it.
+
+18
+00:01:14,530 --> 00:01:19,240
+But we don't actually need to do that because we have several commands at our disposal that let us get
+
+19
+00:01:19,240 --> 00:01:22,040
+a shell inside the container itself while it's running.
+
+20
+00:01:22,330 --> 00:01:27,720
+The first one is just the docker container run command.
+
+21
+00:01:27,790 --> 00:01:30,710
+But we're going to specify a few extra options.
+
+22
+00:01:30,760 --> 00:01:31,810
+We're going to do a -it.
+
+23
+00:01:31,810 --> 00:01:36,610
+The -it is actually two separate options.
+
+24
+00:01:36,610 --> 00:01:45,850
+If I just show the help real quick, you can see that the t actually gives us a pseudo tty or
+
+25
+00:01:45,970 --> 00:01:49,820
+a prompt similar to what you would have through ssh.
+
+26
+00:01:50,020 --> 00:01:52,540
+And then if we scroll up to i,
+
+27
+00:01:52,720 --> 00:01:57,950
+that's really what allows us to keep that session open so that we can keep running more commands.
+
+28
+00:01:58,760 --> 00:02:10,640
+If we do a docker container run -it, and then run another nginx. Let's call it proxy.
+
+29
+00:02:10,640 --> 00:02:14,210
+Then we're going to have to specify an alternate command.
+
+30
+00:02:14,210 --> 00:02:19,490
+If you remember at the beginning of this section where we talked about the format of the docker command
+
+31
+00:02:19,490 --> 00:02:26,480
+line, when you're doing a docker container run, as you can see through the help, here at the end, after
+
+32
+00:02:26,480 --> 00:02:32,300
+the image, you have optional command and arguments that you can send in to this new container that you're
+
+33
+00:02:32,300 --> 00:02:38,420
+about to start to tell it what to run. The image has a default command in it that we will see later how
+
+34
+00:02:38,420 --> 00:02:39,340
+to configure.
+
+35
+00:02:39,380 --> 00:02:44,880
+But if you wanted to change what was run on startup, you can do that right from the run line.
+
+36
+00:02:44,900 --> 00:02:51,740
+Let's just say Bash. Because Bash is one of the common shells that you would usually find in a container
+
+37
+00:02:52,120 --> 00:02:54,390
+that will give you a shell to work with.
+
+38
+00:02:55,120 --> 00:02:56,870
+Look at that. I'm in a prompt.
+
+39
+00:02:56,890 --> 00:03:03,280
+You'll notice my prompt says root which is the user that the container started as. It doesn't actually
+
+40
+00:03:03,280 --> 00:03:04,600
+mean I'm root on the host.
+
+41
+00:03:04,600 --> 00:03:08,300
+It just means I'm acting as root on the container.
+
+42
+00:03:08,560 --> 00:03:11,660
+That number after it is actually the container ID.
+
+43
+00:03:11,720 --> 00:03:17,370
+If I do a ls -al, I get a full listing of everything where I'm at.
+
+44
+00:03:17,380 --> 00:03:21,410
+And you can see that I'm in the root path of the file system inside the container.
+
+45
+00:03:21,580 --> 00:03:28,000
+I'm actually looking at all the files inside the container which is based on the Nginx image.
+
+46
+00:03:28,000 --> 00:03:31,860
+From here, I could go change config files,
+
+47
+00:03:31,990 --> 00:03:37,180
+I could download packages from the internet and do just about any common administrative thing that you
+
+48
+00:03:37,180 --> 00:03:39,240
+would do from a normal shell.
+
+49
+00:03:39,370 --> 00:03:45,790
+To get out of the shell when you're done, I'm going to type exit, like you would with any shell and now that
+
+50
+00:03:45,790 --> 00:03:47,100
+container has stopped.
+
+51
+00:03:47,110 --> 00:03:51,910
+If we actually did a docker container ls, you would not see it there.
+
+52
+00:03:51,910 --> 00:03:54,090
+Remember, we called it proxy.
+
+53
+00:03:54,220 --> 00:03:55,780
+So I had to do a -a.
+
+54
+00:03:55,960 --> 00:04:03,040
+And it's there. Now see the command that it ran. The default command for an Nginx container is to run
+
+55
+00:04:03,040 --> 00:04:04,510
+the Nginx program itself.
+
+56
+00:04:04,510 --> 00:04:10,420
+But when we typed our last command, we changed that default program to actually be Bash, which gave us
+
+57
+00:04:10,420 --> 00:04:18,270
+our shell. When we exited the shell, the container stopped. Because container
+
+58
+00:04:10,420 --> 00:04:18,270
+s only run as long as
+
+59
+00:04:18,270 --> 00:04:24,120
+the command that it ran on startup runs. Since we changed it to Bash, simply exiting Bash quit it
+
+60
+00:04:24,320 --> 00:04:25,040
+Now,
+
+61
+00:04:25,260 --> 00:04:32,430
+what if I used a full distribution of Linux instead of actually doing the Nginx. Let's do a full
+
+62
+00:04:32,430 --> 00:04:34,260
+Ubuntu.
+
+63
+00:04:34,660 --> 00:04:40,350
+It's actually going to download the Ubuntu image and place me in the prompt of this new container.
+
+64
+00:04:40,350 --> 00:04:43,980
+If you've ever used Ubuntu, you know about the apt package manager.
+
+65
+00:04:43,980 --> 00:04:52,950
+So I can use that here. Just like I would in a standard Ubuntu server. I could actually install
+
+66
+00:04:52,950 --> 00:04:55,590
+something apt-get install
+
+67
+00:04:55,770 --> 00:04:57,230
+-y
+
+68
+00:04:57,350 --> 00:04:58,730
+curl.
+
+69
+00:04:58,930 --> 00:05:05,990
+The thing about Ubuntu and other distributions inside a container is that they're usually very minimal.
+
+70
+00:05:06,010 --> 00:05:11,920
+A live CD or a download of the ISO of Ubuntu which you would normally put on a virtual machine is going
+
+71
+00:05:11,920 --> 00:05:17,530
+to have a lot more software installed by default than a Ubuntu container which is really a very minimal
+
+72
+00:05:17,530 --> 00:05:22,090
+version of Ubuntu that you can always add more software to with the apt package manager.
+
+73
+00:05:22,090 --> 00:05:28,240
+So now this running container has curl installed and I can use it just like I would on a local machine.
+
+74
+00:05:28,540 --> 00:05:35,640
+Once I exit the shell again, it will actually stop the container. docker container
+
+75
+00:05:35,650 --> 00:05:42,870
+ls. You notice I don't see it. There's that Ubuntu image that we just ran.
+
+76
+00:05:42,900 --> 00:05:47,800
+If I started that container up again, it would have curl installed in it.
+
+77
+00:05:47,810 --> 00:05:54,840
+But if I created a new container from the Ubuntu image, that different container would not have the curl
+
+78
+00:05:55,050 --> 00:05:56,650
+command line installed.
+
+79
+00:05:56,700 --> 00:06:01,660
+What if we wanted to rerun that container and get Bash right back in it again.
+
+80
+00:06:01,860 --> 00:06:05,310
+We could use the docker container start command.
+
+81
+00:06:05,310 --> 00:06:10,800
+You'll notice it's slightly different when we start an existing container, but it's similar to the
+
+82
+00:06:10,800 --> 00:06:13,240
+it...it's just an ai.
+
+83
+00:06:13,460 --> 00:06:20,190
+Then the name of our container Ubuntu. You'll notice we're right back in it and I can curl google
+
+84
+00:06:20,190 --> 00:06:23,530
+again and it works.
+
+85
+00:06:24,270 --> 00:06:26,490
+If I exit, it stopped it again.
+
+86
+00:06:28,970 --> 00:06:35,270
+What if I want to actually see the shell inside a running container that's already running something
+
+87
+00:06:35,270 --> 00:06:37,270
+like MySQL or Nginx.
+
+88
+00:06:37,490 --> 00:06:38,980
+We can do that too.
+
+89
+00:06:39,320 --> 00:06:44,790
+And that's using the exec command. docker container exec.
+
+90
+00:06:45,510 --> 00:06:47,970
+And you can see we have a few options here.
+
+91
+00:06:48,440 --> 00:06:55,550
+And the most common one is...let's say I want to jump into the MySQL container because I need to do
+
+92
+00:06:55,550 --> 00:06:58,580
+some administrative stuff on the MySQL itself.
+
+93
+00:06:58,700 --> 00:07:05,270
+I could do the it again and then the name of the container. Then the program I want to run.
+
+94
+00:07:05,270 --> 00:07:11,270
+And in this case again it's Bash and I'm now in the container with MySQL.
+
+95
+00:07:11,360 --> 00:07:19,370
+I can actually do a ps aux right inside the container which lists the processes. This will, of
+
+96
+00:07:19,370 --> 00:07:26,420
+course, show me the MySQL daemon that's running in the background, as well as the Bash process that I'm
+
+97
+00:07:26,420 --> 00:07:29,620
+currently sitting in, as well as the ps command that
+
+98
+00:07:29,630 --> 00:07:35,960
+I just ran. In this shell, I could jump into MySQL itself with the mysql command line. You'll
+
+99
+00:07:35,960 --> 00:07:44,480
+notice when I exit this Bash shell and do an ls, MySQL is still running. Because the docker container exec
+
+100
+00:07:44,540 --> 00:07:48,370
+actually runs an additional process on an existing running container,
+
+101
+00:07:48,530 --> 00:07:53,990
+it's not going to affect the root process for the MySQL daemon. Let's try one more.
+
+102
+00:07:54,230 --> 00:07:59,180
+As you can see here this is very useful for jumping into containers when you need to troubleshoot or
+
+103
+00:07:59,180 --> 00:08:05,450
+when you need to change something slightly on a running system, as well as using containers of different
+
+104
+00:08:05,450 --> 00:08:10,700
+distributions to give you the environment you would have if you had a full machine like a Ubuntu or
+
+105
+00:08:10,700 --> 00:08:11,690
+an Alpine.
+
+106
+00:08:11,690 --> 00:08:18,230
+Now what's Alpine? We haven't mentioned Alpine before. Alpine is another distribution of Linux, but Alpine
+
+107
+00:08:18,230 --> 00:08:20,180
+is designed to be very small.
+
+108
+00:08:20,180 --> 00:08:23,620
+It's actually only 5MB in size.
+
+109
+00:08:23,810 --> 00:08:33,620
+If I do a docker pull alpine, that will pull down the latest Alpine image and if I do a docker image
+
+110
+00:08:33,890 --> 00:08:40,860
+ls, you can actually see how small the Alpine image is compared to the Ubuntu.
+
+111
+00:08:41,330 --> 00:08:46,410
+The neat thing about Alpine is that it also comes with its own package manager.
+
+112
+00:08:46,580 --> 00:08:52,280
+So you'll see Alpine as an option on Docker Hub alot in the next section when we go over images and
+
+113
+00:08:52,300 --> 00:08:53,120
+Docker Hub.
+
+114
+00:08:53,390 --> 00:09:04,730
+But for now let's do a Bash shell inside of Alpine.  docker container run -it alpine bash.
+
+115
+00:09:07,690 --> 00:09:09,100
+Now what just happened here?
+
+116
+00:09:09,100 --> 00:09:10,300
+Why did I get in there?
+
+117
+00:09:11,160 --> 00:09:18,360
+It tells me that it's starting the container process and it caused the executable file bash to not be found
+
+118
+00:09:18,360 --> 00:09:24,010
+in the path. And what that really means is that Bash isn't in the container.
+
+119
+00:09:24,010 --> 00:09:30,070
+And this goes back to the concept that we can only run things in the container that already exists in
+
+120
+00:09:30,070 --> 00:09:30,730
+its image
+
+121
+00:09:30,730 --> 00:09:32,080
+when you started it.
+
+122
+00:09:32,380 --> 00:09:36,250
+Or maybe something that you've added later through the exec or run commands.
+
+123
+00:09:36,400 --> 00:09:39,520
+But in this case, how would I get in the Alpine image?
+
+124
+00:09:39,520 --> 00:09:47,050
+Well, Alpine is so small that it doesn't actually have Bash in it. But it does have sh. So we can replace
+
+125
+00:09:47,050 --> 00:09:53,500
+the command with sh, which is not quite as full featured as Bash but does get us right into the container.
+
+126
+00:09:53,860 --> 00:09:58,870
+If you were to search Alpine Linux on the internet, you would learn that its package manager is
+
+127
+00:09:58,930 --> 00:10:04,230
+apk and we could actually use that to install Bash if we really needed it.
+
+128
+00:10:04,960 --> 00:10:08,160
+Just to recap real quick of what we learned in this lesson.
+
+129
+00:10:08,480 --> 00:10:14,410
+We learned about the -it option for container run, which gives us the equivalent of an interactive
+
+130
+00:10:14,410 --> 00:10:19,450
+shell to actually do things in the container as we would if we were ssh'd into a server of some sort.
+
+131
+00:10:20,440 --> 00:10:22,440
+Then we learned a new command for
+
+132
+00:10:22,450 --> 00:10:29,950
+docker container exec with the it that does exactly the same thing as run, but it does it on an
+
+133
+00:10:29,950 --> 00:10:34,640
+existing container that's running not starting a new container.
+
+134
+00:10:34,960 --> 00:10:40,390
+And last, we learned a little bit about Alpine and how that's different from major Linux distributions
+
+135
+00:10:40,390 --> 00:10:44,820
+and how it's actually like 4MB in size and ideal for container images.
+

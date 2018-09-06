@@ -1,0 +1,352 @@
+1
+00:00:04,240 --> 00:00:11,670
+Let's dive into the Dockerfile, which is actually a recipe for creating your image.
+
+2
+00:00:11,740 --> 00:00:17,200
+So far, all of the Docker images we've been using were created from Dockerfiles where you can go look
+
+3
+00:00:17,200 --> 00:00:18,330
+at them on Docker Hub.
+
+4
+00:00:18,340 --> 00:00:25,510
+If you've cloned my repository from the resources listed in the first section you should see a
+
+5
+00:00:25,510 --> 00:00:32,380
+docker sample file 1 directory, and in there we should have just one file. A Dockerfile.
+
+6
+00:00:32,380 --> 00:00:38,860
+We're going to go line by line and talk about these different stanzas. A Dockerfile seems to look
+
+7
+00:00:38,860 --> 00:00:40,820
+like a shell script, but it's not.
+
+8
+00:00:40,840 --> 00:00:45,430
+It's not a batch file, it's not a shell script. It's a totally different language of file that's unique
+
+9
+00:00:45,430 --> 00:00:49,320
+to Docker and the default name is Dockerfile with a capital D.
+
+10
+00:00:49,390 --> 00:00:53,800
+But, from the command line, whenever you need to deal with a Dockerfile using the docker command, you can
+
+11
+00:00:53,800 --> 00:00:59,320
+actually use the dash f. Which is actually common amongst a lot of the tools with Docker, you can use
+
+12
+00:00:59,320 --> 00:01:02,660
+dash f to specify a different file than a default.
+
+13
+00:01:03,130 --> 00:01:08,610
+So, first up is the from command. The from command is in every Dockerfile. It's required to be there.
+
+14
+00:01:08,650 --> 00:01:11,280
+It's normally a minimal distribution.
+
+15
+00:01:11,320 --> 00:01:13,070
+In this case it's Debian.
+
+16
+00:01:13,180 --> 00:01:16,810
+But a lot of times nowadays it's going to be Alpine.
+
+17
+00:01:16,810 --> 00:01:22,390
+And really, the reason you would use these is to save yourself time and pain. Because these minimal distributions
+
+18
+00:01:22,390 --> 00:01:27,040
+are actually much smaller than the CDs you would use to install a virtual machine from them.
+
+19
+00:01:27,040 --> 00:01:32,200
+For example, the Ubuntu one doesn't even have cURL in it, whereas obviously, if you installed
+
+20
+00:01:32,600 --> 00:01:37,480
+a full Ubuntu installation on a VM it would have cURL and a lot of other commands already installed.
+
+21
+00:01:37,480 --> 00:01:41,890
+Because all of these distributions are official images, it means that they're going to be always up
+
+22
+00:01:41,890 --> 00:01:45,720
+to date with the latest security patches and you can depend and trust on them.
+
+23
+00:01:45,760 --> 00:01:51,670
+And one of the main benefits for using them in containers is to use their package distribution systems
+
+24
+00:01:52,120 --> 00:01:54,790
+to install whatever software you need in your package.
+
+25
+00:01:55,000 --> 00:02:00,350
+In this case, we're actually using the Jessie release, which is what's after the colon.
+
+26
+00:02:00,460 --> 00:02:05,800
+And, as you remember from our Docker Hub conversation, there's lots of different options you can specify
+
+27
+00:02:05,800 --> 00:02:07,680
+here for the Debian repository.
+
+28
+00:02:08,580 --> 00:02:13,750
+Next, we have the ENV stanza, and ENV is for environment variables.
+
+29
+00:02:13,770 --> 00:02:19,040
+It's a way to set environment variables, which are actually very important in containers because they're
+
+30
+00:02:19,050 --> 00:02:26,340
+the main way we set keys and values for container building and for running containers.
+
+31
+00:02:26,340 --> 00:02:32,100
+In this case, it's actually setting the version of Nginx it would like us to install and this environment
+
+32
+00:02:32,100 --> 00:02:35,960
+variable will be set so that any subsequent lines will be able to use it.
+
+33
+00:02:36,030 --> 00:02:42,270
+Now, as a reminder from previous lectures, each one of these stanzas is an actual layer in our Docker
+
+34
+00:02:42,270 --> 00:02:43,090
+image.
+
+35
+00:02:43,110 --> 00:02:47,200
+So the order of them actually matters, because it does work top down.
+
+36
+00:02:47,310 --> 00:02:52,830
+As you'll see by this relatively long run command here for the next one. Youll see that it looks like
+
+37
+00:02:52,830 --> 00:02:54,200
+one long command.
+
+38
+00:02:54,450 --> 00:03:00,720
+What it is doing is really just executing shell commands inside this container as it's building
+
+39
+00:03:00,720 --> 00:03:01,090
+it.
+
+40
+00:03:01,110 --> 00:03:07,800
+You'll usually see run commands when you need to install software with a package repository, or you
+
+41
+00:03:07,800 --> 00:03:13,150
+need to do some unzipping, or some file edits inside the container itself.
+
+42
+00:03:13,260 --> 00:03:19,380
+Run commands can also run shell scripts that you've copied in earlier in the file or any commands that
+
+43
+00:03:19,380 --> 00:03:21,190
+you can access from inside the container
+
+44
+00:03:21,210 --> 00:03:23,520
+at that point in time in the file.
+
+45
+00:03:23,520 --> 00:03:28,890
+Since we're coming from Debian, this run command has access to all the commands and binaries that
+
+46
+00:03:28,890 --> 00:03:30,740
+would have been installed with that release.
+
+47
+00:03:30,780 --> 00:03:37,200
+And in this one for Nginx, this list of commands is more or less adding a key to the repository where
+
+48
+00:03:37,200 --> 00:03:42,700
+you can get the package to install the latest Nginx from the official Nginx repository.
+
+49
+00:03:42,720 --> 00:03:47,130
+There's a few things here that are really key in making good Dockerfiles and we'll actually talk
+
+50
+00:03:47,130 --> 00:03:50,260
+about this more in a later section where we talk about best practices.
+
+51
+00:03:50,520 --> 00:03:51,830
+But two things to note.
+
+52
+00:03:52,110 --> 00:03:57,080
+The reason that we're adding all these commands with the double ampersand here, so that they're chained
+
+53
+00:03:57,090 --> 00:04:01,850
+one after the other, is because, if you remember, each stanza is its own layer.
+
+54
+00:04:01,890 --> 00:04:07,430
+What this does is ensures that all of these commands are fit into one single layer.
+
+55
+00:04:07,440 --> 00:04:09,040
+It saves us a little time.
+
+56
+00:04:09,090 --> 00:04:14,350
+It saves us space. And it's so common that you'll probably see it in every Dockerfile on Docker Hub.
+
+57
+00:04:14,610 --> 00:04:17,760
+Okay, on line 27 we've got another run command.
+
+58
+00:04:17,820 --> 00:04:22,340
+This one is all about pointing our log files to the stdout
+
+59
+00:04:22,360 --> 00:04:23,660
+and to the stderr.
+
+60
+00:04:23,670 --> 00:04:31,980
+We'll see later, the proper way to do logging inside a container is to not log to a log file. And there's
+
+61
+00:04:32,010 --> 00:04:35,490
+no syslogd or any other syslog service
+
+62
+00:04:35,490 --> 00:04:41,100
+inside a container. Docker actually handles all of our logging for us. All we have to do inside the
+
+63
+00:04:41,100 --> 00:04:46,800
+container is make sure that everything we want to be captured in the logs is spit to stdout and stderr
+
+64
+00:04:46,860 --> 00:04:49,400
+and docker will handle the rest.
+
+65
+00:04:49,410 --> 00:04:55,290
+There's actually logging drivers that we can use in the Docker Engine itself to control all the logs
+
+66
+00:04:55,290 --> 00:04:57,490
+for all the containers on our host.
+
+67
+00:04:57,570 --> 00:04:59,670
+And so that's really what you want to do with them.
+
+68
+00:04:59,670 --> 00:05:04,100
+It adds more complexity to your app if your app is actually doing the logging itself.
+
+69
+00:05:04,110 --> 00:05:09,120
+And then, if you have to deal with files in every container, now you've got a problem of how do you get those
+
+70
+00:05:09,120 --> 00:05:16,530
+files out, and searchable, and accessible. Here, we're taking the default Nginx logs and we're actually
+
+71
+00:05:16,530 --> 00:05:19,110
+linking them to the stdout.
+
+72
+00:05:19,110 --> 00:05:20,980
+So that Docker can capture them.
+
+73
+00:05:21,000 --> 00:05:22,440
+We also have an expose command.
+
+74
+00:05:22,500 --> 00:05:26,350
+By default, no TCP or UDP ports are open
+
+75
+00:05:26,370 --> 00:05:31,350
+inside a container. It doesn't expose anything from the container to a virtual network unless we list
+
+76
+00:05:31,350 --> 00:05:32,050
+it here.
+
+77
+00:05:32,280 --> 00:05:37,400
+And, of course, because this is a Web and proxy server it's going to expose 80 and 443.
+
+78
+00:05:37,590 --> 00:05:42,470
+Now, this expose command does not mean these ports are going to be opened automatically on our host.
+
+79
+00:05:42,480 --> 00:05:45,720
+That's what the dash P command is whenever we use docker run.
+
+80
+00:05:46,110 --> 00:05:52,410
+Lastly, we have the CMD here. The CMD is a required parameter that is the final command that will
+
+81
+00:05:52,410 --> 00:06:00,240
+be run every time you launch a new container from the image, or every time you restart a stopped container.
+
+82
+00:06:00,670 --> 00:06:06,450
+There is some really excellent documentation on all of these stanzas, plus a whole lot more, that
+
+83
+00:06:06,450 --> 00:06:10,740
+we're going to go into later, on the Docker documentation website at docs.docker.com,
+
+84
+00:06:10,730 --> 00:06:15,510
+which you can find in the resources of this lecture.
+
+85
+00:06:15,540 --> 00:06:22,400
+Okay, so these are the basics, right? These five different stanzas are pretty normal in every single Dockerfile.
+
+86
+00:06:22,440 --> 00:06:24,300
+Some of them are required.
+
+87
+00:06:24,350 --> 00:06:31,370
+Some of them, like the run, and the ENV, and the expose, are optional, but they're pretty typical for most
+
+88
+00:06:31,370 --> 00:06:33,740
+containers that you're going to create images for.
+

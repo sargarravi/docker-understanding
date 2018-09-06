@@ -1,0 +1,492 @@
+1
+00:00:05,240 --> 00:00:08,770
+Now what about Docker Registry in a swarm?
+
+2
+00:00:08,900 --> 00:00:11,500
+It's not actually much different.
+
+3
+00:00:11,510 --> 00:00:16,670
+The nice thing is that we don't have to run a docker run command, we can actually use a docker service
+
+4
+00:00:16,670 --> 00:00:21,980
+command like we're used to or a stack file like we've talked about in a previous section. It's going
+
+5
+00:00:21,980 --> 00:00:26,840
+to work the same way as we did on the local host because we can actually just tell the swarm to talk
+
+6
+00:00:26,840 --> 00:00:28,710
+to itself for the registry.
+
+7
+00:00:28,710 --> 00:00:34,430
+So will use the same 127 address and we don't have to enable the insecure registry because that's already
+
+8
+00:00:34,430 --> 00:00:41,390
+allowed by the Docker Engine. The Routing Mesh basically allows all the nodes to talk to the registry
+
+9
+00:00:41,810 --> 00:00:42,770
+as if it's local,
+
+10
+00:00:42,770 --> 00:00:45,310
+right, because that's kind of the magic of the Routing Mesh.
+
+11
+00:00:45,560 --> 00:00:50,500
+I just want to remind you that this is a persistent data container.
+
+12
+00:00:50,500 --> 00:00:53,800
+It does store data that needs to last over time.
+
+13
+00:00:53,870 --> 00:00:57,920
+So you will have to deal in a real world production kind of scenario. You're going to have to deal with
+
+14
+00:00:58,160 --> 00:01:02,540
+a volume driver and how to deal, and basically make a decision around how you're going to store the
+
+15
+00:01:02,540 --> 00:01:02,920
+data.
+
+16
+00:01:02,960 --> 00:01:04,100
+But we won't do that here.
+
+17
+00:01:05,750 --> 00:01:11,210
+For this example with Swarm, I'm actually going to change it up a little bit and not use the three node cluster
+
+18
+00:01:11,210 --> 00:01:13,320
+that I had used in a previous section.
+
+19
+00:01:13,400 --> 00:01:19,780
+We're going to actually use Play With Docker this time. If you just go to play-with-docker.com,
+
+20
+00:01:19,790 --> 00:01:27,840
+we're going to actually prove that we're not a robot and then it's going to ask me some random
+
+21
+00:01:27,840 --> 00:01:31,970
+questions, it might ask you, it might not.
+
+22
+00:01:32,160 --> 00:01:32,900
+Then we're in.
+
+23
+00:01:33,150 --> 00:01:38,310
+Recently, the Play With Docker enabled a new feature that makes it even easier for us to set up a
+
+24
+00:01:38,310 --> 00:01:42,680
+test form and that's under the wrench object.
+
+25
+00:01:42,690 --> 00:01:47,100
+I guess that's a wrench. You see that there's options here that are basically templates for setting
+
+26
+00:01:47,100 --> 00:01:51,630
+up a swarm so instead of showing you this one set up like we've already done, I'm just going to set up
+
+27
+00:01:51,630 --> 00:01:57,420
+five managers, no workers, give it a second so it'll set all these up. Basically what we're going to
+
+28
+00:01:57,420 --> 00:02:02,220
+start with is a five node swarm. We're just going to run a registry real quick to show how it's pretty
+
+29
+00:02:02,220 --> 00:02:05,270
+much the same thing as before.
+
+30
+00:02:05,280 --> 00:02:13,290
+All right. Now I have five manager nodes and if I did docker node ls, You can just see that I have five
+
+31
+00:02:13,290 --> 00:02:13,630
+of them.
+
+32
+00:02:13,630 --> 00:02:21,030
+So yay. We have a swarm. Let's actually just run the registry but this time we're going to use the
+
+33
+00:02:21,030 --> 00:02:21,870
+service create
+
+34
+00:02:24,760 --> 00:02:27,800
+and call it registry.
+
+35
+00:02:28,290 --> 00:02:34,110
+We're going to publish it again like last time, port 5000,
+
+36
+00:02:39,720 --> 00:02:42,170
+and we're going to, the images registry.
+
+37
+00:02:42,630 --> 00:02:43,270
+There you go.
+
+38
+00:02:45,220 --> 00:02:54,550
+We can do a docker service ps registry and it says it's running. In Play With Docker,
+
+39
+00:02:54,550 --> 00:03:00,040
+we get this nice little button that shows up whenever we publish a web application.
+
+40
+00:03:00,040 --> 00:03:04,900
+It actually exposes the port and gives a nice little friendly URL that we can test that web app or
+
+41
+00:03:05,260 --> 00:03:06,230
+web endpoint.
+
+42
+00:03:06,310 --> 00:03:08,730
+But you know with Registry, at the root of it,
+
+43
+00:03:08,730 --> 00:03:12,860
+it is nothing, there's nothing that is returned other than a HTTP 200.
+
+44
+00:03:12,940 --> 00:03:19,930
+What we can do though is with any registry we can actually go and look at the catalog and that'll
+
+45
+00:03:19,930 --> 00:03:22,190
+return a simple JSON array.
+
+46
+00:03:22,390 --> 00:03:24,490
+You'll notice its repository is empty.
+
+47
+00:03:24,490 --> 00:03:29,410
+We could have done this in the previous lecture with it locally but let's just play with a little
+
+48
+00:03:29,410 --> 00:03:32,510
+bit here since we're in this easy solution with Play With Docker.
+
+49
+00:03:32,530 --> 00:03:43,130
+Let me do the same thing when I do a docker pull as before of the hello world. I'm now going
+
+50
+00:03:43,130 --> 00:03:52,000
+to do the tag remember again, so we're going to say tag hello world and then I'm going to rename it or
+
+51
+00:03:52,050 --> 00:03:58,910
+re-tag to a new repository 127.0.0.1 5000,
+
+52
+00:04:06,310 --> 00:04:08,630
+I'm going to do a docker push.
+
+53
+00:04:09,150 --> 00:04:12,460
+Let me zoom this in so it might be a little easier for us to see.
+
+54
+00:04:13,270 --> 00:04:14,660
+docker push.
+
+55
+00:04:17,130 --> 00:04:19,750
+Then we're going to do the 127.0.0.1
+
+56
+00:04:26,470 --> 00:04:32,240
+OK. Now it pushed that up to our repository. The way we can actually check, really quick, is
+
+57
+00:04:32,240 --> 00:04:40,470
+if you go to this other tab and I'll refresh, you'll notice that repositories now shows the name of the repo that is available.
+
+58
+00:04:40,480 --> 00:04:45,710
+As we add more to it this would actually expand the array and we would see all of them there.
+
+59
+00:04:49,080 --> 00:04:55,830
+At this point, I could just do as before, run that image, it would work just like we expected and scale
+
+60
+00:04:55,830 --> 00:04:58,190
+it up. To just prove that point,
+
+61
+00:04:58,200 --> 00:05:01,690
+I can do a docker pull nginx.
+
+62
+00:05:01,790 --> 00:05:03,540
+We can run a simple nginx web server,
+
+63
+00:05:06,990 --> 00:05:09,010
+docker tag nginx,
+
+64
+00:05:15,310 --> 00:05:17,080
+and then docker push,
+
+65
+00:05:21,260 --> 00:05:23,260
+push that back up to our registry.
+
+66
+00:05:27,640 --> 00:05:32,740
+Then you'll see here, that I have two now. I have two repositories there. Then
+
+67
+00:05:32,740 --> 00:05:34,690
+if I did a docker service create,
+
+68
+00:05:41,230 --> 00:05:42,210
+just like we do normally,
+
+69
+00:05:42,220 --> 00:05:42,570
+right,
+
+70
+00:05:42,580 --> 00:05:44,820
+we're going to do the nginx 80 80,
+
+71
+00:05:44,830 --> 00:05:51,000
+but this time I'm going to specify the image like so.
+
+72
+00:05:51,310 --> 00:05:54,190
+We're telling it we don't want to use the Docker Hub image,
+
+73
+00:05:54,190 --> 00:05:54,480
+right,
+
+74
+00:05:54,480 --> 00:05:57,190
+to start the service and we want to use this.
+
+75
+00:05:57,230 --> 00:05:59,080
+Now we're going to add in a couple of options.
+
+76
+00:05:59,140 --> 00:06:07,290
+I'm going to actually do replicas 5, so that one nginx will start on each node, and then we're
+
+77
+00:06:07,290 --> 00:06:17,490
+going to do a new option that started showing up in the 17.04 I believe, detach equals false and this will
+
+78
+00:06:17,490 --> 00:06:20,010
+allow us to actually see the command running in real time.
+
+79
+00:06:23,540 --> 00:06:28,010
+You'll see that it's preparing, which means it's basically downloading that image from the registry
+
+80
+00:06:28,010 --> 00:06:31,970
+to the nodes, and then it gets ready and then it's running.
+
+81
+00:06:32,480 --> 00:06:34,480
+There we go, we're done.
+
+82
+00:06:34,490 --> 00:06:39,530
+If I pull, you'll notice from the top, it's now showing the port 80 because it's a new service, and you'll
+
+83
+00:06:39,530 --> 00:06:42,570
+see that I have it here and it's working.
+
+84
+00:06:42,770 --> 00:06:50,540
+What's interesting about this is that when you're in a swarm, you cannot use an image that's only
+
+85
+00:06:50,540 --> 00:06:51,470
+on one node,
+
+86
+00:06:51,500 --> 00:06:51,790
+right?
+
+87
+00:06:51,800 --> 00:06:57,250
+A swarm has to be able to pull images on all nodes from some repository
+
+88
+00:06:57,260 --> 00:07:02,630
+in a registry that they can all reach. I didn't mention that in the swarm section, but it's an
+
+89
+00:07:02,630 --> 00:07:10,010
+important point because that means that you can't just build an image of your own on a local, like let's say
+
+90
+00:07:10,010 --> 00:07:15,350
+in this case manager1, and manager2 isn't going to be able to go over to manager1 and get it,
+
+91
+00:07:15,410 --> 00:07:15,650
+right?
+
+92
+00:07:15,650 --> 00:07:19,920
+They all have to do push and pulls from a central repository somewhere.
+
+93
+00:07:20,120 --> 00:07:26,860
+But because I ran the registry as a service here, they can all know how to access 127 zero zero one,
+
+94
+00:07:26,960 --> 00:07:32,510
+and then the routing mesh will actually steer them towards the correct container, wherever that registry
+
+95
+00:07:32,510 --> 00:07:38,030
+is running on one of the nodes, and then it'll pull that nginx image to all the nodes as they need
+
+96
+00:07:38,030 --> 00:07:38,650
+to be there.
+
+97
+00:07:38,690 --> 00:07:38,900
+...
+
+98
+00:07:38,900 --> 00:07:46,950
+If you did a docker service ps nginx, you'll see that there's one running on each node,
+
+99
+00:07:47,180 --> 00:07:52,680
+and you'll see that the image it's using is the one from our registry.
+
+100
+00:07:52,690 --> 00:07:57,320
+OK, so that's it for just showing off how Swarm is very similar with Docker Registry.
+
+101
+00:07:57,420 --> 00:08:02,710
+At the end we kind of mentioned, that new tidbit, that you need to make sure that your images that
+
+102
+00:08:02,710 --> 00:08:07,120
+you use in a swarm are just accessible in whatever registry they're going to be in.
+
+103
+00:08:07,120 --> 00:08:12,040
+They have to be accessible by all nodes. That that should be obvious, right, because the nodes can't
+
+104
+00:08:12,370 --> 00:08:16,300
+share images with each other. They actually all have to pull them from a registry
+
+105
+00:08:16,480 --> 00:08:18,090
+and so they all have to be able to reach it.
+
+106
+00:08:18,100 --> 00:08:23,390
+It just so happens that a routing mesh makes it much easier to run that.
+
+107
+00:08:23,500 --> 00:08:28,900
+Just as a last little ProTip, if you don't have to run your own registry, as cool it might be to
+
+108
+00:08:28,900 --> 00:08:32,030
+do so, just use one of the hosted ones on the Internet.
+
+109
+00:08:32,050 --> 00:08:32,320
+...
+
+110
+00:08:32,320 --> 00:08:33,390
+They're redundant.
+
+111
+00:08:33,580 --> 00:08:38,550
+They've got monitoring and all the proper stuff involved with managing the storage.
+
+112
+00:08:38,740 --> 00:08:40,600
+They're usually, especially if you're doing open source,
+
+113
+00:08:40,600 --> 00:08:41,830
+most of them are free.
+
+114
+00:08:41,830 --> 00:08:48,970
+If you're doing it for private reasons and need to store private images, most of them are very reasonable
+
+115
+00:08:48,970 --> 00:08:51,630
+cost, I mean very low cost to store your images.
+
+116
+00:08:51,670 --> 00:08:57,220
+So whether you use an AWS or Quay or Docker Hub or a lot of the options out there, I would say
+
+117
+00:08:57,280 --> 00:09:04,210
+try those first and only use your own registry if you really have some sort of, maybe, offline requirement
+
+118
+00:09:04,210 --> 00:09:09,970
+where it has to be available without the Internet, or if there is just some restriction of security that
+
+119
+00:09:09,970 --> 00:09:15,820
+you really can't use any hosted platform. Because it really just is one of those things where it's a utility
+
+120
+00:09:16,060 --> 00:09:19,500
+and it's great when you can just rely on someone else to solve that problem for you.
+
+121
+00:09:19,690 --> 00:09:23,050
+So I hope you play around with it and have some fun.
+
+122
+00:09:24,010 --> 00:09:27,850
+Now that you don't this lecture, remember to clean up so you can start with a fresh slate on the
+
+123
+00:09:27,850 --> 00:09:28,730
+next lecture.
+

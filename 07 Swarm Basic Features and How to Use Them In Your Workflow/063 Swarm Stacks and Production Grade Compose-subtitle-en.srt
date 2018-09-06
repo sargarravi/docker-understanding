@@ -1,0 +1,851 @@
+0
+00:04.870 --> 00:10.150
+Now that you understand the basics of creating a multi-node swarm and creating overlay networks and
+
+1
+00:10.150 --> 00:16.590
+Docker services, we're going to cover the next really cool thing about Swarm, which is stacks. Not stacks of
+
+2
+00:16.610 --> 00:24.160
+pancakes, but stacks of services. In 1.13, Docker added this really great feature that adds another
+
+3
+00:24.160 --> 00:33.180
+layer of abstraction on top of stacks. Basically it's Compose files for production of Swarm. Now
+
+4
+00:33.190 --> 00:35.650
+stacks accept Compose files.
+
+5
+00:35.820 --> 00:40.530
+Inside there is what we would call a declarative definition, where we're stating this is what I want
+
+6
+00:40.530 --> 00:42.090
+the end result to be.
+
+7
+00:42.090 --> 00:47.370
+And it's the swarm's job to figure all that out. Now it's not just services; it's networks and volumes
+
+8
+00:47.370 --> 00:48.080
+as well.
+
+9
+00:48.220 --> 00:49.400
+And a little sneak peek.
+
+10
+00:49.530 --> 00:53.620
+It's actually going to include secrets, which we'll talk about in the next few lectures.
+
+11
+00:53.760 --> 01:00.910
+We get to use a new command, which is docker stack deploy to import this Compose file and run the command
+
+12
+01:00.930 --> 01:02.010
+that we put in it.
+
+13
+01:02.460 --> 01:04.360
+The stack manages all of this.
+
+14
+01:04.380 --> 01:10.850
+It doesn't need us to go and first create networks, or first create volumes, but we can totally do that.
+
+15
+01:10.860 --> 01:15.990
+We can use something called External in our Compose file to say hey, these are already things that exist
+
+16
+01:15.990 --> 01:18.610
+in my swarm. Go ahead and use those, don't bother creating them.
+
+17
+01:18.690 --> 01:23.850
+But usually you end up having your stacks just doing it all for you because it's easier that way.
+
+18
+01:23.940 --> 01:28.110
+We're going to get some new features in our Compose file, so we're going to start with the ones that
+
+19
+01:28.110 --> 01:34.170
+look very similar to what we had before. But we're going to get this new deployed key in there, or dictionary,
+
+20
+01:34.500 --> 01:38.200
+that allows us to specify the things that are specific to Swarm.
+
+21
+01:38.310 --> 01:40.020
+How many replicas do we want?
+
+22
+01:40.230 --> 01:44.250
+What do we want to do when we failover? How do we want to do rolling updates, and all those sorts of
+
+23
+01:44.250 --> 01:47.230
+things that we wouldn't care about on our local development machine.
+
+24
+01:47.340 --> 01:52.830
+But that comes at a price, which is, that we can't do the build command yet. That may be something
+
+25
+01:52.830 --> 01:59.130
+that will never happen in Swarm because the mindset here is that building shouldn't happen on your production
+
+26
+01:59.140 --> 02:01.800
+swarm. Building is something that your CI system should do.
+
+27
+02:01.800 --> 02:04.060
+Maybe Jenkins or something else like Codeship.
+
+28
+02:04.110 --> 02:09.270
+Once you built your images and put them in your repository, this stack will actually be the one
+
+29
+02:09.390 --> 02:12.890
+to pull down those images and deploy them with the deploy options.
+
+30
+02:13.890 --> 02:16.470
+The good news there, though, is that they actually get along.
+
+31
+02:16.500 --> 02:23.280
+On your local machine, Compose will actually ignore when you run the docker-compose command.
+
+32
+02:23.280 --> 02:23.700
+It will actually
+
+33
+02:23.700 --> 02:29.520
+ignore any of the deploy information. It will actually say 'hey, you've got deploy information in here.
+
+34
+02:29.580 --> 02:31.520
+I can't really use it so I'm going to ignore it.'
+
+35
+02:31.740 --> 02:37.290
+Likewise, when you're on Swarm and you're deploying a new stack or an update to a stack, it'll actually say
+
+36
+02:37.530 --> 02:39.630
+'hey, you've got build commands in here.
+
+37
+02:39.690 --> 02:42.670
+I don't do builds so I'm going to ignore them and keep going.'
+
+38
+02:42.810 --> 02:46.710
+The nice thing is you don't have to change your file. We'll see later how we can actually have
+
+39
+02:46.710 --> 02:51.270
+a single Compose file that does everything that we need it to do on the development side and on the
+
+40
+02:51.270 --> 02:52.500
+production deployment side.
+
+41
+02:52.740 --> 02:54.090
+It's pretty cool.
+
+42
+02:54.120 --> 03:00.540
+Finally, you don't actually need the Docker Compose CLI, the binary. That doesn't need to be in
+
+43
+03:00.540 --> 03:05.550
+your swarm. Because again compose, the actual command, is not a production tool.
+
+44
+03:05.550 --> 03:07.040
+It wasn't designed to be production.
+
+45
+03:07.110 --> 03:10.910
+It was designed to be a developer and sysadmin helper tool.
+
+46
+03:10.950 --> 03:14.250
+It's really best for local work on our machines.
+
+47
+03:14.370 --> 03:20.580
+The swarm, which is basically the Docker Engine. The Docker Engine now can accept Compose files using
+
+48
+03:20.580 --> 03:28.020
+that stack command. It reads the Compose files without needing Docker Compose anywhere on the server.
+
+49
+03:28.030 --> 03:31.030
+Let's review real quick when we look back at our services.
+
+50
+03:31.090 --> 03:33.070
+This is what our service would look like.
+
+51
+03:33.070 --> 03:34.180
+We would create a service...
+
+52
+03:34.180 --> 03:38.060
+let's say it's Nginx. And let's say we specified three replicas of it.
+
+53
+03:38.200 --> 03:44.380
+So, it would then go and create three tasks in the orchestrator, and those tasks would find certain servers,
+
+54
+03:44.410 --> 03:47.980
+or nodes, to put them on and they would create containers.
+
+55
+03:48.040 --> 03:54.760
+In the new stacks, we're talking about multiple services, one or more, right. You can have dozens of
+
+56
+03:54.760 --> 03:58.000
+services in there. In that single YAML file.
+
+57
+03:58.120 --> 04:04.960
+They act just like the services that we had before, only now we get to do volumes and overlay networks
+
+58
+04:05.050 --> 04:07.770
+in that Compose file. And that results
+
+59
+04:07.780 --> 04:12.040
+in what we would call a stack. A stack controls all those things.
+
+60
+04:12.040 --> 04:18.190
+And it actually will put its name properly on all the objects so that you can easily tell which ones
+
+61
+04:18.190 --> 04:23.380
+are related to which stack. It'll actually put labels in there as well, which we'll cover later, which is
+
+62
+04:23.380 --> 04:28.690
+more metadata for you to be able to determine what stack this particular thing came from.
+
+63
+04:28.690 --> 04:29.880
+So this is really great.
+
+64
+04:29.890 --> 04:35.650
+We now get to use a YAML file to actually do all those things we didn't want to have to type in the
+
+65
+04:35.740 --> 04:40.750
+service commands. Because the service commands were already kind of getting unwieldy and long. And then
+
+66
+04:40.750 --> 04:45.200
+we ended up making Bash scripts in order to run those commands, and then it just got tedious, right.
+
+67
+04:45.220 --> 04:52.660
+So, now that we've had Swarm around for eight months, we now get this stack feature that manages
+
+68
+04:52.750 --> 04:53.890
+those services.
+
+69
+04:53.890 --> 04:56.910
+Notice that the stack is only for one swarm.
+
+70
+04:56.920 --> 04:58.740
+Right? It can't do many swarms.
+
+71
+04:58.820 --> 05:04.330
+It's only going to be running on one swarm so that it can control all the nodes and deploy all these
+
+72
+05:04.330 --> 05:06.440
+services, networks and volumes.
+
+73
+05:06.460 --> 05:11.530
+I should say that this diagram can actually have one more thing in it, which is secrets, because the
+
+74
+05:11.530 --> 05:19.020
+stack can control those as well. We'll see that in a later lecture in this section. OK.
+
+75
+05:19.030 --> 05:21.020
+Let's look at the stacks and how they work.
+
+76
+05:21.160 --> 05:26.370
+I'm back in my 3-node swarm that we built earlier. I'm going to maximize the window on node1
+
+77
+05:26.380 --> 05:28.710
+because I don't really need the other two nodes.
+
+78
+05:28.740 --> 05:30.860
+At least I don't need their ssh command line.
+
+79
+05:31.030 --> 05:36.790
+We're going to use the voting app example we did in previous lectures for this section.
+
+80
+05:37.180 --> 05:42.370
+If you remember our design for that, it was five different services, and they all had dependencies on
+
+81
+05:42.370 --> 05:43.010
+each other.
+
+82
+05:43.030 --> 05:45.810
+And it ultimately gave us two different websites.
+
+83
+05:46.090 --> 05:53.140
+You went through and I'm sure you crafted the best services list with all the values and options that
+
+84
+05:53.140 --> 05:55.490
+it needed and it was perfect, right?
+
+85
+05:55.810 --> 05:59.720
+I'm here to tell you that now, that is no longer needed.
+
+86
+05:59.980 --> 06:04.160
+It was really important for us to use them and not everything is going to need a stack file.
+
+87
+06:04.270 --> 06:06.780
+But now I have a stack file.
+
+88
+06:07.120 --> 06:11.680
+Let's just take a peek at it real quick because you'll notice that it looks very much like a Compose
+
+89
+06:11.680 --> 06:18.100
+file because it is. The only real key thing you have to change as it has to be at least version 3 or
+
+90
+06:18.100 --> 06:18.760
+higher.
+
+91
+06:18.820 --> 06:23.530
+The latest version right now is version 3.1, but I'm sure that will change as it continues
+
+92
+06:23.530 --> 06:24.690
+to change and mature.
+
+93
+06:24.760 --> 06:28.190
+But you need version 3 in order to use stacks.
+
+94
+06:28.210 --> 06:32.560
+You'll notice that we have our redis, and our db, and our vote, and all these things that are probably
+
+95
+06:32.560 --> 06:37.420
+very similar to you from your own work. You're probably very familiar with those and the images they
+
+96
+06:37.420 --> 06:39.420
+need, and the ports they need open and all that.
+
+97
+06:39.550 --> 06:43.030
+But in this case, you'll notice deploy.
+
+98
+06:43.030 --> 06:47.980
+Deploy here is a new option. You'll see here that I was specifying how many replicas I want, which is how many
+
+99
+06:47.980 --> 06:51.100
+copies of that image that need to run at a time.
+
+100
+06:51.100 --> 06:53.740
+And what happens when I do an update.
+
+101
+06:53.770 --> 06:58.420
+So when I do an actual stack update, which will then do service updates.
+
+102
+06:58.600 --> 06:59.940
+How do I want that to roll out?
+
+103
+06:59.950 --> 07:00.290
+Right?
+
+104
+07:00.340 --> 07:03.810
+Do I want to all go down at the same time? Do I only want one at a time?
+
+105
+07:03.820 --> 07:05.880
+How much delay between them?
+
+106
+07:05.890 --> 07:07.580
+There's all sorts of options here.
+
+107
+07:07.660 --> 07:12.190
+We're just kind of scratching the surface, but you can see like I have a restart policy here that if
+
+108
+07:12.190 --> 07:14.860
+the container fails, automatically restart it.
+
+109
+07:14.950 --> 07:16.600
+You can see down here under the database,
+
+110
+07:16.600 --> 07:21.720
+I've actually had constraints put in to make sure that it's on a specific node.
+
+111
+07:21.770 --> 07:26.290
+We haven't talked really a lot about constraints yet, but there are ways for us to label objects, that
+
+112
+07:26.290 --> 07:34.080
+is, containers or images or really anything that we can create or destroy in Swarm or in Docker itself.
+
+113
+07:34.180 --> 07:40.990
+We can actually assign labels to any of those, including nodes, and a node that is a manager gets its
+
+114
+07:40.990 --> 07:41.800
+own labels.
+
+115
+07:41.830 --> 07:48.700
+This is very easy for us to do to just say, hey, this container has to run on a node that has this
+
+116
+07:48.700 --> 07:50.350
+particular role.
+
+117
+07:50.410 --> 07:56.320
+Great example there. As we scroll down we've got some parallelism options which we've seen before.
+
+118
+07:59.000 --> 08:04.410
+This delay option is pretty cool. If you have sort of a warm up time when you have containers that spin
+
+119
+08:04.410 --> 08:09.540
+up. Maybe they've started but they don't actually go live for maybe 60 seconds or something.
+
+120
+08:09.540 --> 08:14.490
+You can add in delays there. We'll actually look at those later during production
+
+121
+08:14.490 --> 08:19.500
+blue-green deployments. For now, you can see those are all pretty standard.
+
+122
+08:19.500 --> 08:24.360
+We've actually got even more options down here. You can actually see that I assign this a specific label.
+
+123
+08:24.450 --> 08:27.840
+I have a window and a max attempt for restart policy.
+
+124
+08:27.840 --> 08:33.420
+So if it tries to restart, and it continues to fail, it's not going to try more than three times.
+
+125
+08:33.420 --> 08:34.760
+Let's check it out.
+
+126
+08:35.310 --> 08:45.220
+All I've got to do is do a docker stack deploy -c for compose. So I'm going to use a Compose file.
+
+127
+08:45.240 --> 08:52.340
+Now I'm going to call it voteapp. And there we go. It didn't actually create everything and spin it up
+
+128
+08:52.340 --> 08:53.350
+that fast.
+
+129
+08:53.360 --> 08:58.550
+All it did was create those objects in the scheduler, which will then go through the process of creating
+
+130
+08:58.550 --> 09:02.800
+the services, which then create the tasks, which then create the containers.
+
+131
+09:02.810 --> 09:07.810
+It also has to create the networks as you'll see here. Remember we had the frontend and the backend
+
+132
+09:07.820 --> 09:14.570
+so it created those, as well as a default network, which that particular stack file that I had was using
+
+133
+09:14.630 --> 09:16.250
+a default network.
+
+134
+09:16.250 --> 09:20.450
+And then you'll see this option for visualizer which is a new one we did not use before.
+
+135
+09:20.630 --> 09:21.980
+We'll see that in a minute.
+
+136
+09:21.980 --> 09:26.200
+So let's take a look at the docker stack command a little more.
+
+137
+09:26.380 --> 09:28.600
+You'll see that we can deploy. We've done that already.
+
+138
+09:28.720 --> 09:29.290
+Then we have an 
+
+139
+09:29.310 --> 09:31.700
+ls, a ps, an rm, and services.
+
+140
+09:31.900 --> 09:34.200
+So this command doesn't have a whole lot of features to it.
+
+141
+09:34.420 --> 09:40.210
+It's pretty simple because all of the functionality is really in the Compose file and really in the
+
+142
+09:40.210 --> 09:41.730
+objects it's creating.
+
+143
+09:41.890 --> 09:47.980
+Since we've done all that already, we can do things like ls, which just shows us all of our stacks.
+
+144
+09:47.980 --> 09:55.020
+It's a pretty basic command. We only have the one. Then if I do a ps, it actually shows me...oops
+
+145
+09:55.140 --> 09:57.220
+I've got to specify the name.
+
+146
+09:57.220 --> 09:58.620
+vote.
+
+147
+09:58.830 --> 10:00.040
+It's called voteapp.
+
+148
+10:01.040 --> 10:01.940
+Got to get that right.
+
+149
+10:01.980 --> 10:02.700
+OK.
+
+150
+10:02.820 --> 10:09.050
+Let me back that up so that you can see that a little better. Right there.
+
+151
+10:09.070 --> 10:14.460
+These are the actual tasks. Then you can see which node they're running on.
+
+152
+10:14.530 --> 10:19.870
+It's not actually the containers. It's actually the task that we're seeing here. Because if it was the
+
+153
+10:19.870 --> 10:24.550
+actual container, we would see a big, long name. Because if you remember, the services we created earlier, they
+
+154
+10:24.550 --> 10:25.660
+had these really long names
+
+155
+10:25.660 --> 10:30.030
+if we actually went and did it docker ps. Right? If I did a docker container
+
+156
+10:30.080 --> 10:36.250
+ls, or a docker ps, you get these really long names. And that's because they all get a GUID, because every
+
+157
+10:36.250 --> 10:38.030
+container's got to be uniquely named.
+
+158
+10:38.030 --> 10:41.840
+So that's how they guarantee that they're always unique and never collide.
+
+159
+10:41.980 --> 10:44.650
+Then the last one here is docker stack
+
+160
+10:47.390 --> 10:50.720
+services voteapp.
+
+161
+10:50.950 --> 10:54.940
+I like this one the best, actually, because it shows me my replicas.
+
+162
+10:54.940 --> 10:56.710
+It's kind of like doing a service
+
+163
+10:56.710 --> 11:02.830
+ls. It shows me how many replicas I have started so I know whether I've got the proper number of containers
+
+164
+11:02.840 --> 11:07.370
+already started. Then if I want to dive deeper, then I could do a docker stack
+
+165
+11:07.400 --> 11:13.230
+ps. We actually get the task names here and we see what nodes they're running on.
+
+166
+11:13.420 --> 11:19.070
+These two together actually give you a complete picture of how this entire application is running.
+
+167
+11:19.150 --> 11:23.290
+If I wanted to dive into the networking, I could do a docker network
+
+168
+11:23.290 --> 11:25.330
+ls just like we normally would do.
+
+169
+11:25.450 --> 11:30.250
+And you can see these three new overlay networks that were created for this app. And notice that the
+
+170
+11:30.250 --> 11:35.680
+app name is always at the beginning. The stack always precedes the name of the service.
+
+171
+11:35.680 --> 11:40.030
+So each stack will make sure that it's name is at the front.
+
+172
+11:40.150 --> 11:41.530
+And then let's go check it out.
+
+173
+11:41.530 --> 11:43.000
+Let me bring up my browser.
+
+174
+11:43.960 --> 11:44.250
+All right.
+
+175
+11:44.260 --> 11:46.060
+We can see them on port 5000.
+
+176
+11:46.060 --> 11:48.620
+I've got the voting site running.
+
+177
+11:48.740 --> 11:51.300
+I go to 5001.
+
+178
+11:51.430 --> 11:56.090
+I've got the results site so I can hit this and then see the result.
+
+179
+11:57.220 --> 12:00.510
+Then this new one we have is called a Visualizer.
+
+180
+12:00.830 --> 12:06.830
+It's on 8080. The Visualizer is actually a pretty neat tool for demonstration purposes.
+
+181
+12:06.850 --> 12:11.080
+That's actually made...all this is made by Docker, by the way, and these are all an open source repo that
+
+182
+12:11.080 --> 12:14.980
+you can see in the Resources section of this section.
+
+183
+12:15.370 --> 12:18.750
+So we've got different colors for each service.
+
+184
+12:18.760 --> 12:22.290
+The voteapp result is a green.
+
+185
+12:22.290 --> 12:28.900
+And then the redis is kind of a mustardy, and the vote is a pink. You can see there's two votes and there's two
+
+186
+12:28.900 --> 12:29.820
+redises.
+
+187
+12:29.860 --> 12:35.340
+It's pretty great to kind of show what happens as things move around the swarm.
+
+188
+12:35.420 --> 12:40.300
+If I actually went into my file and did a change.
+
+189
+12:40.400 --> 12:45.150
+Let's go to the voting app and let's say we want to change the replicas to five.
+
+190
+12:45.260 --> 12:52.310
+We could go and update the service. But that's kind of an AntiPattern. If we go in and type manually,
+
+191
+12:52.310 --> 12:54.980
+commands into the service, like docker service update,
+
+192
+12:55.010 --> 13:01.490
+that would mean that the next time I reapply this YAML file, it's going to overwrite those changes.
+
+193
+13:01.490 --> 13:07.010
+If you've ever done a cloud formation in AWS or any other configuration management, you know that
+
+194
+13:07.280 --> 13:12.530
+once you're using a config file like this to manage your infrastructure, you really want to always use
+
+195
+13:12.530 --> 13:15.210
+this file because it's going to be the source of truth.
+
+196
+13:15.470 --> 13:20.810
+So it probably, in production, would be some sort of file that you keep in a Git Repository that you have
+
+197
+13:20.810 --> 13:25.770
+version control on, and you control changes, and that way you can roll back changes.
+
+198
+13:25.850 --> 13:30.630
+In this case, I'm just going to change that file real quick, and we're going to run the same command, docker stack
+
+199
+13:31.830 --> 13:32.400
+deploy.
+
+200
+13:32.400 --> 13:38.200
+Notice we don't have an update. Because we're going to deploy to the same stack and it's going to recognize
+
+201
+13:38.200 --> 13:43.110
+that it's existing, and that we're going to update it based on these changes.
+
+202
+13:43.120 --> 13:45.770
+In order to update it, we've got to make sure we use the right name.
+
+203
+13:45.890 --> 13:52.490
+So it's voteapp. And then notice that it's saying updating services, but recognizes that it needs to change them.
+
+204
+13:52.700 --> 13:58.060
+Then if we go over to our visualizer, you can see that we've already got it.
+
+205
+13:58.070 --> 13:59.210
+We're just too slow today, aren't we.
+
+206
+13:59.230 --> 14:05.390
+We're not able to keep up with the swarm. We've got now five of these voting apps already running.
+
+207
+14:05.610 --> 14:09.890
+If they took a while to run and launch, we would actually see their states change in here as they came
+
+208
+14:09.900 --> 14:10.540
+online.
+
+209
+14:10.700 --> 14:13.690
+But it's a simple web app, so it's going to start up pretty quickly.
+
+210
+14:13.700 --> 14:14.050
+Okay.
+
+211
+14:14.060 --> 14:15.200
+That's stacks.
+
+212
+14:15.200 --> 14:18.140
+Now let's add on the secrets to our stacks.
